@@ -1,1 +1,9 @@
-
+-	Was genau ist mit Peilung gemeint
+-	Welche GPX Standart soll verwendet werden
+-	Welche Daten sollen aufgezeichnet werden? (Koordinaten, Höhe, Zeitstempel, Genauigkeit, Geschwindigkeit)
+-	Zeitintervall in dem die GPS-Punkte aufgezeichnet werden sollen
+-	Anforderung an die Genauigkeit
+-	Performance Anforderung
+-	Wie soll mit ungültiken Koordinaten umgegangen werden
+-	Wo soll die GPX Datei gespeichert werden
+-	Schnittstellen zur App? (nur GPX-Datei?)
