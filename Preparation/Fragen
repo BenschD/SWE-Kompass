@@ -2,9 +2,12 @@
 -	Welche GPX Standart soll verwendet werden
 -	Welche Daten sollen aufgezeichnet werden? (Koordinaten, Höhe, Zeitstempel, Genauigkeit, Geschwindigkeit)
 -	Zeitintervall in dem die GPS-Punkte aufgezeichnet werden sollen
+  -> Einstellbar durch de User
+  -> User soll gesamt menge der Punkte angeben können
 -	Anforderung an die Genauigkeit
 -	Performance Anforderung
 -	Wie soll mit ungültiken Koordinaten umgegangen werden
+  -> kann ignoriert werden
 -	Wo soll die GPX Datei gespeichert werden
 -	Schnittstellen zur App? (nur GPX-Datei?)
 - Umfang in Seiten der Anforderungsanalyse und der Spezifikation
@@ -12,5 +15,10 @@
 - Nur die einzelnen Module?
 - Für jedes Modul eine eigenen Test?
 - Abbruchverhalten? Was soll passieren, wenn der nutzer die Peilung abbricht
+  -> Bei abbruch sollen ebenfalls die GPX-Daten erzeugt werden
 - Welche APIs sollen verwendet werden (W3W)
-- Optimierung und allgemeine Erwweiterungen für die 1+ mit Sternchen
+- Optimierung und allgemeine Erweiterungen für die 1+ mit Sternchen
+  -> Alle themen in der Vorlesung optimal abdecken
+  -> 2 Punkte für Geraden
+  -> in kurven geht das nicht
+  -> Algo in Sequenzdiagramme darstellen
