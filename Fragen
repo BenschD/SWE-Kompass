@@ -7,3 +7,10 @@
 -	Wie soll mit ungültiken Koordinaten umgegangen werden
 -	Wo soll die GPX Datei gespeichert werden
 -	Schnittstellen zur App? (nur GPX-Datei?)
+- Umfang in Seiten der Anforderungsanalyse und der Spezifikation
+- Gößenlimit für die GPX Datein? (Max anzahl an Datenpunkte)
+- Nur die einzelnen Module?
+- Für jedes Modul eine eigenen Test?
+- Abbruchverhalten? Was soll passieren, wenn der nutzer die Peilung abbricht
+- Welche APIs sollen verwendet werden (W3W)
+- Optimierung und allgemeine Erwweiterungen für die 1+ mit Sternchen
