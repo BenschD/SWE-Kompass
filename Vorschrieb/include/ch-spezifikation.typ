@@ -1,5 +1,8 @@
 #import "macros.typ": diagramm-box
 
+// UML-SVGs: nur width:100% laesst hohe PlantUML-Grafiken ueber A4 hinauswachsen.
+#let puml-fig(path) = image(path, width: 100%, height: 19cm, fit: "contain")
+
 #let ch-spezifikation-kapitel = [
 #set par(justify: true)
 
@@ -41,7 +44,7 @@ Das System „Java-Peilungskomponente“ ist eine Bibliothek. Akteure sind die *
 ]
 
 #figure(
-  image("../plantuml/out/SWE_Kompass_Context.svg", width: 100%),
+  puml-fig("../plantuml/out/SWE_Kompass_Context.svg"),
   caption: [UML-Kontextdiagramm (PlantUML): Systemgrenze und externe Schnittstellen.],
 )
 
@@ -66,7 +69,7 @@ Das System „Java-Peilungskomponente“ ist eine Bibliothek. Akteure sind die *
 )
 
 #figure(
-  image("../plantuml/out/SWE_Kompass_UseCases.svg", width: 100%),
+  puml-fig("../plantuml/out/SWE_Kompass_UseCases.svg"),
   caption: [UML Use-Case-Diagramm (PlantUML): Akteure und zentrale Use Cases der Java-Peilungskomponente.],
 )
 
@@ -141,12 +144,12 @@ Die folgenden Aktivitätsbeschreibungen ergänzen die UML-Aktivitätsdiagramme (
 Die textuellen Aktivitätsbeschreibungen oben werden durch die folgenden UML-Aktivitätsdiagramme (PlantUML) ergänzt.
 
 #figure(
-  image("../plantuml/out/SWE_Kompass_Activity_PositionUpdate.svg", width: 100%),
+  puml-fig("../plantuml/out/SWE_Kompass_Activity_PositionUpdate.svg"),
   caption: [UML-Aktivitätsdiagramm: Ablauf `onPositionUpdate` inkl. Sampling und Qualitätsprüfungen.],
 )
 
 #figure(
-  image("../plantuml/out/SWE_Kompass_Activity_GpxExport.svg", width: 100%),
+  puml-fig("../plantuml/out/SWE_Kompass_Activity_GpxExport.svg"),
   caption: [UML-Aktivitätsdiagramm: GPX-Export mit sequentieller Optimierungskette.],
 )
 
@@ -176,12 +179,12 @@ Die textuellen Sequenzen werden durch die nachfolgenden UML-Sequenzdiagramme (Pl
 ]
 
 #figure(
-  image("../plantuml/out/SWE_Kompass_Sequence_Complete.svg", width: 100%),
+  puml-fig("../plantuml/out/SWE_Kompass_Sequence_Complete.svg"),
   caption: [UML-Sequenzdiagramm: regulärer Abschluss `complete()` bis GPX-Ergebnis.],
 )
 
 #figure(
-  image("../plantuml/out/SWE_Kompass_Sequence_ValidationError.svg", width: 100%),
+  puml-fig("../plantuml/out/SWE_Kompass_Sequence_ValidationError.svg"),
   caption: [UML-Sequenzdiagramm: Fehlerpfad bei ungültiger Koordinate / Validierung.],
 )
 
@@ -207,7 +210,7 @@ Die OOA fokussiert *fachliche* Konzepte ohne technische Middleware. Assoziatione
 *Assoziationen:* Peilung hat genau einen Zielpunkt und genau einen Track; der Track enthält beliebig viele Trackpunkte; die Peilung kann optional einen Export (GPX) erzeugen; Standortfolge 0..\*.
 
 #figure(
-  image("../plantuml/out/SWE_Kompass_OOA_Domain.svg", width: 100%),
+  puml-fig("../plantuml/out/SWE_Kompass_OOA_Domain.svg"),
   caption: [UML-Klassendiagramm (OOA): fachliches Domänenmodell ohne technische Infrastruktur.],
 )
 
@@ -235,7 +238,7 @@ Die folgende Tabelle ersetzt ein grafisches Klassendiagramm in kompakter, aber i
 )
 
 #figure(
-  image("../plantuml/out/SWE_Kompass_OOD_Design.svg", width: 100%),
+  puml-fig("../plantuml/out/SWE_Kompass_OOD_Design.svg"),
   caption: [UML-Klassendiagramm (OOD): zentrale Entwurfsklassen und Schnittstellen der Implementierung.],
 )
 
@@ -250,7 +253,7 @@ Zustände: `IDLE` → `ACTIVE` (start) → `COMPLETED` (complete) oder `ABORTED`
 *Invariante COMPLETED/ABORTED:* keine weiteren Updates (`/LF060/`, `/LF070/`).
 
 #figure(
-  image("../plantuml/out/SWE_Kompass_State_Session.svg", width: 100%),
+  puml-fig("../plantuml/out/SWE_Kompass_State_Session.svg"),
   caption: [UML-Zustandsdiagramm: Lebenszyklus einer `BearingSession` (vereinfacht).],
 )
 
@@ -261,7 +264,7 @@ Zustände: `IDLE` → `ACTIVE` (start) → `COMPLETED` (complete) oder `ABORTED`
 Die logische Schichtung aus dem Grobentwurf wird hier als UML-Komponenten-/Paketdiagramm abgebildet.
 
 #figure(
-  image("../plantuml/out/SWE_Kompass_Component_Layers.svg", width: 100%),
+  puml-fig("../plantuml/out/SWE_Kompass_Component_Layers.svg"),
   caption: [UML-Komponentendiagramm: API-, Domain- und Infrastrukturpakete.],
 )
 
