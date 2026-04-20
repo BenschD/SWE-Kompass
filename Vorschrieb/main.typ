@@ -50,18 +50,15 @@
     height: 100%,
     inset: 0mm,
     stroke: none,
-    // fill: red,
   )[
     #set align(top)
     #set text(11pt)
     #grid(
-      // fill: blue,
       columns: (auto, 1fr, auto),
       rows: (4cm),
       align: horizon,
       image("include\images\DHBW_Logo.png", height: 1cm),
       h(1fr),
-      // text(titel + " " + autor + "\ndfs"),
       box([
         #set align(right)
         #titel #autor \
@@ -73,37 +70,15 @@
 
 #show heading: set text(rgb("#d90000"))
 #show heading: set block(below: 1em)
-// #show heading: set block(below: 2em)
 
 ////////////////////////////////
-// FRONTMATTER (Abstract)
+// FRONTMATTER
 ////////////////////////////////
 = Abstract
 #pagebreak()
 
-
-////////////////////////////////
-// INHALTS-VERZEICHNIS
-////////////////////////////////
-#linebreak()
 #outline(title: "Inhaltsverzeichnis")
 #pagebreak()
-////////////////////////////////
-
-////////////////////////////////
-// ABBILDUNGS- & TABELLENVERZEICHNIS
-////////////////////////////////
-#linebreak()
-
-#show cite: it => [#it]
-
-#show outline.where(target: figure.where(kind: image)): it => {
-  show outline.entry: it => {
-    show cite: it => { }
-    it
-  }
-  it
-}
 
 = Abbildungsverzeichnis
 #outline(target: figure.where(kind: image), title: "")
@@ -112,11 +87,7 @@
 = Tabellenverzeichnis
 #outline(target: figure.where(kind: table), title: "")
 #pagebreak()
-////////////////////////////////
 
-////////////////////////////////
-// GLOSSAR
-////////////////////////////////
 = Glossar
 #pagebreak()
 ////////////////////////////////
@@ -127,12 +98,10 @@
 #set page(numbering: "1")
 #counter(page).update(1)
 
-
 #show math.equation: set align(center)
 
-
 ////////////////////////////////
-// BEGINN
+// HAUPTTEIL
 ////////////////////////////////
 
 = Einleitung
@@ -140,11 +109,11 @@
 == Zielsetzung
 == Abgrenzung und Scope
 
-= Grobentwurf (Makro-Architektur)
+= Grobentwurf
 == Schichtendiagramm
-_Grobe architektonische Einordnung des Systems zwischen den Anforderungen und dem detaillierten Entwurf._
+_Grobe Darstellung der Systemarchitektur als Bindeglied zwischen Anforderungen und technischer Umsetzung._
 
-= Anforderungsanalyse (Business Requirements / Lastenheft)
+= Anforderungsanalyse (Lastenheft)
 == Zielbestimmung und Produkteinsatz
 == Funktionale Anforderungen
 == Produktdaten
@@ -153,36 +122,31 @@ _Grobe architektonische Einordnung des Systems zwischen den Anforderungen und de
 === Externe Schnittstellen
 == Qualitätsanforderungen
 
-= Systemspezifikation und Feinentwurf (System Requirements / Pflichtenheft)
+= Systemspezifikation und Feinentwurf (Pflichtenheft)
 == Einleitung und allgemeine Beschreibung
 == Funktionale Spezifikation
 === Use Cases
-=== Einzelanforderungen
-== Datenspezifikation
-=== Data Dictionary
-=== Detaillierte Produktdaten
-=== Feinentwurf: Klassendiagramm
-_Ableitung der Struktur und Klassenarchitektur basierend auf den vorangegangenen Daten- und Funktionsspezifikationen._
+=== Einzelanforderungen (Sophist-Schablonen)
+
+== Datenmodellierung und technischer Feinentwurf
+_In diesem Abschnitt werden die Datenstrukturen zusammen mit dem technischen Klassendesign definiert, um eine redundanzfreie Abbildung der Systemlogik zu gewährleisten._
+
+=== Klassendiagramm (Struktureller Feinentwurf)
+
 == Nichtfunktionale Spezifikation
 === Qualitätsanforderungen nach ISO/IEC 25010
-=== Mengengerüst
-=== Sicherheitsanforderungen
+=== Mengengerüst und Sicherheitsanforderungen
 == Angestrebte Eigenschaften & Qualitätscheck
 
-= Qualitätssicherung und Testing
-_Das Testing des Systems erfolgt primär automatisiert und funktional direkt auf Code-Ebene._
+= Qualitätssicherung
+_Die Qualitätssicherung erfolgt prozessbegleitend durch automatisierte Tests direkt auf Code-Ebene._
 
 = Fazit
 == Zusammenfassung der Ergebnisse
 
 #pagebreak()
-////////////////////////////////
 
 ////////////////////////////////
 // ANHANG
 ////////////////////////////////
-#linebreak()
-
 = Anhang
-
-////////////////////////////////
