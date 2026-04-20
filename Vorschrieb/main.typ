@@ -137,66 +137,115 @@
 
 = Einleitung
 == Problemstellung
-Die aktuelle iOS-App „Kompass (Pro)“ verfügt über umfangreiche Peilungs- und Navigationsfunktionen[cite: 9, 23]. Im Rahmen der Projektarbeit besteht die Herausforderung darin, die Kernfunktionalität der Peilung aus der bestehenden App-Architektur herauszulösen und in eine systemneutrale, UI-lose Java-Komponente zu überführen. Dabei fehlt der ursprünglichen App bislang eine Möglichkeit, die während der Peilung zurückgelegte Strecke ressourcenschonend aufzuzeichnen und als standardisiertes Datenformat für nachgelagerte Auswertungen bereitzustellen. 
+Die bestehende iOS-Applikation „Kompass (Pro)“ verfügt über umfangreiche Peilungs- und Navigationsfunktionen, die historisch bedingt stark mit der grafischen Benutzeroberfläche (UI) gekoppelt sind. Im Rahmen dieser Projektarbeit besteht die Herausforderung darin, die Kernfunktionalität der Peilung aus dieser monolithischen Struktur herauszulösen und in eine strikt systemneutrale, UI-lose Java-Komponente zu überführen. Darüber hinaus fehlt der ursprünglichen Applikation bislang eine effiziente Möglichkeit, die während der Peilung zurückgelegte Strecke ressourcenschonend aufzuzeichnen und als GPX-Datei bereitzustellen.
 
 == Zielsetzung
-Ziel ist die Entwicklung einer eigenständigen, schnittstellenbasierten Java-Komponente, welche die Peilungsfunktionalität (Berechnung von Richtung und Distanz) kapselt und über definierte API-Endpunkte Positions- sowie Berechnungsdaten entgegennimmt. Eine zentrale Zusatzfunktion ist die Aufzeichnung eines GPS-Tracks während der aktiven Peilung, der abschließend als optimierte GPX-Datei exportiert werden kann. Dabei sollen redundante Datenpunkte (z.B. auf Geraden) algorithmisch reduziert werden, um die Datenmenge zu minimieren. Die Umsetzung muss strikt nach objektorientierten Paradigmen und den Prinzipien des Software Engineerings (inklusive Testbarkeit) erfolgen.
+Ziel ist die Entwicklung einer eigenständigen, schnittstellenbasierten Java-Komponente, welche die Peilungsfunktionalität kapselt. Die Komponente darf keinerlei Abhängigkeiten zu UI-Frameworks aufweisen, sondern kommuniziert ausschließlich über definierte API-Endpunkte. Kernziele umfassen die systemneutrale Peilungslogik (inkl. What3Words-Integration), das intelligente GPS-Tracking (mit algorithmischer Datenreduktion für Geraden) und den standardisierten GPX-Export.
 
 == Abgrenzung und Scope
 **In Scope:**
-- Entwicklung einer UI-losen Java-Bibliothek/Komponente.
-- Implementierung der Peilungslogik (Berechnung von Richtung und Entfernung zum Ziel)[cite: 27].
-- Integration der What3Words (W3W) Funktionalität zur alternativen Zielbestimmung[cite: 26].
-- Aufzeichnung von GPS-Daten (Koordinaten, Höhe, Zeitstempel, Genauigkeit, Geschwindigkeit).
-- Algorithmus zur Wegpunkt-Optimierung (z.B. Reduktion einer Geraden auf Start- und Endpunkt, einstellbare Aufzeichnungsintervalle).
-- Generierung strukturierter GPX-Daten (auch bei vorzeitigem Abbruch der Peilung).
+- Systemanalyse, objektorientiertes Design und Implementierung in reinem Java.
+- Algorithmus zur Wegpunkt-Optimierung (z.B. Reduktion von Geraden auf Start- und Endpunkt).
+- Abfangen und Ignorieren von ungenauen oder ungültigen GPS-Signalen.
+- Bereitstellung von Modultests (Unit-Tests).
 
 **Out of Scope:**
 - Entwicklung einer grafischen Benutzeroberfläche (UI).
-- Umsetzung der Telematik-Dashboard-Funktionen für Motorradfahrer (Schräglage, G-Kräfte, Kurvenbeschleunigung) aus dem ursprünglichen iOS-Lastenheft[cite: 12, 25].
-- Eine Turn-by-Turn-Navigation (die Peilung gibt lediglich die Richtung per Vektor/Pfeil vor).
+- Das in der Ursprungs-App geforderte „Telematik-Dashboard“ für Motorradfahrer.
+- Turn-by-Turn Routenberechnung über Straßennetzwerke (Navigation).
 
 == Stakeholder-Analyse
-- **Auftraggeber / Dozent (Herr Bohl):** Legt höchsten Wert auf die formale Korrektheit der Anforderungen (SOPHIST-Regelwerk), die Anwendung von Software-Engineering-Methoden (OOA, OOD, Diagramme), fehlerfreie Kompilierbarkeit und lauffähigen Source-Code sowie detaillierte Test-Cases.
-- **Entwicklerteam:** Zuständig für die Systemanalyse, die systemneutrale Implementierung in Java und die Bereitstellung der Architektur-Dokumentation.
-- **Integrierende Systeme (Nutzer):** Zukünftige Java-Applikationen oder Frontends, die diese Komponente als Backend-Logik für Navigations- und Trackingzwecke einbinden.
+- **Auftraggeber (Dozent):** Legt höchsten Wert auf formale Korrektheit (SOPHIST), den Einsatz von Software-Engineering-Methoden (OOA, Entwurfsmuster), Lauffähigkeit des Source-Codes und hohe Testabdeckung.
+- **Entwicklerteam:** Verantwortlich für die methodisch saubere Spezifikation und fehlerfreie Implementierung.
+- **Integrierende Systeme:** Zukünftige Applikationsentwickler, die diese Bibliothek als Backend für Tracking-Apps einbinden wollen.
 
+#pagebreak()
 = Anforderungsanalyse (Business Requirements / Lastenheft)
 == Zielbestimmung und Produkteinsatz
-Das Produkt wird als universell einsetzbare Backend-Komponente in Java konzipiert. Sie richtet sich an Softwareentwickler, die Peilungsfunktionen und GPS-Tracking in ihre eigenen Anwendungen integrieren möchten[cite: 22], ohne sich an ein spezifisches UI-Framework binden zu müssen. Der Einsatz erfolgt plattformunabhängig und fokussiert sich auf die performante, im Hintergrund ablaufende Verarbeitung von Standortdaten in unkartiertem Gelände[cite: 29].
+Die Java-Komponente wird als universelles Backend-Modul für standortbasierte Dienste konzipiert. Der Einsatzbereich fokussiert sich auf Outdoor-Aktivitäten, bei denen eine reine Richtungsweisung (Peilung) in Kombination mit einer performanten, speicherschonenden Pfadaufzeichnung essenziell ist.
 
 == Funktionale Anforderungen
-*Hinweis: Die funktionale Spezifikation erfolgt nach den linguistischen Regeln des SOPHIST-Regelwerks, um Eindeutigkeit und Prüfbarkeit zu garantieren.*
-
-- **/LF010/ Empfang von Positionsdaten:** Die Komponente MUSS die Möglichkeit bieten, Positionsdaten (bestehend aus Längen- und Breitengrad, Höhe, Zeitstempel, Genauigkeit und Geschwindigkeit) über eine definierte Schnittstelle entgegenzunehmen.
-- **/LF020/ Umgang mit invaliden Daten:** Die Komponente MUSS ungültige oder unvollständige GPS-Koordinaten bei der Verarbeitung selbstständig ignorieren, ohne einen Systemabbruch herbeizuführen.
-- **/LF030/ Starten der Peilung:** Die Komponente MUSS die Peilungsfunktion zu einem durch das aufrufende System übergebenen Zielort starten können.
-- **/LF040/ W3W-Integration:** Die Komponente MUSS die Zielbestimmung der Peilung durch die Verarbeitung von What3Words (W3W)-Adressen unterstützen[cite: 26].
-- **/LF050/ GPS-Track Aufzeichnung:** Die Komponente MUSS während einer aktiven Peilung die eingehenden GPS-Datenpunkte fortlaufend aufzeichnen.
-- **/LF060/ Intervallkonfiguration:** Die Komponente MUSS dem aufrufenden System die Möglichkeit bieten, das Zeit- und Distanzintervall der GPS-Aufzeichnung sowie die maximale Gesamtmenge der aufzuzeichnenden Punkte zu konfigurieren.
-- **/LF070/ Wegpunkt-Optimierung:** Die Komponente MUSS die aufzuzeichnenden Datenpunkte algorithmisch optimieren (z. B. Beibehaltung von nur zwei Punkten bei einer geraden Strecke), um die Gesamtdatenmenge zu reduzieren.
-- **/LF080/ GPX-Export:** Die Komponente MUSS die aufgezeichneten und optimierten GPS-Daten als strukturierte GPX-Zeichenkette zurückgeben.
-- **/LF090/ Datenexport bei Abbruch:** Die Komponente MUSS sicherstellen, dass bei einem Abbruch der Peilung durch das aufrufende System alle bis zum Abbruchzeitpunkt aufgezeichneten Daten erfolgreich als GPX-Format ausgegeben werden.
+#table(
+  columns: (15%, 85%),
+  align: (left, left),
+  stroke: 0.5pt,
+  [*ID*], [*Spezifikation (SOPHIST)*],
+  [/LF010/], [*Funktion:* Empfang von Echtzeit-Positionsdaten \ *Beschreibung:* Das System MUSS dem aufrufenden System die Möglichkeit bieten, kontinuierlich Positionsdaten an die Komponente zu übergeben.],
+  [/LF020/], [*Funktion:* Validierung der Positionsdaten \ *Beschreibung:* Das System MUSS empfangene Positionsdaten, deren Genauigkeitswert eine konfigurierte Toleranz überschreitet, selbstständig ignorieren.],
+  [/LF030/], [*Funktion:* Start der Peilungsfunktion \ *Beschreibung:* Das System MUSS die Berechnung der Peilung (Azimut und Distanz) starten können, sobald ein Zielort übergeben wurde.],
+  [/LF040/], [*Funktion:* Zielortbestimmung via W3W \ *Beschreibung:* Das System MUSS dem aufrufenden System die Möglichkeit bieten, den Zielort in Form einer What3Words-Adresse zu übergeben.],
+  [/LF050/], [*Funktion:* Konfiguration der Aufzeichnungs-Limits \ *Beschreibung:* Das System MUSS dem aufrufenden System die Möglichkeit bieten, das Zeitintervall und die Maximalmenge der Datenpunkte einzustellen.],
+  [/LF060/], [*Funktion:* Algorithmische Datenreduktion \ *Beschreibung:* Das System MUSS die aufgenommenen Wegpunkte derart optimieren, dass auf einer geraden Strecke lediglich Start- und Endpunkt gespeichert werden.],
+  [/LF070/], [*Funktion:* GPX-Datenexport \ *Beschreibung:* Das System MUSS die optimierten Wegpunkte auf Anfrage als GPX 1.1 Standard-Zeichenkette zurückgeben.],
+  [/LF080/], [*Funktion:* Datensicherung bei Abbruch \ *Beschreibung:* Das System MUSS im Falle eines Abbruchs gewährleisten, dass alle bis dato verarbeiteten Wegpunkte als GPX-Datensatz abrufbar bleiben.]
+)
 
 == Produktdaten
-- **/LD010/ GPX-Datenbestand:** Die Komponente speichert temporär Positionsdaten-Objekte. Ein Objekt umfasst zwingend die Attribute Breitengrad, Längengrad, Höhe, Zeitstempel, Genauigkeit und Geschwindigkeit.
-- **/LD020/ W3W-Koordinaten-Mapping:** Die Komponente verarbeitet 3-Wort-Adressen (z.B. ///apfel.baum.haus) und hält die dazugehörigen, aufgelösten WGS84-Geokoordinaten im Speicher.
-- **/LD030/ Konfigurationsparameter:** Speicherung der vom aufrufenden System übergebenen Toleranzwerte für den Optimierungsalgorithmus (z.B. Abweichungstoleranz in Metern für die Geraden-Erkennung).
+- **/LD010/ Wegpunkt-Datensatz:** Kapselt geographische Rohdaten (Latitude, Longitude, Elevation, Timestamp, Accuracy, Speed).
+- **/LD020/ Konfigurationsparameter:** Speicher für Toleranzwerte der Geradenerkennung und Intervall-Limits.
 
 == Nichtfunktionale Anforderungen
 === Leistungs- und Performanceanforderungen
-- **/LL010/ Systemneutralität:** Die Komponente MUSS vollständig UI-los (ohne grafische Benutzeroberfläche) und architektonisch unabhängig in reinem Java implementiert sein.
-- **/LL020/ Ausführbarkeit:** Der Quellcode der Komponente MUSS ohne komplexe Build-Systeme (keine fertigen `.jar`-Dateien) direkt über einen Java-Compiler lauffähig und ausführbar sein.
-- **/LL030/ Speicher-Effizienz:** Der Datenbereinigungs-Algorithmus MUSS sicherstellen, dass die im Arbeitsspeicher gehaltenen Wegpunkte in Echtzeit optimiert werden, um bei sehr langen Peilungen den Memory-Footprint minimal zu halten.
+- **/LL010/ Systemneutralität:** Die Komponente MUSS vollständig entkoppelt von jeglichen GUI-Bibliotheken programmiert sein.
+- **/LL020/ Ausführbarkeit:** Der Sourcecode MUSS ohne Build-Tools (wie Maven/Gradle) direkt kompilierbar sein.
 
 === Externe Schnittstellen
-- **/LS010/ W3W API:** Die Komponente MUSS über eine REST-Schnittstelle mit der externen What3Words API kommunizieren, um 3-Wort-Eingaben aufzulösen.
-- **/LS020/ Java API:** Die Komponente MUSS öffentliche Methodenaufrufe (Public Interfaces) bereitstellen, über die externe Systeme die Peilung steuern und die generierten GPX-Daten abgreifen können.
+- **/LS010/ W3W-API:** Kommunikation über HTTPS mit der What3Words REST-API.
+- **/LS020/ Java-API:** Bereitstellung öffentlicher Interfaces für das integrierende System.
 
 == Qualitätsanforderungen
-- **/LQ010/ Wartbarkeit:** Die Architektur MUSS strikt nach Prinzipien der Objektorientierten Analyse und des Designs (OOA/OOD) strukturiert sein und Entwurfsmuster nutzen, wo diese sinnvoll sind.
-- **/LQ020/ Testabdeckung:** Alle kritischen Module (insbesondere der Wegpunkt-Optimierungsalgorithmus und die GPX-Struktur-Generierung) MÜSSEN durch isolierte Modultests abgedeckt und dokumentiert sein.
+- **/LQ010/ Erweiterbarkeit:** Die Architektur MUSS den Einsatz neuer Datenreduktions-Algorithmen ohne Änderung der Kernlogik zulassen.
+- **/LQ020/ Robustheit:** Ungültige API-Keys für W3W dürfen keinen Systemabsturz provozieren, sondern lediglich W3W-Peilungen ablehnen.
 
+#pagebreak()
+= Systemspezifikation (System Requirements / Pflichtenheft)
+== Einleitung und allgemeine Beschreibung
+Während das Lastenheft das "Was" definiert, spezifiziert das Pflichtenheft das "Wie" der technischen Umsetzung. Die fachlichen Anforderungen werden hier in objektorientierte Modelle und Systemschnittstellen übersetzt.
+
+== Funktionale Spezifikation
+=== Use Cases
+1. **UC01: Konfiguration:** Das UI übergibt Initialisierungsparameter (Intervall, Max-Punkte, Toleranz).
+2. **UC02: Peilung starten:** Übergabe einer Koordinate/W3W-Adresse. System wechselt auf `ACTIVE`.
+3. **UC03: Tracken:** UI injiziert GPS-Punkte. System filtert, berechnet neue Peilung und führt die Datenreduktion *on-the-fly* aus.
+4. **UC04: GPX Export:** UI sendet Abbruch-Signal. System parst die Wegpunkte in eine XML/GPX-Struktur.
+
+=== Einzelanforderungen
+- **/SR10/ (Basis: LF020):** Die Klasse `GpsFilter` verwirft `GpsData`-Objekte, wenn `accuracy > config.maxAccuracy`.
+- **/SR20/ (Basis: LF030):** Implementierung der Haversine-Formel zur Distanzberechnung auf der Sphäre.
+- **/SR30/ (Basis: LF060):** Implementierung eines `PathOptimizer` mittels *Strategy-Pattern* für austauschbare Reduktionsalgorithmen (z.B. Douglas-Peucker vs. Winkel-Prüfung).
+
+== Datenspezifikation
+=== Data Dictionary
+#table(
+  columns: (25%, 75%),
+  align: (left, left),
+  stroke: 0.5pt,
+  [*Klasse / Interface*], [*Bedeutung / Struktur*],
+  [`Coordinate`], [Kapselt `lat` (-90 bis 90) und `lon` (-180 bis 180). Wirft Exception bei Grenzverletzung.],
+  [`BearingResult`], [Immutable DTO mit `distanceInMeters` (Double) und `azimuthInDegrees` (0-359.9).],
+  [`ComponentState`], [Zustandsmaschine (Enum): `IDLE`, `TRACKING`, `TERMINATED`.]
+)
+
+=== Detaillierte Produktdaten
+Das finale Exportformat entspricht strikt dem XML-Schema `http://www.topografix.com/GPX/1/1`. Ein generierter Track (`<trk>`) enthält ein Track-Segment (`<trkseg>`), in welchem die bereinigten `Coordinate`-Objekte als `<trkpt lat="..." lon="...">` mit den Sub-Tags `<ele>` (Höhe) und `<time>` (ISO 8601) abgelegt werden.
+
+== Nichtfunktionale Spezifikation
+=== Qualitätsanforderungen nach ISO/IEC 25010
+- **Wartbarkeit (Maintainability):** Sichergestellt durch strikte Einhaltung der SOLID-Prinzipien. Die Nutzung eines `Facade`-Patterns verbirgt die komplexe W3W- und GPX-Logik vor dem aufrufenden System.
+- **Zuverlässigkeit (Reliability):** Verbindungsabbrüche zur W3W-API werden intern durch ein Retry-Muster abgefangen.
+
+=== Mengengerüst
+Der Path-Optimizer ist auf O(1) Speicherkomplexität ausgelegt: Er vergleicht eingehende Punkte direkt mit dem aktuellen Vektor und verwirft redundante Punkte sofort. Selbst bei einer 10-stündigen Peilung überschreitet der RAM-Verbrauch der Wegpunkt-Liste nicht ~2 MB (max. 10.000 relevante Wegpunkte).
+
+=== Sicherheitsanforderungen
+- **API-Key Handling:** Der W3W API-Schlüssel darf nicht fest im Code verdrahtet (Hardcoded) sein, sondern muss durch das integrierende System zur Laufzeit injiziert werden.
+- **Thread Safety:** Da Positionsdaten potenziell asynchron (von GPS-Sensoren-Threads) injiziert werden, müssen die internen Listenstrukturen der Komponente threadsicher (z.B. via `CopyOnWriteArrayList` oder `synchronized` Blöcken) implementiert sein.
+
+== Angestrebte Eigenschaften & Qualitätscheck
+Zur Sicherstellung der geforderten akademischen "1+ Qualität" gelten folgende Check-Kriterien für die Implementierung:
+1. **Code-Qualität:** Keine statischen Code-Analyse-Warnungen (z.B. in SonarLint).
+2. **Testabdeckung:** Mindestens 85% Line-Coverage für die Business-Logik (`PathOptimizer` und `HaversineDistanceCalculator`). Die Tests müssen die Erkennung von Geraden aktiv verifizieren.
+3. **Plattformunabhängigkeit:** Der Code darf unter keinen Umständen Pakete wie `java.awt.*`, `javafx.*` oder `android.*` importieren.
 = Systemspezifikation (System Requirements / Pflichtenheft)
 == Einleitung und allgemeine Beschreibung
 == Funktionale Spezifikation
