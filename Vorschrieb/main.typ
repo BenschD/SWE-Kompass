@@ -123,7 +123,7 @@
       columns: (auto, 1fr, auto),
       rows: (4cm),
       align: horizon,
-      image("include/images/dhbw-placeholder.svg", height: 1cm),
+      image("include/images/DHBW_Logo.png", height: 1cm),
       h(1fr),
       box([
         #set align(right)

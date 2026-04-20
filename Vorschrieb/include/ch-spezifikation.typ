@@ -198,13 +198,13 @@ Die OOA fokussiert *fachliche* Konzepte ohne technische Middleware. Assoziatione
   [*Konzept*], [*Beschreibung*], [*Multiplizität*],
   [`Peilung`], [fachlicher Vorgang vom Start bis Complete/Abort], [1 pro Session],
   [`Zielpunkt`], [Geo-Koordinate], [1],
-  [`Standortfolge`], [Zeitlich geordnete Fixes], [0..*],
+  [`Standortfolge`], [Zeitlich geordnete Fixes], [0..\*],
   [`Peilungsgrößen`], [abgeleitete Werte], [0..1 vor erstem Fix],
   [`Track`], [Sammlung von Segmenten], [0..1],
   [`Export`], [GPX-Dokument als Artefakt], [0..1 nach Abschluss],
 )
 
-*Assoziationen:* Peilung hat genau einen Zielpunkt und genau einen Track; der Track enthält beliebig viele Trackpunkte; die Peilung kann optional einen Export (GPX) erzeugen; Standortfolge 0..*.
+*Assoziationen:* Peilung hat genau einen Zielpunkt und genau einen Track; der Track enthält beliebig viele Trackpunkte; die Peilung kann optional einen Export (GPX) erzeugen; Standortfolge 0..\*.
 
 #figure(
   image("../plantuml/out/SWE_Kompass_OOA_Domain.svg", width: 100%),
@@ -271,13 +271,13 @@ Die logische Schichtung aus dem Grobentwurf wird hier als UML-Komponenten-/Paket
 
 Die vollständige Menge ist tabellarisch im Lastenheft. Hier werden exemplarisch drei Anforderungen in der *SOPHIST-Dreierregel* (Bedingung - Subjekt - Predicate) nachpräzisiert:
 
-- */LF050/ Peilungsinformationen abfragen:*\
+- * /LF050/ Peilungsinformationen abfragen:*\
   *Wenn* eine aktive Session existiert und mindestens ein gültiger Fix vorliegt, *soll* das System *auf Anfrage* einen `BearingSnapshot` liefern, der geografischen Azimut, Distanz und Ordinalrichtung enthält.
 
-- */LF230/ Export als String oder Bytes:*\
+- * /LF230/ Export als String oder Bytes:*\
   *Wenn* eine Session beendet oder abgebrochen wurde, *soll* das System GPX-Daten *ohne* zwingendes Dateisystem bereitstellen.
 
-- */LF320/ Pfadvalidierung:*\
+- * /LF320/ Pfadvalidierung:*\
   *Wenn* ein Ausgabepfad außerhalb des erlaubten Basisverzeichnisses liegt, *soll* das System eine `SecurityException` auslösen.
 
 #pagebreak()
