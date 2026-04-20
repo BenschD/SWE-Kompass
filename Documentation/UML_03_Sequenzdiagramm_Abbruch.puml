@@ -1,0 +1,49 @@
+@startuml SWE-Kompass-Sequenzdiagramm-Abbruch
+!theme plain
+skinparam backgroundColor #FEFEFE
+
+actor App as app
+participant BearingComponent as component
+participant BearingService as service
+participant Validator as validator
+
+app -> component: initiateBearing(position, azimuth)
+    component -> validator: validate(position)
+    validator --> component: valid ✓
+    component -> service: createBearingSession()
+    service --> component: BearingSession
+component --> app: session
+
+app -> component: updateBearing(session, pos1, azimuth1)
+    component -> service: recordGPSPoint(point1)
+    service --> component: UpdateResult
+component --> app: pointsRecorded=1
+
+app -> component: updateBearing(session, pos2, azimuth2)
+    component -> service: recordGPSPoint(point2)
+    service --> component: UpdateResult
+component --> app: pointsRecorded=2
+
+note over app: User bricht Peilung ab!
+
+app -> component: abortBearing(session)
+    component -> service: finalizeAborting(session)
+    service --> component: BearingResult(status=ABORTED)
+component --> app: result(2 points, status=ABORTED)
+
+note over app: Daten sind in-memory verfügbar\nApp entscheidet über Speicherung
+
+alt App speichert Daten
+    app -> component: exportToGPXString(result)
+    component --> app: gpxString
+    app -> app: showDialog("Speichern?")
+    
+    alt User bestätigt
+        app -> component: saveGPXToFile(result, path)
+        component --> app: saved ✓
+    end
+else App verwirft Daten
+    app -> app: return
+end
+
+@enduml

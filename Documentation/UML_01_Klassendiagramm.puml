@@ -1,0 +1,263 @@
+@startuml SWE-Kompass-Klassendiagramm
+!theme plain
+skinparam backgroundColor #FEFEFE
+skinparam classBackgroundColor #F0F0F0
+skinparam classBorderColor #333333
+skinparam arrowColor #333333
+
+' Interfaces
+interface BearingComponent {
+    +initiateBearing(initialPosition, azimuth): BearingSession
+    +updateBearing(session, currentPosition, newAzimuth): UpdateResult
+    +completeBearing(session): BearingResult
+    +abortBearing(session): BearingResult
+    +exportToGPXString(result): String
+    +saveGPXToFile(result, filePath): void
+    +optimizeTrack(result, mode, value): BearingResult
+    +resolvePosition(position): W3WLocation
+}
+
+interface BearingSessionRepository {
+    +save(session): void
+    +findById(sessionId): Optional<BearingSession>
+    +delete(sessionId): void
+}
+
+interface W3WClient {
+    +resolve(position, apiKey): W3WLocation
+}
+
+interface GPXValidator {
+    +validate(gpxString): ValidationResult
+}
+
+' Core Service Implementierungen
+class BearingServiceImpl {
+    -sessionRepository: BearingSessionRepository
+    -gpxExporter: GPXExportService
+    -optimizer: TrackOptimizationService
+    -validator: PositionValidator
+    -logger: BearingLogger
+    --
+    +initiateBearing(Position, double): BearingSession
+    +updateBearing(BearingSession, Position, double): UpdateResult
+    +completeBearing(BearingSession): BearingResult
+    +abortBearing(BearingSession): BearingResult
+    +exportToGPXString(BearingResult): String
+    +saveGPXToFile(BearingResult, Path): void
+    -recordGPSPoint(session, point): void
+}
+
+class GPXExportService {
+    -gpxValidator: GPXValidator
+    -logger: BearingLogger
+    --
+    +toBearingResultGPXString(result): String
+    +saveBearingResultGPXToFile(result, path): void
+    -formatGPXHeader(result): String
+    -formatGPXTrackpoints(points): String
+}
+
+class TrackOptimizationService {
+    -haversineCalc: HaversineCalculator
+    -logger: BearingLogger
+    --
+    +optimizeByPointCount(track, interval): OptimizedTrack
+    +optimizeByDistance(track, distanceM): OptimizedTrack
+    +simplifyLines(track, tolerance): OptimizedTrack
+}
+
+class W3WIntegrationService {
+    -w3wClient: W3WClient
+    -cacheProvider: W3WCacheProvider
+    -logger: BearingLogger
+    --
+    +resolvePosition(position, apiKey): W3WLocation
+    -fromCache(position): Optional<W3WLocation>
+    -toCache(location): void
+}
+
+' Validators
+class PositionValidator {
+    +validate(position): ValidationResult
+    -validateLatitude(lat): boolean
+    -validateLongitude(lon): boolean
+    -validateAccuracy(accuracy): boolean
+}
+
+class AzimuthValidator {
+    +validate(azimuth): ValidationResult
+}
+
+class CoordinateValidator {
+    +validateGPSPoint(point): ValidationResult
+}
+
+' Algorithmen
+class HaversineCalculator {
+    +distance(p1, p2): double
+    -toRadians(degrees): double
+}
+
+class CompassConverter {
+    +azimuthToCompassDirection(azimuth): CompassDirection
+    +compassToAzimuth(direction): double
+}
+
+class LineSimplificationAlgorithm {
+    +simplify(points, tolerance): List<GPSPoint>
+    -pointToLineDistance(point, lineStart, lineEnd): double
+}
+
+' Repositories
+class InMemoryBearingRepository {
+    -sessions: Map<UUID, BearingSession>
+    --
+    +save(session): void
+    +findById(sessionId): Optional<BearingSession>
+    +delete(sessionId): void
+}
+
+class GPXFileRepository {
+    +writeToFile(path, gpxContent): void
+    +readFromFile(path): String
+}
+
+' Value Objects und Entities
+class BearingSession {
+    -sessionId: UUID
+    -startTime: Instant
+    -initialPosition: Position
+    -currentPosition: Position
+    -currentAzimuth: double
+    -status: BearingStatus
+    -gpxTrack: GPSTrack
+    --
+    +getSessionId(): UUID
+    +getStatus(): BearingStatus
+    +getCurrentAzimuth(): double
+}
+
+class GPSTrack {
+    -trackId: UUID
+    -points: List<GPSPoint>
+    -createdAt: Instant
+    --
+    +addPoint(point): void
+    +getPoints(): List<GPSPoint>
+    +getPointCount(): int
+    +calculateTotalDistance(): double
+}
+
+class BearingResult {
+    -sessionId: UUID
+    -startTime: Instant
+    -endTime: Instant
+    -finalAzimuth: double
+    -compassDirection: String
+    -optimizedTrack: List<GPSPoint>
+    -totalPointsRecorded: int
+    -totalPointsOptimized: int
+    -totalDistanceMeters: double
+    -status: BearingStatus
+}
+
+class OptimizedTrack {
+    -points: List<GPSPoint>
+    -originalCount: int
+    -optimizedCount: int
+    -reductionPercent: double
+}
+
+class UpdateResult {
+    -success: boolean
+    -currentAzimuth: double
+    -compassDirection: String
+    -pointsRecorded: int
+    -lastUpdateTime: Instant
+}
+
+class Position {
+    -latitude: double
+    -longitude: double
+    -accuracy: double
+    -elevation: Optional<Double>
+}
+
+class GPSPoint {
+    -latitude: double
+    -longitude: double
+    -accuracy: double
+    -elevation: Optional<Double>
+    -speed: Optional<Double>
+    -timestamp: Instant
+}
+
+class W3WLocation {
+    -words: String
+    -latitude: double
+    -longitude: double
+    -countryCode: String
+    -isValid: boolean
+}
+
+' Enums
+enum BearingStatus {
+    INITIATED
+    ACTIVE
+    COMPLETED
+    ABORTED
+}
+
+enum OptimizationMode {
+    POINT_BASED
+    DISTANCE_BASED
+    LINE_SIMPLIFIED
+}
+
+enum CompassDirection {
+    N, NE, E, SE, S, SW, W, NW
+}
+
+' Relationships
+BearingComponent <|.. BearingServiceImpl : implements
+BearingServiceImpl --> BearingSessionRepository : uses
+BearingServiceImpl --> GPXExportService : uses
+BearingServiceImpl --> TrackOptimizationService : uses
+BearingServiceImpl --> W3WIntegrationService : uses
+BearingServiceImpl --> PositionValidator : uses
+BearingServiceImpl --> BearingSession : creates
+BearingServiceImpl --> BearingResult : creates
+
+GPXExportService --> GPXValidator : uses
+GPXExportService --> BearingResult : processes
+
+TrackOptimizationService --> HaversineCalculator : uses
+TrackOptimizationService --> LineSimplificationAlgorithm : uses
+TrackOptimizationService --> GPSPoint : processes
+
+W3WIntegrationService --> W3WClient : uses
+W3WIntegrationService --> W3WLocation : creates
+
+BearingSessionRepository <|.. InMemoryBearingRepository : implements
+BearingSessionRepository <|.. GPXFileRepository : implements
+
+BearingSession --> GPSTrack : contains
+BearingSession --> BearingStatus : has
+BearingSession --> Position : has
+
+GPSTrack --> GPSPoint : contains
+
+BearingResult --> GPSTrack : contains
+BearingResult --> BearingStatus : has
+
+UpdateResult --> CompassDirection : has
+
+PositionValidator --> Position : validates
+AzimuthValidator --> CompassDirection : uses
+CoordinateValidator --> GPSPoint : validates
+
+CompassConverter --> CompassDirection : uses
+CompassConverter --> BearingSession : updates
+
+@enduml

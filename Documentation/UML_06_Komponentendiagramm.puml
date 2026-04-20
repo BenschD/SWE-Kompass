@@ -1,0 +1,55 @@
+@startuml SWE-Kompass-Komponentendiagramm
+!theme plain
+skinparam backgroundColor #FEFEFE
+skinparam componentBackgroundColor #F5F5F5
+skinparam componentBorderColor #333333
+
+package "SWE-Kompass Komponente" #F0F8FF {
+    
+    component [BearingComponent\nFacade] as facade
+    
+    component [BearingService] as bearing_service
+    component [GPXExportService] as gpx_service
+    component [TrackOptimization\nService] as optim_service
+    component [W3W Integration\nService] as w3w_service
+    
+    component [Validators\n(Position, Azimuth,\nCoordinate)] as validators
+    
+    component [Algorithms\n(Haversine,\nCompassConverter,\nLineSimplify)] as algorithms
+    
+    component [Repository\n(Session, GPX File)] as repository
+    
+    facade --|> bearing_service
+    facade --|> gpx_service
+    facade --|> optim_service
+    facade --|> w3w_service
+    
+    bearing_service --|> validators
+    bearing_service --|> repository
+    bearing_service --|> algorithms
+    
+    optim_service --|> algorithms
+    gpx_service --|> validators
+    
+    w3w_service --|> algorithms
+}
+
+package "Externe Systeme" #FFE8E8 {
+    component [GPS Provider\n(Mock/Real)] as gps_provider
+    component [Magnetometer\n(Mock/Real)] as magnetometer
+    component [W3W API\n(Optional REST)] as w3w_api
+    component [Dateisystem\n(NIO)] as filesystem
+}
+
+package "Externe Applikation" #E8F8E8 {
+    component [GUI/CLI\nApplication] as app
+}
+
+facade <-- app : nutzt\n(BearingComponent)
+
+gps_provider <-- bearing_service : liest GPS\n(abstrahiert)
+magnetometer <-- bearing_service : liest Azimuth\n(abstrahiert)
+filesystem <-- repository : speichert/liest\nGPX-Dateien
+w3w_api <-- w3w_service : optionale\nAbfrage
+
+@enduml
