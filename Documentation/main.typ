@@ -1,13 +1,13 @@
-  
+
 
 #let titel = "JAVA Peilungs-Komponente mit GPS-Track-Aufzeichnung"
 #let autor = "Duales Hochschulstudium"
 #let kurzthema = "Anforderungsspezifikation und Systemdesign"
 
 #let abgabedatum = datetime(
-  year: 2000,
-  month: 01,
-  day: 01,
+year: 2000,
+month: 01,
+day: 01,
 )
 
 
@@ -1842,10 +1842,10 @@ Die vorliegende Spezifikation bildet die Grundlage für die Implementierung der 
 
 == Anhang E: UML-Klassendiagramm
 
-#figure(
-  image("../Documentation/UML_01_Klassendiagramm.puml", width: 100%),
-  caption: "Abbildung E1: SWE-Kompass Klassendiagramm - Zeigt alle Klassen, Interfaces und Beziehungen"
-)
+//#figure(
+  //image("../Documentation/UML_01_Klassendiagramm.puml", width: 100%),
+ // caption: "Abbildung E1: SWE-Kompass Klassendiagramm - Zeigt alle Klassen, Interfaces und Beziehungen"
+//)
 
 Das Klassendiagramm bildet die Kernarchitektur der Komponente ab:
 
@@ -1865,10 +1865,10 @@ Das Klassendiagramm bildet die Kernarchitektur der Komponente ab:
 
 === F.1 Sequenzdiagramm: Normale Peilung (Happy Path)
 
-#figure(
-  image("../Documentation/UML_02_Sequenzdiagramm_NormaleBeilung.puml", width: 100%),
-  caption: "Abbildung F1: Sequenzdiagramm - Normale Peilung von Start bis Ende"
-)
+//#figure(
+  //image("../Documentation/UML_02_Sequenzdiagramm_NormaleBeilung.puml", width: 100%),
+  //caption: "Abbildung F1: Sequenzdiagramm - Normale Peilung von Start bis Ende"
+//)
 
 *Beschreibung:*
 Zeigt den normalen Ablauf einer Peilung:
@@ -1885,10 +1885,10 @@ Zeigt den normalen Ablauf einer Peilung:
 
 === F.2 Sequenzdiagramm: Abbruch mit Daten-Rückgabe
 
-#figure(
-  image("../Documentation/UML_03_Sequenzdiagramm_Abbruch.puml", width: 100%),
-  caption: "Abbildung F2: Sequenzdiagramm - Abbruch-Szenario mit optionaler Daten-Speicherung"
-)
+//#figure(
+  //image("../Documentation/UML_03_Sequenzdiagramm_Abbruch.puml", width: 100%),
+  //caption: "Abbildung F2: Sequenzdiagramm - Abbruch-Szenario mit optionaler Daten-Speicherung"
+//)
 
 *Beschreibung:*
 Zeigt das Abbruch-Szenario (vorzeitige Beendigung):
@@ -1908,10 +1908,10 @@ Zeigt das Abbruch-Szenario (vorzeitige Beendigung):
 
 == Anhang G: Aktivitätsdiagramm (Peilungs-Prozess)
 
-#figure(
-  image("../Documentation/UML_04_Aktivitaetsdiagramm.puml", width: 100%),
-  caption: "Abbildung G1: Aktivitätsdiagramm - Zeigt den Prozessablauf der Peilung"
-)
+//#figure(
+  //image("../Documentation/UML_04_Aktivitaetsdiagramm.puml", width: 100%),
+  //caption: "Abbildung G1: Aktivitätsdiagramm - Zeigt den Prozessablauf der Peilung"
+//)
 
 *Beschreibung - Hauptaktivitäten:*
 
@@ -1949,10 +1949,10 @@ Zeigt das Abbruch-Szenario (vorzeitige Beendigung):
 
 == Anhang H: Zustandsdiagramm (Session-Zustände)
 
-#figure(
-  image("../Documentation/UML_05_Zustandsdiagramm.puml", width: 100%),
-  caption: "Abbildung H1: Zustandsdiagramm - BearingSession Zustandsübergänge"
-)
+//#figure(
+  //image("../Documentation/UML_05_Zustandsdiagramm.puml", width: 100%),
+  //caption: "Abbildung H1: Zustandsdiagramm - BearingSession Zustandsübergänge"
+//)
 
 *Zustände und Übergänge:*
 
@@ -1991,7 +1991,7 @@ Zeigt das Abbruch-Szenario (vorzeitige Beendigung):
 
 == Anhang I: Komponentendiagramm (Übersicht)
 
-#figure(
+//#figure(
   image("../Documentation/UML_06_Komponentendiagramm.puml", width: 100%),
   caption: "Abbildung I1: Komponentendiagramm - Komponenten und externe Systeme"
 )
