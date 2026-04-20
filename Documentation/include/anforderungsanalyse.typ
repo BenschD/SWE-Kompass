@@ -294,7 +294,7 @@ Die Tabelle stellt eine kompakte Priorisierung dar (sehr wichtig / wichtig / nor
 Die OOA identifiziert *Klassenkandidaten* aus Substantiven der Anforderungen und ordnet Verantwortlichkeiten zu:
 
 - *BearingSession* kapselt den Lebenszyklus und referenziert den *GpsTrack*.
-- *GeoCoordinate*/*GpsPoint* sind Wertobjekte (unveränderlich).
+- *GeoCoordinate* /*GpsPoint* sind Wertobjekte (unveränderlich).
 - *BearingCalculator* ist ein domänennaher Dienst ohne I/O.
 - *GpxSerializer* ist ein technischer Dienst (Infrastructure), der über Schnittstellen angebunden wird.
 
