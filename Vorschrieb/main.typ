@@ -168,11 +168,13 @@
 ////////////////////////////////
 = Abstract
 
-Diese technische Dokumentation beschreibt die *Anforderungsanalyse* und *Systemspezifikation* einer UI-freien Java-Bibliothek zur Peilung (Richtungs- und Distanzangabe zu einem Zielpunkt auf Basis von WGS84-Koordinaten) sowie zur Aufzeichnung und zum Export eines GPS-Tracks im GPX-Format Version 1.1. Ausgangspunkt ist die fachliche Orientierungshilfe der iOS-Referenzanwendung _Kompass Professional_ (Apple App Store, Kennung `id1289069674`), jedoch *ohne* Übernahme von UI, Routing oder Hardwarezugriff: Die Bibliothek erhält Positions- und Kursdaten vom Host und liefert berechnete Peilungsgrößen, Ereignisse und serialisierte GPX-Daten.
+*neu Formulieren*
 
-Der dokumentierte Umfang erfüllt die formalen Anforderungen der Lehrveranstaltung Softwareengineering: SOPHIST-konforme Anforderungen mit Quellen- und Akteursangaben, Produktdaten, nicht-funktionale Kriterien nach ISO/IEC 25010, objektorientierte Analyse und Entwurf, textuelle UML-Aktivitäts- und Sequenzbeschreibungen sowie ein Qualitätssicherungskonzept inklusive Testfällen und Traceability. Ergänzend werden zentrale Fachbegriffe im Glossar in der Vorgabeform *Begriff – Definition – Gültigkeit – Bezeichnung – Quellverweis* geführt.
 
-*Schlagwörter:* Software Requirements Specification, Java, GPS, GPX 1.1, Peilung, Haversine, What3Words, Maven, JUnit, Schichtenarchitektur.
+
+Diese technische Dokumentation beschreibt die Anforderungsanalyse und Systemspezifikation einer UI-freien Java-Bibliothek zur Peilung (Richtungs- und Distanzangabe zu einem Zielpunkt auf Basis von WGS84-Koordinaten) sowie zur Aufzeichnung und zum Export eines GPS-Tracks im GPX-Format Version 1.1. Ausgangspunkt ist die fachliche Orientierungshilfe der iOS-Referenzanwendung Kompass Professional , jedoch *ohne* Übernahme von UI, Routing oder Hardwarezugriff: Die Bibliothek erhält Positions- und Kursdaten vom Host und liefert berechnete Peilungsgrößen, Ereignisse und serialisierte GPX-Daten.
+
+Der dokumentierte Umfang erfüllt die formalen Anforderungen der Lehrveranstaltung Softwareengineering: SOPHIST-konforme Anforderungen mit Quellen- und Akteursangaben, Produktdaten, nicht-funktionale Kriterien nach ISO/IEC 25010, objektorientierte Analyse und Entwurf, textuelle UML-Aktivitäts- und Sequenzbeschreibungen sowie ein Qualitätssicherungskonzept inklusive Testfällen und Traceability.
 
 #pagebreak()
 

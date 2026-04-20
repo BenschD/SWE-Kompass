@@ -3,7 +3,7 @@
 
 == Problemstellung
 
-Mobile Outdoor-Anwendungen unterstützen Nutzerinnen und Nutzer bei der Orientierung im Gelände. Die im App Store veröffentlichte Anwendung _Kompass Professional_ (Apple Inc., Vertrieb über den App Store unter `https://apps.apple.com/de/app/kompass-professional/id1289069674`) demonstriert eine Peilungsfunktion: Ausgehend von der aktuellen Position wird die Richtung zu einem gewählten Ziel als Richtungsangabe präsentiert – ohne eine vollständige Navigation entlang eines Routengraphs. Im Rahmen der Lehrveranstaltung Softwareengineering soll diese fachliche Idee analysiert und in eine systemneutrale, UI-freie Java-Bibliothek überführt werden, die sich in beliebige Java-Oberflächen integrieren lässt.
+Mobile Outdoor-Anwendungen unterstützen Nutzerinnen und Nutzer bei der Orientierung im Gelände. Die im App Store veröffentlichte Anwendung _Kompass Professional_ demonstriert eine Peilungsfunktion: Ausgehend von der aktuellen Position wird die Richtung zu einem gewählten Ziel als Richtungsangabe präsentiert – ohne eine vollständige Navigation entlang eines Routengraphs. Im Rahmen der Lehrveranstaltung Softwareengineering soll diese fachliche Idee analysiert und in eine systemneutrale, UI-freie Java-Bibliothek überführt werden, die sich in beliebige Oberflächen integrieren lässt.
 
 Die Problemstellung umfasst drei eng verzahnte Teilprobleme:
 
