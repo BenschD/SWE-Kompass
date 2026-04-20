@@ -131,7 +131,7 @@ Vollständige Anforderungsspezifikation und Systemdesign
 
 == Abstract
 
-Die vorliegende Arbeit beschreibt die Überführung der Peilungs-Funktionalität der iOS App "Kompass Professional" in eine modulare, UI-unabhängige Java-Komponente. Die Arbeit umfasst die Anforderungsanalyse nach SOPHIST-Regeln, eine Spezifikation nach IEEE 830-1998, objektoorientierte Analyse mit UML-Diagrammen, ein Systemdesign basierend auf Architekturmustern und Entwurfsmustern, ein umfassendes Testkonzept sowie die Implementierungsstrategie. Dabei werden alle Themengebiete beider Vorlesungssemester (Anforderungsmanagement, Spezifikation, Objektorientierter Entwurf, Architektur, Entwurfsmuster, Testverfahren) systematisch integriert.
+Die vorliegende Arbeit beschreibt die Überführung der Peilungs-Funktionalität der iOS App "Kompass Professional" in eine modulare, UI-unabhängige Java-Komponente. Die Arbeit umfasst die Anforderungsanalyse nach SOPHIST-Regeln, eine Spezifikation nach IEEE 830-1998, objektorientierte Analyse mit UML-Diagrammen, ein Systemdesign basierend auf Architekturmustern und Entwurfsmustern, ein umfassendes Testkonzept sowie die Implementierungsstrategie. Dabei werden alle Themengebiete beider Vorlesungssemester (Anforderungsmanagement, Spezifikation, Objektorientierter Entwurf, Architektur, Entwurfsmuster, Testverfahren) systematisch integriert.
 
 #set page(numbering: "1")
 
@@ -149,8 +149,7 @@ Dieses Dokument entstand im Rahmen der Projektarbeit an der Dualen Hochschule Ba
 - SOPHIST-Regeln für Anforderungen
 - IEEE 830 für Spezifikation
 
-== Inhaltsverzeichnis
-
+Zusätzlich liegen die PlantUML-Quellen unter `Documentation/plantuml/` (inkl. `README.md`) sowie die Java-Paket- und Modul-Blaupause unter `Documentation/JAVA_PROJEKT_AUFBAU.md`.
 
 == 1 Einleitung und Problemstellung
 
@@ -198,398 +197,11 @@ Ausführliche Dokumentation aller Designentscheidungen, Architekturmuster und En
 - Datenmodell (Koordinaten, Peilungen, GPS-Tracks)
 - GPX-Datei-Export und -Validierung
 
-== 2 Anforderungsanalyse nach SOPHIST-Regeln
+== 2 Anforderungsanalyse (klassischer Aufbau, SOPHIST-Qualität, Traceability)
 
-=== 2.1 Stakeholder-Analyse
+Dieses Kapitel ist inhaltlich in `include/anforderungsanalyse.typ` ausgelagert, um den geforderten Umfang der Anforderungsanalyse mit stabilen Tabellenformaten zu erreichen und gleichzeitig `main.typ` wartbar zu halten. Die tabellarischen Anforderungen folgen dem Aufbau der Muster-Anforderungssammlung (Zielbestimmung, Produkteinsatz, funktionale und nicht-funktionale Anforderungen, Produktdaten, Qualität, Glossar) und ergänzen SWE-Artefakte (Stakeholder, Risiken, OOA, Testbarkeit).
 
-==== 2.1.1 Primäre Stakeholder
-
-| Stakeholder | Interesse | Auswirkung |
-|---|---|---|
-| Auftraggeber (Dozent Bohl) | Erfüllung aller Anforderungen, Lauffähigkeit, hohe Qualität | Benotung, Abnahmeverfahren |
-| Implementier-Team | Klare Anforderungen, manageable Complexity | Machbarkeit, Zeitbudget |
-| Integrierungs-Partner | API-Stabilität, Fehlerbehandlung, Performance | Integrationserfolg |
-| End-User (Applikation) | Zuverlässigkeit, Performance, Datengenauigkeit | Produktqualität |
-
-==== 2.1.2 Sekundäre Stakeholder
-
-- Wartungsteam (zukünftige Erweiterungen)
-- QA/Test-Team (Testbarkeit)
-- Architektur-Review-Board (Einhaltung von Standards)
-
-=== 2.2 Klärung der Kernkonzepte (Beantwortung aller Fragen)
-
-==== 2.2.1 Was ist Peilung?
-
-*Definition nach geodätischem Standard:*
-Eine Peilung ist die Bestimmung der räumlichen Richtung zwischen zwei geografischen Koordinaten und deren Entfernung. Im Kontext dieser Komponente besteht eine Peilung aus vier Komponenten:
-
-1. *Azimut (geografisch):* Winkelabweichung von Nord (0°) bis 360°, gemessen im Uhrzeigersinn
-2. *Distanz:* Großkreis-Distanz (berechnet nach Haversine-Formel) zwischen Start- und Zielkoordinate
-3. *Kursabweichung:* Differenz zwischen aktuellem Kurs und dem zum Ziel notwendigen Azimut
-4. *Höhendifferenz:* Differenz in der Elevation (optionale Erweiterung)
-
-*Funktionales Verständnis für diese Komponente:*
-Es handelt sich NICHT um Navigation im klassischen Sinne, sondern um eine reine Richtungsbestimmung. Der Nutzer erhält zu jedem Zeitpunkt die Information "in diese Richtung liegt das Ziel in dieser Entfernung". Die Komponente aktualisiert diese Werte kontinuierlich basierend auf der aktuellen Position des Nutzers.
-
-==== 2.2.2 Welcher GPX-Standard?
-
-*Entscheidung:* GPX 1.1 (Topografix Standard)
-
-*Begründung:*
-- Weit verbreiteter Standard, unterstützt von allen gängigen Navigations-Tools
-- Offene Spezifikation unter http://www.topografix.com/GPX/1/1
-- XML-basiert, einfach zu parsen und zu generieren
-- Unterstützung für Tracks, Waypoints, Routen und Metadaten
-- JAXB (Java Architecture for XML Binding) für automatisierte Serialisierung verfügbar
-- Zeitstempel im ISO 8601 UTC-Format
-
-==== 2.2.3 Aufzuzeichnende Daten (pro GPS-Punkt)
-
-*Pflichtdaten:*
-- Latitude (WGS84): -90° bis +90°
-- Longitude (WGS84): -180° bis +180°
-- Elevation/Höhe: Meter über NN
-- Zeitstempel: ISO 8601 UTC
-
-*Optionale Daten (bei Verfügbarkeit):*
-- HDOP (Horizontal Dilution of Precision): Maß für GPS-Genauigkeit
-- Anzahl Satelliten: Für Qualitätsmetriken
-- Geschwindigkeit: m/s (wenn verfügbar)
-- Magnetischer Kurs: 0-360° (wenn verfügbar)
-
-*Track-Metadaten:*
-- Track-Name und -Description
-- Start- und End-Koordinaten
-- Start- und End-Zeit
-- Gesamtstrecke
-- Min/Max Elevation
-
-==== 2.2.4 Zeitintervall für GPS-Aufzeichnung
-
-*Entscheidung nach Bohl:*
-Einstellbare Aufzeichnungs-Intervalle mit konfigurierbaren Modi.
-
-*Standard-Modi:*
-- Eco-Modus: 5 Sekunden (batterieschonend)
-- Normal: 2 Sekunden (Standard)
-- High-Precision: 1 Sekunde
-- Ultra-High: 0.5 Sekunden
-
-*Adaptives Verhalten:*
-- Bei Stillstand (Geschwindigkeit < 0.1 m/s): Intervall erhöhen auf 10 Sekunden
-- Bei hoher Bewegung (> 10 m/s): Intervall reduzieren auf 0.5 Sekunden
-
-*Limitierungen:*
-- Maximale Anzahl Punkte im RAM: 10.000 (soft limit)
-- Absolutes Limit: 50.000 Punkte pro Track
-- Bei Überschreitung: Automatisches Flushing in Datei oder Fehler
-
-==== 2.2.5 Genauigkeits-Anforderungen
-
-*GPS-Genauigkeit (HDOP):*
-- Akzeptabel: HDOP < 5.0
-- Empfohlen: HDOP < 3.0
-- Gut: HDOP < 2.0
-- Punkte mit HDOP > 5.0 werden mit Warnung akzeptiert oder verworfen (konfigurierbar)
-
-*Mindestanzahl Satelliten:*
-- Mindestens 4 Satelliten erforderlich für 3D-Position
-- Mindestens 5 empfohlen für gute Genauigkeit
-- Punkte mit < 4 Satelliten können verworfen werden
-
-*Horizontal (Latitude/Longitude):*
-- Minimum: ±10m
-- Empfohlen: ±5m
-- Zielwert: ±3m
-
-*Vertikal (Elevation):*
-- Minimum: ±15m
-- Empfohlen: ±10m
-
-*Azimut-Berechnung:*
-- Genauigkeit bei Distanz > 10m: ±1°
-- Bei sehr kleinen Distanzen (< 10m): Spezialbehandlung erforderlich
-- Magnetische Deklination wird automatisch korrigiert (basierend auf geografischer Position)
-
-==== 2.2.6 Performance-Anforderungen
-
-*Echtzeitanforderungen:*
-- Peilung berechnen: < 50 ms
-- GPS-Punkt verarbeiten: < 50 ms
-- Gesamte Updatezyklus: < 100 ms
-
-*Speicher:*
-- Max. RAM-Verbrauch: 50 MB insgesamt
-- Pro Track-Punkt: ca. 200 Bytes
-- 10.000 Punkte ≈ 2 MB
-
-*CPU-Last:*
-- Idle (keine aktive Peilung): < 2%
-- Bei aktiver Peilung: < 10%
-- Bei GPS-Verarbeitung: < 20% kurzzeitig akzeptabel
-
-*Startzeit:*
-- Komponenten-Initialisierung: < 1 Sekunde
-
-*Speicheroperationen:*
-- Schreiben in GPX-Datei: asynchron, max. 500 ms für einen Zyklus
-- Datei-Validierung: < 100 ms
-
-==== 2.2.7 Behandlung ungültiger Koordinaten
-
-*Validierungsregeln:*
-- Latitude: -90° ≤ lat ≤ 90°
-- Longitude: -180° ≤ lon ≤ 180°
-- Elevation: -500m ≤ ele ≤ 9000m (Mount Everest)
-- Zeitstempel: nicht in der Zukunft, nicht älter als 1 Stunde
-- Geschwindigkeit: 0 m/s ≤ speed ≤ 100 m/s (360 km/h)
-
-*Fehlerbehandlung:*
-- Ungültige Punkte: Logging mit WARNING-Level, Punkt wird verworfen
-- Outlier (Sprünge > 50 m/s): Logging, konfigurierbar verworfen oder akzeptiert
-- Duplikate (identische Koordinaten): dedupliziert, zählt als 1 Punkt
-- Zeitstempel-Rückwärts: Fehler, Track wird unterbrochen und markiert
-
-*Strategien:*
-- Last-Known-Good-Position: Verwendung der letzten gültigen Position bei Ausfall
-- Interpolation: Bei Ausfällen < 10 Sekunden
-- Gap-Markierung: Lücke in GPX als Segment-Unterbrechung gekennzeichnet
-
-==== 2.2.8 Speicherort und Dateihandhabung
-
-*Standard-Speicherort:*
-```
-./gps-tracks/bearing_YYYYMMDD_HHmmss.gpx
-```
-
-*Konfigurierbar:*
-- Verzeichnis (muss existieren oder wird erstellt)
-- Dateinamenskonvention (Template-basiert)
-- Automatisches Speichern (ja/nein)
-
-*Datei-Operationen:*
-- Atomare Schreibvorgänge (temp-Datei → rename)
-- Optional: Gzip-Kompression (.gpx.gz)
-- Berechtigungen: rw-r--r-- (644)
-- Fehlerbehandlung: IOException → Logging und Exception
-
-==== 2.2.9 Schnittstellen-Definition (API)
-
-*Primäre Schnittstelle:*
-Java-API über Interface `BearingComponent` und zugehörige Objekte.
-
-*Keine zusätzliche Schnittstelle für:*
-- REST/HTTP (keine Netzwerk-Komponente)
-- Datenbank (nur Dateisystem)
-- Message Queue (keine Event-Bus-Integration)
-
-*Nur GPX-Datei als Ausgabe-Format.*
-
-==== 2.2.10 Datenabbruch und -speicherung
-
-*Abbruchszenario:*
-Wenn der Nutzer die Peilung abbricht (stopBearing() oder abortBearing()), sollen die bisherigen GPS-Daten trotzdem exportiert werden.
-
-*Behavior:*
-- `abortBearing()`: Gibt GpxFile mit bisherigen Daten zurück (markiert mit "aborted" im Namen)
-- `stopBearing()`: Speichert ordnungsgemäße GPX-Datei
-- In beiden Fällen: keine Fehler, sondern erfolgreicher Abschluss mit verfügbaren Daten
-
-==== 2.2.11 What3Words (W3W) Integration
-
-*Entscheidung:* W3W soll optional unterstützt werden als Erweiterung.
-
-*Use Case:*
-Umwandlung von Koordinaten in What3Words-Adressen für benutzerfreundlichere Zielangaben.
-
-*Implementierung:*
-- Optionales API-Wrapper
-- Externe Abhängigkeit (nur wenn W3W-API-Schlüssel konfiguriert)
-- Fallback auf Koordinaten bei Fehler
-
-==== 2.2.12 Size-Limits für GPX-Dateien
-
-*Soft-Limit:* 10.000 Datenpunkte
-- Warnung wird geloggt
-- Tracking läuft weiter
-
-*Hard-Limit:* 50.000 Datenpunkte
-- Track wird beendet
-- GpxFile wird zurückgegeben
-- Event wird ausgelöst
-
-*Größenlimit auf Disk:*
-- Max. 100 MB pro Datei (unkomprimiert)
-- Entspricht ca. 50.000 Punkte
-
-==== 2.2.13 Testabdeckung pro Modul
-
-*Anforderung:* Ein Test je Modul oder besser: ein umfassendes Testset pro Modul.
-
-*Module und Test-Coverage-Ziele:*
-- bearing-core: ≥ 90% (kritisch)
-- gps-tracker: ≥ 85%
-- gpx-exporter: ≥ 80%
-- data-model: ≥ 95% (einfach, aber wichtig)
-- bearing-utils: ≥ 90%
-
-*Gesamt-Ziel: ≥ 85% durchschnittlich*
-
-==== 2.2.14 Optimierung für 1+ mit Sternchen
-
-*Erweiterte Anforderungen (Beyond Scope, aber erwünscht):*
-
-- *Kalman-Filter:* Datenglättung für GPS-Punkte (reduziert Rauschen)
-- *Ramer-Douglas-Peucker-Algorithmus:* Linienvereinfachung (z. B. jeden 10. Punkt, oder Punkte unterschreiten 100m Abstand)
-- *Multi-Target-Peilung:* Mehrere Ziele verfolgen gleichzeitig
-- *Geofencing:* Benachrichtigungen beim Verlassen eines Radius
-- *Statistik-Modul:* Durchschnittsgeschwindigkeit, Höhengain, Gesamtstrecke
-- *Magnetische Deklination:* Automatische Korrektur
-- *Kalibration:* Kompass-Kalibrierung
-
-*Implementierungs-Reihenfolge (nach Priorität):*
-1. Kalman-Filter (kritisch für Qualität)
-2. Douglas-Peucker (für Performance und Speicher)
-3. Statistik-Modul (für Nutzer-Feedback)
-4. Geofencing (erweiterte Funktionalität)
-5. Multi-Target (komplexere Architektur)
-
-=== 2.3 Anforderungen nach SOPHIST-Regeln
-
-*SOPHIST-Regeln für gute Anforderungen:*
-1. **Spezifisch:** Klar und eindeutig formuliert
-2. **Oriented:** Zielgerichtet, auf Nutzen ausgerichtet
-3. **Pragmatisch:** Umsetzbar mit vorhandenen Ressourcen
-4. **Hoch-granular:** Richtige Abstraktionsebene
-5. **Individuell:** Nicht redundant
-6. **Schreibweise:** Konsistent, aktive Form
-7. **Testbar:** Akzeptanzkriterien definiert
-
-==== 2.3.1 Funktionale Anforderungen (FA)
-
-*FA-1: Peilung initialisieren*
-Der Nutzer kann eine Peilung zu einem Zielort starten, indem er eine GeoCoordinate und optionale Konfiguration übergibt.
-- Spezifizierung: Komponente akzeptiert Zielkoordinate (Lat/Lon), startet GPS-Aufzeichnung
-- Akzeptanzkriterium: startBearing(GeoCoordinate target) -> void
-- Testbar: JUnit-Test mit Mock-GPS-Daten
-
-*FA-2: Aktuelle Position aktualisieren*
-Der Nutzer aktualisiert die aktuelle Position laufend mit neuen GPS-Daten zur Verfügung.
-- Spezifizierung: updatePosition(GeoCoordinate current) ist die Hauptschnittstelle
-- Akzeptanzkriterium: Peilung wird neuberechnet, Event wird gesendet
-- Testbar: Event-Listener prüft auf Ereignis
-
-*FA-3: Peilung berechnen*
-Die Komponente berechnet das aktuelle Azimut und die Distanz zum Ziel.
-- Spezifizierung: BearingCalculator berechnet Azimut (Haversine-Formel)
-- Akzeptanzkriterium: Azimut-Genauigkeit ±1° bei Distanzen > 10m
-- Testbar: Parametrisierte Tests mit bekannten Koordinatenpaaren
-
-*FA-4: GPS-Track aufzeichnen*
-Während einer aktiven Peilung werden GPS-Punkte in konfigurierbaren Intervallen aufgezeichnet.
-- Spezifizierung: GpsTracker sammelt Punkte mit Zeitstempel und Qualitätsmetriken
-- Akzeptanzkriterium: Mind. 1 Punkt pro Intervall, max. 10.000 im RAM
-- Testbar: Anzahl der Punkte wird geprüft, Performance-Test
-
-*FA-5: GPX-Datei exportieren*
-Am Ende einer Peilung kann eine GPX 1.1-konforme Datei generiert und gespeichert werden.
-- Spezifizierung: stopBearing() gibt GpxFile zurück, speichert auf Disk
-- Akzeptanzkriterium: GPX-Datei ist valid gegen XML-Schema
-- Testbar: XML-Validierung und Dateisystem-Prüfung
-
-*FA-6: Peilung abbrechen mit Daten-Sicherung*
-User kann Peilung abbrechen; bisherige Daten werden trotzdem in Datei gespeichert.
-- Spezifizierung: abortBearing() speichert Datei mit "aborted"-Suffix
-- Akzeptanzkriterium: Datei mit min. 2 Punkte wird angelegt
-- Testbar: Datei existiert, GPX ist valid
-
-*FA-7: Ereignisse (Events) auslösen*
-Komponente sendet Events bei Meilenstein (Start, Punkt-hinzufügen, Ende).
-- Spezifizierung: Observer Pattern mit BearingListener
-- Akzeptanzkriterium: Listener wird aufgerufen, Parameter stimmen
-- Testbar: Mock-Listener prüft auf Aufrufe
-
-*FA-8: Validierung ungültiger Koordinaten*
-Ungültige GPS-Punkte werden erkannt und behandelt.
-- Spezifizierung: GeoCoordinate-Validierung bei Eingabe
-- Akzeptanzkriterium: aus ungültigem Punkt: Exception oder Warning-Log
-- Testbar: Test mit Grenzwerten (±91°, -181°, etc.)
-
-*FA-9: Konfiguration*
-Benutzer kann Aufzeichnungs-Intervall und Speicherpfad konfigurieren.
-- Spezifizierung: BearingConfig-Builder mit setInterval(), setOutputDir()
-- Akzeptanzkriterium: Konfiguration wird angewendet
-- Testbar: Unterschiedliche Konfigurationen führen zu unterschiedlichem Verhalten
-
-*FA-10: Mehrsprachige Fehlerbehandlung*
-Fehler werden mit aussagekräftigen Meldungen protokolliert.
-- Spezifizierung: Every error logged mit Stacktrace (DEBUG) und Meldung (ERROR)
-- Akzeptanzkriterium: Log-Datei enthält Fehler-Details
-- Testbar: Log-Level-Prüfung
-
-==== 2.3.2 Nicht-funktionale Anforderungen (NFA)
-
-*NFA-1: Performance - Peilung berechnen*
-Die Berechnung einer Peilung muss in < 50 ms abgeschlossen sein.
-- Messmethode: JMH-Benchmark für Haversine-Formel
-- Grenzwert: 50 Millisekunden (worst case)
-- Testbar: Performance-Test mit JMH
-
-*NFA-2: Performance - GPS-Update*
-Ein GPS-Update (inkl. Peilung-Neuberechnung) muss in < 100 ms erfolgen.
-- Messmethode: Zeitmessung in Integration-Test
-- Grenzwert: 100 Millisekunden
-- Testbar: System-Test mit Chrono
-
-*NFA-3: Speicher - RAM-Verbrauch*
-Track mit 10.000 Punkten darf max. 50 MB RAM verbrauchen.
-- Messmethode: JVM Memory-Monitoring
-- Grenzwert: 50 MB (Heap)
-- Testbar: Runtime.getRuntime().totalMemory()
-
-*NFA-4: Speicher - Datei-Größe*
-Eine GPX-Datei mit 10.000 Punkten darf max. 2 MB groß sein unkomprimiert.
-- Messmethode: File-Größe auf Disk
-- Grenzwert: 2 MB
-- Testbar: file.length() < 2_000_000
-
-*NFA-5: Zuverlässigkeit - Genauigkeit Distanzberechnung*
-Distanzberechnung nach Haversine-Formel hat Genauigkeit von ±0.1%.
-- Messmethode: Vergleich mit Referenzimplementierung
-- Grenzwert: ±0.1% Abweichung
-- Testbar: Test mit bekannten Refrenzen-Distanzen (z. B. Äquator)
-
-*NFA-6: Datensicherung - atomare GPX-Speicherung*
-GPX-Datei wird atomar geschrieben (temp → rename).
-- Messmethode: Dateioperationen monitoren
-- Grenzwert: Keine Partial-Dateien bei Fehler
-- Testbar: Test mit künstlichen Fehler-Szenarien
-
-*NFA-7: Wartbarkeit - Code-Dokumentation*
-
-Jede öffentliche Methode muss Javadoc mit \@param, \@return, \@throws haben.
-- Messmethode: Static-Analyse-Tool (Checkstyle)
-- Grenzwert: 100% öffentliche Methoden dokumentiert
-- Testbar: Checkstyle-Bericht
-
-*NFA-8: Portabilität - Plattformunabhängigkeit*
-Code darf keine Windows/Linux/Mac-spezifischen APIs verwenden.
-- Messmethode: Code-Review, Abstraktionen für OS-spezifisches (Pfade)
-- Grenzwert: 0 OS-spezifische Hardcodes
-- Testbar: Paths.get() statt "C:\\..." verwenden
-
-*NFA-9: Testbarkeit - Unit-Test-Coverage*
-Mindestens 85% Coverage für critical paths.
-- Messmethode: JaCoCo-Report
-- Grenzwert: ≥ 85%
-- Testbar: Maven JaCoCo-Plugin
-
-*NFA-10: Sicherheit - Input-Validierung*
-Alle externen Eingaben (Koordinaten, Pfade) werden validiert.
-- Messmethode: Code-Review, Fuzz-Testing
-- Grenzwert: 0 unkontrollierte Eingaben
-- Testbar: Negative-Tests mit ungültigen Werten
+#include "include/anforderungsanalyse.typ"
 
 == 3 IEEE 830 Spezifikation
 
@@ -1795,7 +1407,7 @@ Siehe Kapitel 2.2, wo alle Original-Fragen systematisch beantwortet wurden:
 |---|---|
 | API | Application Programming Interface |
 | DI | Dependency Injection |
-| FAoordinate | Functional Requirement |
+| FR | Functional Requirement (funktionale Anforderung) |
 | GPX | GPS Exchange Format |
 | GPS | Global Positioning System |
 | HDOP | Horizontal Dilution of Precision |
@@ -1893,16 +1505,15 @@ Zeigt den normalen Ablauf einer Peilung:
 *Beschreibung:*
 Zeigt das Abbruch-Szenario (vorzeitige Beendigung):
 1. Peilung wird normal gestartet und mit Updates fortgesetzt
-2. Nutzer bricht Peilung ab (z.B. durch Nutzer-Aktion in der App)
-3. BearingComponent.abortBearing() wird aufgerufen
-4. BearingResult wird mit Status ABORTED zurückgegeben
-5. Daten bleiben IN-MEMORY verfügbar
-6. **WICHTIG:** Keine automatische Speicherung!
-7. App entscheidet darüber, ob Daten gespeichert werden ("Daten speichern?")
-8. Optional: exportToGPXString() für optionale Speicherung
-9. Oder: Daten werden verworfen
+2. Nutzer bricht Peilung ab (z. B. durch Nutzer-Aktion in der Host-App)
+3. `abortBearing()` wird aufgerufen
+4. Es wird ein Ergebnisobjekt mit Status `ABORTED` zurückgegeben, das den aufgezeichneten Track enthält
+5. Die Bibliothek erzeugt **GPX-konforme Daten** (mindestens als XML/`String` bzw. strukturiertes Objekt), damit der Host sie speichern oder weiterreichen kann
+6. **WICHTIG (Abgrenzung Dateisystem):** Eine physische `.gpx`-Datei wird beim Abbruch **nicht** zwingend geschrieben; Persistenz ist Aufgabe der Host-App oder einer expliziten Konfiguration `persistOnAbort=true`
+7. Optional ruft die Host-App `saveGPXToFile(...)` auf, falls eine Datei gewünscht ist
+8. Alternativ verwirft die Host-App die zurückgegebenen Daten bewusst
 
-*Spezialfall nach Bohl:* Bei Abbruch sollen trotzdem GPX-Daten ausgegeben werden können, aber es erfolgt keine automatische Speicherung.
+*Klärungsstand Bohl / Team:* Beim Abbruch müssen die **GPX-Daten** verfügbar sein; ein **automatischer Dateiexport** ist nicht verpflichtend und soll nicht stillschweigend erfolgen, um Seiteneffekte in der Host-Umgebung zu vermeiden.
 
 #pagebreak()
 
@@ -1974,9 +1585,9 @@ Zeigt das Abbruch-Szenario (vorzeitige Beendigung):
         
         └→ ABORTED  (abortBearing())
             (vorzeitiges Ende)
-            - Daten in-memory verfügbar
-            - Keine automatische Speicherung
-            - Export optional
+            - GPX-Datenstruktur verfügbar (In-Memory / String)
+            - Keine Pflicht zur automatischen Datei-Persistenz
+            - optional: Host speichert Datei
             → [*]
 ```
 
@@ -1991,10 +1602,11 @@ Zeigt das Abbruch-Szenario (vorzeitige Beendigung):
 
 == Anhang I: Komponentendiagramm (Übersicht)
 
+// Hinweis: `.puml` ist kein Bildformat für Typst. Bitte aus `Documentation/plantuml/06_komponentendiagramm.puml` SVG/PNG exportieren und hier als `image(...)` einbinden.
 //#figure(
-  image("../Documentation/UML_06_Komponentendiagramm.puml", width: 100%),
-  caption: "Abbildung I1: Komponentendiagramm - Komponenten und externe Systeme"
-)
+//  image("include/images/uml/06_komponentendiagramm.svg", width: 100%),
+//  caption: [Abbildung I1: Komponentendiagramm – Komponenten und externe Systeme],
+//)
 
 *Komponenten-Übersicht:*
 

@@ -1,0 +1,33 @@
+@startuml SWE-Kompass-Deployment
+!theme plain
+skinparam backgroundColor #FEFEFE
+skinparam nodeBackgroundColor #EEF6FF
+
+node "Entwicklungs- / Zielrechner" as machine {
+  artifact "JVM (Java 11+)" as jvm {
+    component "Host-Anwendung\n(eigene UI / Services)" as host
+    package "swe-kompass-* .jar\n(Maven Module)" as lib {
+      [bearing-api]
+      [bearing-core]
+      [gps-tracker]
+      [gpx-export]
+      [w3w-adapter (optional)]
+    }
+  }
+  folder "Dateisystem\n(konfigurierbar)" as fs {
+    file "tracks/*.gpx"
+  }
+  cloud "What3Words API\n(HTTPS, optional)" as w3w
+}
+
+host --> lib : ruft BearingComponent
+lib --> fs : optional saveGPXToFile
+lib --> w3w : optional resolve
+
+note bottom of lib
+  Keine eigene UI-Schicht.
+  GPS kommt immer vom Host
+  (Sensor / Mock / Import).
+end note
+
+@enduml

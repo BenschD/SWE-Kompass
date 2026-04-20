@@ -1,0 +1,53 @@
+@startuml SWE-Kompass-UseCases
+!theme plain
+skinparam backgroundColor #FEFEFE
+skinparam usecaseBackgroundColor #F5F5F5
+
+left to right direction
+
+actor "Host-Anwendung\n(Java UI / Service)" as host
+
+rectangle "SWE-Kompass Bibliothek" {
+  usecase "UC1: Peilung initialisieren\n(Zielkoordinate, Konfiguration)" as uc1
+  usecase "UC2: Aktuelle Position melden\n(GPS-Punkt inkl. Metadaten)" as uc2
+  usecase "UC3: Kurs / Heading melden\n(für Kursabweichung)" as uc3
+  usecase "UC4: Peilungsinformation abfragen\n(Azimut, Distanz, Himmelsrichtung)" as uc4
+  usecase "UC5: Track-Punkte samplen\n(Intervall / Budget / Filter)" as uc5
+  usecase "UC6: Peilung regulär beenden\n(COMPLETED)" as uc6
+  usecase "UC7: Peilung abbrechen\n(ABORTED, Daten behalten)" as uc7
+  usecase "UC8: GPX 1.1 erzeugen\n(String / Bytes)" as uc8
+  usecase "UC9: GPX optional persistieren\n(atomar via NIO)" as uc9
+  usecase "UC10: Track optimieren\n(N-ter Punkt / 100m / Gerade)" as uc10
+  usecase "UC11: What3Words auflösen\n(optional, API-Key)" as uc11
+}
+
+host --> uc1
+host --> uc2
+host --> uc3
+host --> uc4
+host --> uc5
+host --> uc6
+host --> uc7
+host --> uc8
+host --> uc9
+host --> uc10
+host --> uc11
+
+uc2 .> uc1 : <<include>>
+uc3 .> uc1 : <<include>>
+uc4 .> uc2 : <<include>>
+uc5 .> uc2 : <<include>>
+uc6 .> uc8 : <<include>>
+uc7 .> uc8 : <<include>>
+uc9 .> uc8 : <<extend>>
+uc10 .> uc6 : <<extend>>
+uc11 .> uc4 : <<extend>>
+
+note right of uc7
+  Abbruch liefert mindestens
+  GPX-konforme Datenstruktur
+  (kein erzwungenes Dateisystem,
+   sofern Host nicht speichert)
+end note
+
+@enduml
