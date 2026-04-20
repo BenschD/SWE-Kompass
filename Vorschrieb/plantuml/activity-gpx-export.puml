@@ -1,0 +1,17 @@
+@startuml SWE_Kompass_Activity_GpxExport
+skinparam monochrome true
+skinparam shadowing false
+start
+:Rohtrack immutable snapshot;
+:Strategie: jeder n-ter Punkt;
+:Strategie: Mindestabstand;
+:Strategie: Geraden-Heuristik;
+if (Douglas-Peucker aktiv?) then (ja)
+  :Vereinfachung mit Epsilon;
+else (nein)
+endif
+:Metadaten anreichern;
+:XML erzeugen + escapen;
+:String / byte[] liefern;
+stop
+@enduml

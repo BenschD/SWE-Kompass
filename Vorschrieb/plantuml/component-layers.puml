@@ -1,0 +1,29 @@
+@startuml SWE_Kompass_Component_Layers
+skinparam monochrome true
+skinparam shadowing false
+
+package "API-Schicht" {
+  [BearingSessionFactory] as F
+  [BearingSession] as S
+}
+
+package "Domain-Schicht" {
+  [BearingCalculator] as BC
+  [TrackAggregator] as TA
+  [OptimizationPipeline] as OP
+}
+
+package "Infrastruktur" {
+  [GpxSerializer] as GX
+  [W3wAdapter] as W3W
+  [FileSink] as FS
+}
+
+F --> S
+S --> BC
+S --> TA
+S --> OP
+S --> GX
+S ..> W3W
+S ..> FS
+@enduml

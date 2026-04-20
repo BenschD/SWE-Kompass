@@ -1,0 +1,12 @@
+@startuml SWE_Kompass_State_Session
+skinparam monochrome true
+skinparam shadowing false
+
+[*] --> IDLE : Instanz erzeugt
+IDLE --> ACTIVE : startSession()
+ACTIVE --> ACTIVE : onPositionUpdate()\nonCourseUpdate()
+ACTIVE --> COMPLETED : complete()
+ACTIVE --> ABORTED : abort()
+COMPLETED --> IDLE : reset()
+ABORTED --> IDLE : reset()
+@enduml

@@ -1,0 +1,27 @@
+@startuml SWE_Kompass_UseCases
+skinparam monochrome true
+skinparam shadowing false
+left to right direction
+
+actor "Host-App" as Host
+rectangle "Java-Peilungskomponente" {
+  usecase "UC-01 Session starten" as UC01
+  usecase "UC-02 Positionsupdate" as UC02
+  usecase "UC-03 Peilungswerte lesen" as UC03
+  usecase "UC-04 Regulaer beenden" as UC04
+  usecase "UC-05 Abbrechen" as UC05
+  usecase "UC-06 GPX exportieren" as UC06
+  usecase "UC-07 W3W aufloesen\n(optional)" as UC07
+}
+
+actor "What3Words\n(optional)" as W3W
+
+Host --> UC01
+Host --> UC02
+Host --> UC03
+Host --> UC04
+Host --> UC05
+Host --> UC06
+UC07 ..> W3W : HTTPS
+Host --> UC07
+@enduml

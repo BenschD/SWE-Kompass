@@ -1,0 +1,16 @@
+@startuml SWE_Kompass_Sequence_ValidationError
+skinparam monochrome true
+skinparam shadowing false
+autonumber
+
+actor Host
+participant "BearingSession" as BS
+participant "Validator" as V
+participant "Logger" as L
+
+Host -> BS: onPositionUpdate(fix)
+BS -> V: validate(fix)
+V --> BS: **throw** ValidationException\n(COORD_RANGE)
+BS -> L: warn(sessionId, code)
+BS --> Host: Exception propagieren
+@enduml

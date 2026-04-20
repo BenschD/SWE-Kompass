@@ -2,5 +2,6 @@
   "plantuml.render": "PlantUMLServer",
   "plantuml.server": "https://www.plantuml.com/plantuml",
   "plantuml.exportFormat": "svg",
-  "plantuml.previewAutoUpdate": true
+  "plantuml.previewAutoUpdate": true,
+  "tinymist.projectResolution": "lockDatabase"
 }

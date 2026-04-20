@@ -1,0 +1,21 @@
+@startuml SWE_Kompass_Context
+skinparam monochrome true
+skinparam shadowing false
+
+rectangle "Host-Anwendung\n(GNSS, UI)" as Host {
+}
+
+rectangle "Java-Peilungskomponente\n(ohne UI)" as Lib {
+  [BearingSession API] as API
+  [Domain: Peilung + Track] as Dom
+  [GPX 1.1 Export] as Gpx
+}
+
+cloud "What3Words API\n(optional)" as W3W
+file "Dateisystem\n(optional)" as FS
+
+Host --> API : Positions- /\nKursdaten
+API --> Host : Events,\nSnapshot, GPX
+Lib --> W3W : Reverse Lookup
+Lib --> FS : atomares Schreiben
+@enduml

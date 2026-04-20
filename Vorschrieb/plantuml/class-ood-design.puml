@@ -1,0 +1,52 @@
+@startuml SWE_Kompass_OOD_Design
+skinparam monochrome true
+skinparam shadowing false
+
+interface TrackOptimizer {
+  +optimize(points): List<GpsPoint>
+}
+
+interface W3wClient {
+  +reverse(lat, lon): String
+}
+
+interface ClockProvider {
+  +instant(): Instant
+}
+
+class BearingSession {
+  -state
+  +start(config, target)
+  +onPositionUpdate(fix)
+  +complete()
+  +abort()
+}
+
+class SessionConfig <<immutable>> {
+}
+
+class BearingCalculator <<service>> {
+  +snapshot(fix, target): BearingSnapshot
+}
+
+class TrackAggregator <<service>> {
+  +accept(fix): void
+}
+
+class GpxSerializer <<infra>> {
+  +serialize(doc): bytes
+}
+
+class OptimizationPipeline {
+  +apply(track, strategies): Track
+}
+
+BearingSession --> SessionConfig
+BearingSession --> BearingCalculator
+BearingSession --> TrackAggregator
+BearingSession --> OptimizationPipeline
+BearingSession --> GpxSerializer
+OptimizationPipeline o--> "0..*" TrackOptimizer
+BearingSession ..> W3wClient : optional
+BearingSession ..> ClockProvider
+@enduml

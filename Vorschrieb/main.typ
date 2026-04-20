@@ -1,11 +1,11 @@
-#let titel = "Titel"
-#let autor = "Name"
-#let kurzthema = "Thema"
+#let titel = "Java-Peilungskomponente mit GPX-Track und What3Words-Anbindung"
+#let autor = "Vorname Nachname"
+#let kurzthema = "Softwareengineering – Projektdokumentation (Lasten- und Pflichtenheft)"
 
 #let abgabedatum = datetime(
-  year: 2000,
-  month: 01,
-  day: 01,
+  year: 2026,
+  month: 04,
+  day: 20,
 )
 
 #set document(title: titel, author: autor, date: abgabedatum)
@@ -93,7 +93,7 @@
 ////////////////////////////////
 
 #show: deckblatt.with(
-  thema: "Thema",
+  thema: "Analyse und Spezifikation einer UI-freien Peilungs-Bibliothek (Referenz: Kompass Professional, iOS)",
   titel: titel,
   studiengang: "Informatik",
   standort: "Stuttgart",
@@ -103,8 +103,8 @@
     ),
   ),
   abgabedatum: abgabedatum,
-  bearbeitungszeitraum: "01.01.2000 - 01.01.2000",
-  martikelnummer: "martikel",
+  bearbeitungszeitraum: "Januar 2026 – April 2026",
+  martikelnummer: "Matrikelnummer bitte eintragen",
 )
 ////////////////////////////////
 
@@ -123,7 +123,7 @@
       columns: (auto, 1fr, auto),
       rows: (4cm),
       align: horizon,
-      image("include\images\DHBW_Logo.png", height: 1cm),
+      image("include/images/dhbw-placeholder.svg", height: 1cm),
       h(1fr),
       box([
         #set align(right)
@@ -141,9 +141,16 @@
 // FRONTMATTER
 ////////////////////////////////
 = Abstract
+
+Diese technische Dokumentation beschreibt die *Anforderungsanalyse* und *Systemspezifikation* einer UI-freien Java-Bibliothek zur Peilung (Richtungs- und Distanzangabe zu einem Zielpunkt auf Basis von WGS84-Koordinaten) sowie zur Aufzeichnung und zum Export eines GPS-Tracks im GPX-Format Version 1.1. Ausgangspunkt ist die fachliche Orientierungshilfe der iOS-Referenzanwendung _Kompass Professional_ (Apple App Store, Kennung `id1289069674`), jedoch *ohne* Übernahme von UI, Routing oder Hardwarezugriff: Die Bibliothek erhält Positions- und Kursdaten vom Host und liefert berechnete Peilungsgrößen, Ereignisse und serialisierte GPX-Daten.
+
+Der dokumentierte Umfang erfüllt die formalen Anforderungen der Lehrveranstaltung Softwareengineering: SOPHIST-konforme Anforderungen mit Quellen- und Akteursangaben, Produktdaten, nicht-funktionale Kriterien nach ISO/IEC 25010, objektorientierte Analyse und Entwurf, textuelle UML-Aktivitäts- und Sequenzbeschreibungen sowie ein Qualitätssicherungskonzept inklusive Testfällen und Traceability. Ergänzend werden zentrale Fachbegriffe im Glossar in der Vorgabeform *Begriff – Definition – Gültigkeit – Bezeichnung – Quellverweis* geführt.
+
+*Schlagwörter:* Software Requirements Specification, Java, GPS, GPX 1.1, Peilung, Haversine, What3Words, Maven, JUnit, Schichtenarchitektur.
+
 #pagebreak()
 
-#outline(title: "Inhaltsverzeichnis")
+#outline(depth: 3, title: "Inhaltsverzeichnis")
 #pagebreak()
 
 = Abbildungsverzeichnis
@@ -155,6 +162,13 @@
 #pagebreak()
 
 = Glossar
+
+#import "include/glossar-begriffe.typ": glossar-begriffe-kapitel
+#glossar-begriffe-kapitel
+
+#import "include/ch-mehr-begriffe.typ": ch-mehr-begriffe-kapitel
+#ch-mehr-begriffe-kapitel
+
 #pagebreak()
 ////////////////////////////////
 
@@ -171,13 +185,14 @@
 ////////////////////////////////
 
 = Einleitung
-== Problemstellung
-== Zielsetzung
-== Abgrenzung und Scope
+
+#import "include/ch-einleitung.typ": ch-einleitung-kapitel
+#ch-einleitung-kapitel
 
 = Grobentwurf
-== Schichtendiagramm
-_Grobe Darstellung der Systemarchitektur als Bindeglied zwischen Anforderungen und technischer Umsetzung._
+
+#import "include/ch-grobentwurf.typ": ch-grobentwurf-kapitel
+#ch-grobentwurf-kapitel
 
 // ─────────────────────────────────────────────────────────────────────────────
 = Anforderungsanalyse (Lastenheft)
@@ -1042,26 +1057,14 @@ Die Qualitätskriterien wurden in Anlehnung an die ISO/IEC 9126 / ISO/IEC 25010 
 #pagebreak()
 
 = Systemspezifikation und Feinentwurf (Pflichtenheft)
-== Einleitung und allgemeine Beschreibung
-== Funktionale Spezifikation
-=== Use Cases
-=== Einzelanforderungen (Sophist-Schablonen)
 
-== Datenmodellierung und technischer Feinentwurf
-_In diesem Abschnitt werden die Datenstrukturen zusammen mit dem technischen Klassendesign definiert, um eine redundanzfreie Abbildung der Systemlogik zu gewährleisten._
-
-=== Klassendiagramm (Struktureller Feinentwurf)
-
-== Nichtfunktionale Spezifikation
-=== Qualitätsanforderungen nach ISO/IEC 25010
-=== Mengengerüst und Sicherheitsanforderungen
-== Angestrebte Eigenschaften & Qualitätscheck
+#import "include/ch-spezifikation.typ": ch-spezifikation-kapitel
+#ch-spezifikation-kapitel
 
 = Qualitätssicherung
-_Die Qualitätssicherung erfolgt prozessbegleitend durch automatisierte Tests direkt auf Code-Ebene._
 
-= Fazit
-== Zusammenfassung der Ergebnisse
+#import "include/ch-qs-fazit.typ": ch-qs-fazit-kapitel
+#ch-qs-fazit-kapitel
 
 #pagebreak()
 
@@ -1069,3 +1072,6 @@ _Die Qualitätssicherung erfolgt prozessbegleitend durch automatisierte Tests di
 // ANHANG
 ////////////////////////////////
 = Anhang
+
+#import "include/ch-anhang.typ": ch-anhang-kapitel
+#ch-anhang-kapitel

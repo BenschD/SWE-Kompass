@@ -1,0 +1,46 @@
+@startuml SWE_Kompass_OOA_Domain
+skinparam monochrome true
+skinparam shadowing false
+hide circle
+
+class Peilung <<domain>> {
+  +sessionId
+  +status
+}
+
+class Zielpunkt <<value>> {
+  +lat
+  +lon
+}
+
+class Standortfolge <<entity>> {
+  +fixes : List<GpsFix>
+}
+
+class Peilungsgroessen <<value>> {
+  +azimuthDeg
+  +distanceM
+  +ordinal
+}
+
+class Track <<aggregate>> {
+  +segments
+}
+
+class Trackpunkt <<value>> {
+  +time
+  +lat
+  +lon
+}
+
+class Export <<artifact>> {
+  +gpxXml
+}
+
+Peilung "1" --> "1" Zielpunkt
+Peilung "1" o-- "*" Standortfolge
+Peilung "1" --> "0..1" Peilungsgroessen
+Peilung "1" *-- "1" Track
+Track "1" *-- "*" Trackpunkt
+Peilung ..> Export : erzeugt bei Ende
+@enduml

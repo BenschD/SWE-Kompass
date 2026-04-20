@@ -1,0 +1,27 @@
+@startuml SWE_Kompass_Sequence_Complete
+skinparam monochrome true
+skinparam shadowing false
+autonumber
+
+actor Host
+participant "BearingSession" as BS
+participant "TrackRepository" as TR
+participant "OptimizationPipeline" as OP
+participant "TrackOptimizer" as TO
+participant "GpxSerializer" as GX
+participant "XmlEscaper" as XE
+
+Host -> BS: complete()
+BS -> TR: immutableView()
+TR --> BS: track
+BS -> OP: apply(strategies)
+loop je Strategie
+  OP -> TO: optimize(points)
+  TO --> OP: reduced
+end
+BS -> GX: toDocument(track, metadata)
+GX -> XE: escape(strings)
+XE --> GX: safe
+GX --> BS: GpxDocument / bytes
+BS --> Host: GpxResult + Statistik
+@enduml

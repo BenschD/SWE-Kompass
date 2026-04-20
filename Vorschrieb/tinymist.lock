@@ -1,0 +1,21 @@
+# Tinymist: fester Einstieg fuer Preview/Diagnosen (projectResolution: lockDatabase).
+# Bei Schema-Fehlern der Extension: Datei loeschen und `tinymist compile --save-lock Vorschrieb/main.typ` ausfuehren.
+version = "0.1.0-beta0"
+
+[[document]]
+id = "file:main.typ"
+inputs = []
+main = "file:main.typ"
+root = "file:."
+system-fonts = true
+
+[[route]]
+id = "file:main.typ"
+priority = 256
+
+[[task]]
+document = "file:main.typ"
+id = "file:main.typ"
+output = "main"
+type = "export-pdf"
+when = "never"
