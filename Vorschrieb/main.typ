@@ -1,11 +1,12 @@
-#let titel = "Java-Peilungskomponente mit GPX-Track und What3Words-Anbindung"
-#let autor = "Vorname Nachname"
-#let kurzthema = "Softwareengineering – Projektdokumentation (Lasten- und Pflichtenheft)"
+#let titel = "Java-Kompass mit GPX-Track und What3Words-Anbindung"
+#let autoren = "Moritz Pfitzenmaier, Marius Müllmaier, Daniel Bensch"
+#let autor = autoren  // für Rückwärtskompatibilität mit templates.typ
+#let kurzthema = "Softwareengineering – Projektdokumentation"
 
 #let abgabedatum = datetime(
   year: 2026,
-  month: 04,
-  day: 20,
+  month: 06,
+  day: 12,
 )
 
 #set document(title: titel, author: autor, date: abgabedatum)
@@ -93,7 +94,6 @@
 ////////////////////////////////
 
 #show: deckblatt.with(
-  thema: "Analyse und Spezifikation einer UI-freien Peilungs-Bibliothek (Referenz: Kompass Professional, iOS)",
   titel: titel,
   studiengang: "Informatik",
   standort: "Stuttgart",
@@ -103,8 +103,8 @@
     ),
   ),
   abgabedatum: abgabedatum,
-  bearbeitungszeitraum: "Januar 2026 – April 2026",
-  martikelnummer: "Matrikelnummer bitte eintragen",
+  bearbeitungszeitraum: "April 2026 – Juni 2026",
+  martikelnummer: "111111, 222222, 5133713",
 )
 ////////////////////////////////
 
@@ -127,9 +127,35 @@
       h(1fr),
       box([
         #set align(right)
-        #titel #autor \
-        #kurzthema
+        #context {
+          let headings = query(heading.where(level: 1))
+          let current-page = here().page()
+          let active-headings = headings.filter(h => h.location().page() <= current-page)
+          
+          if active-headings.len() > 0 {
+            active-headings.last().body
+          } else {
+            kurzthema
+          }
+        }
       ])
+    )
+  ],
+  footer: rect(
+    height: 100%,
+    inset: 0mm,
+    stroke: none,
+  )[
+    #set text(11pt)
+    #grid(
+      columns: (auto, 1fr, auto),
+      rows: (1cm),
+      align: horizon,
+      box([
+        #set align(left)
+        #autoren
+      ]),
+      h(1fr),
     )
   ],
 )
@@ -153,12 +179,12 @@ Der dokumentierte Umfang erfüllt die formalen Anforderungen der Lehrveranstaltu
 #outline(depth: 3, title: "Inhaltsverzeichnis")
 #pagebreak()
 
-= Abbildungsverzeichnis
-#outline(target: figure.where(kind: image), title: "")
+
+#outline(target: figure.where(kind: image), title: "Abbildungsverzeichnis")
 #pagebreak()
 
-= Tabellenverzeichnis
-#outline(target: figure.where(kind: table), title: "")
+
+#outline(target: figure.where(kind: table), title: "Tabellenverzeichnis")
 #pagebreak()
 
 = Glossar
