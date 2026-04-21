@@ -297,7 +297,7 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "Projektauftrag SWE",
   "/LF010/, /LL010/",
   "Host-App",
-  "Das System muss jedes übergebene Positionsupdate validieren und – bei Gültigkeit – die Peilungsberechnung aktualisieren. Ungültige Positionsdaten werden zurückgewiesen und führen zu einer semantisch klassifizierten Exception.",
+  "Das System muss jeden übergebenen GPS-Punkt validieren und bei Gültigkeit die Ausrichtung der Peilung aktualisieren. Ungültige Positionsdaten werden dabei ignoroert.",
 )
 
 #lf-card(
@@ -324,7 +324,7 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "Projektauftrag SWE",
   "/LF110/, /LF120/",
   "Host-App",
-  "Das System muss eine aktive Session deterministisch beenden, den Status auf COMPLETED setzen und GPX-Daten erzeugen. Nach regulärem Abschluss sind keine weiteren Positionsupdates zulässig.",
+  "Die Peilungskomponente muss beendet werden und im anschluss daran den GPS-Trak in GPX-Form (nach GPX 1.1) zurückgeben Nach regulärem Abschluss sind keine weiteren Positionsupdates zulässig.",
 )
 
 #lf-card(
@@ -333,7 +333,7 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "Klärungsgespräch",
   "/LF060/, /LF121/",
   "Host-App",
-  "Das System muss eine Abbruchoperation unterstützen, die die bis dahin aufgezeichneten Daten nicht verwirft und GPX-Daten bereitstellt. Die Session erhält den Status ABORTED. Automatisches Dateispeichern erfolgt nur, wenn die Konfiguration dies explizit erlaubt.",
+  "Die Peilungskomponente muss vom Nutzer Abgebrochen werden können. Im Falle eines Peilungsabbruch darf der GPS-Track nicht verworfen werden, sondern in GPX-Form (Nach GPX 1.1) zurückgegeben werden.",
 )
 
 #lf-card(
