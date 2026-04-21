@@ -3,9 +3,9 @@
 #let ch-grobentwurf-kapitel = [
 #set par(justify: true)
 
-Die Architektur folgt einer *Schichtenarchitektur* mit klarer Abhängigkeitsrichtung von oben nach unten. Oberste Schicht ist die *API-Fassade* (`BearingSessionFactory`, `BearingSession`), darunter die *Domänenschicht* (Peilungsberechnung, Trackaggregation), gefolgt von *Infrastruktur* (GPX-Writer, optional W3W-Client, Dateizugriff).
+Die Architektur folgt einer Schichtenarchitektur mit klarer Abhängigkeitsrichtung von oben nach unten. Oberste Schicht ist die API-Fassade (`BearingSessionFactory`, `BearingSession`), darunter die Domänenschicht (Peilungsberechnung, Trackaggregation), gefolgt von Infrastruktur (GPX-Writer, W3W-Client, Dateizugriff).
 
-== Schichtendiagramm (logisch)
+== Schichtendiagramm 
 
 #diagramm-box("Logische Schichten (C4 Level-2 vereinfacht)")[
   *1. API / Application Service*\
@@ -15,9 +15,7 @@ Die Architektur folgt einer *Schichtenarchitektur* mit klarer Abhängigkeitsrich
   Pure Business Logic: Haversine, Azimut, Ordinalzuordnung, Sampling-Policy, Track-Segmentierung, Optimierungs-Pipeline.
 
   *3. Infrastructure*\
-  XML-Serialisierung GPX, sicheres Dateischreiben, HTTP-Client für W3W (optional durch Maven-Profil), Clock-Injection.
-
-  *Abhängigkeitsregel:* Schicht n darf nur Schichten ≤ n-1 kennen. Infrastruktur implementiert Schnittstellen, die in der Domäne verankert sind (_Dependency Inversion_).
+  XML-Serialisierung GPX, sicheres Dateischreiben, HTTP-Client für W3W , Clock-Injection.
 ]
 
 == Paket- und Modulschnitt

@@ -235,11 +235,7 @@ Der dokumentierte Umfang erfüllt die formalen Anforderungen der Lehrveranstaltu
 = Anforderungsanalyse (Lastenheft)
 // ─────────────────────────────────────────────────────────────────────────────
 
-Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomponente. Es folgt dem formalen Aufbau einer klassischen Anforderungssammlung: Zielbestimmung, Produkteinsatz, funktionale Anforderungen, Produktdaten, nicht-funktionale Anforderungen sowie Qualitätsanforderungen. Ergänzend werden SWE-Artefakte integriert, die in der Vorlesung gefordert sind (Stakeholder, Risiken, OOA-Hinweise, Testbarkeit, Traceability).
-
-*Konvention für IDs:* Funktionale Anforderungen tragen Präfix `/LF…/`, nicht-funktionale `/LL…/`, Produktdaten `/LD…/`. Verweise verbinden zusammengehörige Anforderungen.
-
-*SOPHIST-Qualität der Formulierungen:* Jede Anforderung ist als vollständiger Satz formuliert, enthält einen erkennbaren Akteur, eine eindeutige Systemreaktion und ist überprüfbar (Testfall, Messgröße oder Inspektion).
+Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomponente. Es folgt dem formalen Aufbau einer klassischen Anforderungssammlung: Zielbestimmung, Produkteinsatz, funktionale Anforderungen, Produktdaten, nicht-funktionale Anforderungen sowie Qualitätsanforderungen. Ergänzend werden SWE-Artefakte integriert, die in der Vorlesung gefordert sind.
 
 // ─────────────────────────────────────────────────────────────────────────────
 == Zielbestimmung und Produkteinsatz
@@ -247,31 +243,27 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
 
 === Zielbestimmung
 
-*Hintergrund:* Die iOS-App „Kompass Professional" demonstriert eine Peilungsfunktion: Sie zeigt *wohin* (Richtung) relativ zur aktuellen Orientierung bzw. Position – ohne Navigation im Sinne einer Turn-by-Turn-Führung. Für Lehr- und Integrationszwecke soll dieselbe fachliche Funktionalität als wiederverwendbare Java-Bibliothek bereitgestellt werden.
+*Hintergrund:* Die iOS-App „Kompass Professional" demonstriert eine Peilungsfunktion: Sie zeigt wohin (Richtung) relativ zur aktuellen Orientierung bzw. Position, ohne Navigation im Sinne einer Turn-by-Turn-Führung. Die App zeichnet dabei einen GPS-Track auf, der als GPX exportierbar ist. 
 
-*Zielbild:* Die Bibliothek ermittelt aus vom Host gelieferten Positions- und Kursdaten die Peilungsgrößen (insbesondere geografischer Azimut und Entfernung) und zeichnet währenddessen einen GPS-Track auf, der als GPX 1.1 exportierbar ist. Optional kann eine What3Words-Auflösung erfolgen.
+*Zielbild:* Die Bibliothek ermittelt durch vom Host gelieferten Positions- und Kursdaten die Peilungsgrößen (insbesondere geografischer Azimut und Entfernung) und zeichnet währenddessen einen GPS-Track auf, der als GPX 1.1 exportierbar ist. Optional kann eine What3Words-Auflösung erfolgen.
 
-*Nutzen für den Auftraggeber (Lehre):* Die Analyse ist die verbindliche Referenz für Implementierung, Tests und Abnahme. Sie liefert normierbare, tabellarische Anforderungen.
-
-*Erfolgskriterien (übergeordnet):*
+*Erfolgskriterien:*
 
 - Die Komponente ist ohne UI lauffähig und per `mvn test` verifizierbar.
 - Alle `/LF…/`-Anforderungen sind durch mindestens einen dokumentierten Testfall abdeckbar.
-- GPX-Ausgaben enthalten den GPX-1.1-Namespace und valide Zeitstempel im UTC-ISO-8601-Format.
+- GPX-Ausgaben enthalten den GPX-1.1-Namespace und valide Zeitstempel im UTC-ISO-8601-Format. *(Muss in die Funktionale Anforderungen)*
 
 === Produkteinsatz
 
-*Einsatzgebiet:* Integration in beliebige Java-Anwendungen (Desktop, Server, eingebettete JVM), die selbst Sensordaten beschaffen und an die Bibliothek übergeben.
-
-*Typische Host-Rollen:*
+*Einsatzgebiet:* Integration in beliebige Java-Anwendungen, die selbst Sensordaten beschaffen und an die Bibliothek übergeben.
 
 - *Outdoor-Applikation* mit eigener Karten-UI (Bibliothek liefert nur Zahlen und GPX).
 - *Feld-Dienst* mit periodischen GPS-Fixes; Bibliothek übernimmt Sampling-Policy und Export.
-- *Lehre/Labor:* Mock-GPS-Streams treiben deterministische Tests.
+- *Labor:* Mock-GPS-Streams treiben deterministische Tests.
 
 *Schnittstelle zur Außenwelt:* Die Bibliothek spricht keine Hardware-APIs an. Stattdessen definiert sie eine klare Java-API. Persistenz erfolgt optional über das Dateisystem des Hosts.
 
-*Randbedingungen:* Keine ausführbare „Fat-JAR"-Anwendung als Liefergegenstand; Lieferobjekt ist Quelltext plus Dokumentation. Keine Cloud-Pflicht; W3W nur optional.
+*Randbedingungen:* Keine ausführbare „Fat-JAR"-Anwendung als Liefergegenstand; Lieferobjekt ist Quelltext plus Dokumentation. Keine Cloud; mit W3W; Optionale Datenminderung durch optimierungs Algorithmen.
 
 #pagebreak()
 
