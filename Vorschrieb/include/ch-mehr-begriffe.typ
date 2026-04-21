@@ -121,6 +121,4 @@
   "`ReferenceHaversine` (Bezeichner frei wählbar).",
   "/LL020/ Testpraxis.",
 )
-
-#pagebreak()
 ]

@@ -32,21 +32,23 @@
 #let lf-card(id, funktion, quelle, verweise, akteur, beschreibung) = {
   v(0.7em)
   set text(size: 11pt)
-  table(
-    columns: (1.9cm, 2.7cm, 1fr, 2.3cm, 1fr),
-    stroke: 0.5pt + rgb("#AAAAAA"),
-    fill: (x, _y) => if x == 0 or x == 1 { _req-fill } else { white },
-    inset: (x: 7pt, y: 6pt),
-    align: (x, _y) => if x <= 1 { center + horizon } else { left + top },
-    table.cell(rowspan: 4)[
-      #set align(center + horizon)
-      #text(weight: "bold", size: 10pt)[#id]
-    ],
-    [Funktion], table.cell(colspan: 3)[#funktion],
-    [Quelle], [#quelle], table.cell(fill: _req-fill)[Verweise], [#verweise],
-    [Akteur], table.cell(colspan: 3)[#akteur],
-    [Beschreibung], table.cell(colspan: 3)[#beschreibung],
-  )
+  block(width: 100%, breakable: false)[
+    #table(
+      columns: (1.9cm, 2.7cm, 1fr, 2.3cm, 1fr),
+      stroke: 0.5pt + rgb("#AAAAAA"),
+      fill: (x, _y) => if x == 0 or x == 1 { _req-fill } else { white },
+      inset: (x: 7pt, y: 6pt),
+      align: (x, _y) => if x <= 1 { center + horizon } else { left + top },
+      table.cell(rowspan: 4)[
+        #set align(center + horizon)
+        #text(weight: "bold", size: 10pt)[#id]
+      ],
+      [Funktion], table.cell(colspan: 3)[#funktion],
+      [Quelle], [#quelle], table.cell(fill: _req-fill)[Verweise], [#verweise],
+      [Akteur], table.cell(colspan: 3)[#akteur],
+      [Beschreibung], table.cell(colspan: 3)[#beschreibung],
+    )
+  ]
 }
 
 /// Karte für nicht-funktionale Anforderungen /LL.../
@@ -156,6 +158,10 @@
         #autoren
       ]),
       h(1fr),
+      box([
+        #set align(right)
+        #context { counter(page).display() }
+      ]),
     )
   ],
 )
@@ -178,15 +184,18 @@ Der dokumentierte Umfang erfüllt die formalen Anforderungen der Lehrveranstaltu
 
 #pagebreak()
 
-#outline(depth: 3, title: "Inhaltsverzeichnis")
+= Inhaltsverzeichnis
+#outline(depth: 3, title: none)
 #pagebreak()
 
 
-#outline(target: figure.where(kind: image), title: "Abbildungsverzeichnis")
+= Abbildungsverzeichnis
+#outline(target: figure.where(kind: image), title: none)
 #pagebreak()
 
 
-#outline(target: figure.where(kind: table), title: "Tabellenverzeichnis")
+= Tabellenverzeichnis
+#outline(target: figure.where(kind: table), title: none)
 #pagebreak()
 
 = Glossar
@@ -353,7 +362,6 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "Das System muss Eingabe-, Zustands- und I/O-Fehler über eine klar dokumentierte Exception-Hierarchie unterscheidbar machen. Jede Exception enthält einen maschinenlesbaren Fehlercode.",
 )
 
-#pagebreak()
 
 === GPS-Track und Sampling (/LF100/)
 
@@ -438,7 +446,6 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "Das System muss beim Erreichen des konfigurierten Hard-Limits die Aufzeichnung kontrolliert stoppen oder in einen definierten Overflow-Modus wechseln und den Host über ein dediziertes Limit-Event informieren.",
 )
 
-#pagebreak()
 
 === GPX-Export, Optimierung und W3W (/LF200/)
 
@@ -532,7 +539,6 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "Das System muss wiederholte What3Words-Anfragen für identische Koordinaten über einen internen Cache reduzieren können. Cache-Einträge können mit einer konfigurierbaren Time-to-Live versehen werden.",
 )
 
-#pagebreak()
 
 === Validierung, Sicherheit und Betrieb (/LF300/)
 
@@ -590,7 +596,6 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "Das System muss in der Javadoc klar angeben, welche Methoden thread-sicher sind. Der Standardbetrieb sieht vor, dass ein einzelner Host-Thread die Session steuert. Abweichungen sind explizit zu kennzeichnen.",
 )
 
-#pagebreak()
 
 === Ergänzende funktionale Anforderungen (/LF400/)
 
@@ -926,7 +931,7 @@ Die folgenden Produktdaten beschreiben die persistenten bzw. transportierten Dat
   "Für einen Track mit 10.000 Punkten soll der Heap-Zuwachs der Bibliothek typischerweise unter 50 MB bleiben. Dieser Richtwert ist durch einen Profiling-Test zu validieren.",
 )
 
-#pagebreak()
+
 
 === Externe Schnittstellen (/LL100/)
 

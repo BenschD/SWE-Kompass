@@ -1,7 +1,7 @@
 #import "macros.typ": diagramm-box
 
 // UML-SVGs: nur width:100% laesst hohe PlantUML-Grafiken ueber A4 hinauswachsen.
-#let puml-fig(path) = image(path, width: 100%, height: 19cm, fit: "contain")
+#let puml-fig(path) = image(path, width: 100%, height: 15.5cm, fit: "contain")
 
 #let ch-spezifikation-kapitel = [
 #set par(justify: true)
@@ -28,8 +28,6 @@ Das System „Java-Peilungskomponente“ ist eine Bibliothek. Akteure sind die *
   [Betrieb], [Logging, keine stillen Fehler], [niedrig–mittel],
 )
 
-#pagebreak()
-
 == Systemkontext (Kontextdiagramm verbal)
 
 #diagramm-box("Kontext (0-Ebene)")[
@@ -47,8 +45,6 @@ Das System „Java-Peilungskomponente“ ist eine Bibliothek. Akteure sind die *
   puml-fig("../plantuml/out/SWE_Kompass_Context.svg"),
   caption: [UML-Kontextdiagramm (PlantUML): Systemgrenze und externe Schnittstellen.],
 )
-
-#pagebreak()
 
 == Funktionale Spezifikation
 
@@ -99,8 +95,6 @@ Das System „Java-Peilungskomponente“ ist eine Bibliothek. Akteure sind die *
 + System materialisiert GPX-Datenstruktur im Speicher.
 + Wenn `persistOnAbort = true`, atomares Schreiben (`/LF220/`), sonst nur Rückgabeobjekt (`/LF230/`).
 + Listener `onSessionAborted` mit Statistik (`/LF500/`).
-
-#pagebreak()
 
 === Aktivitätsdiagramme (textuelle UML-Abbilder)
 
@@ -153,8 +147,6 @@ Die textuellen Aktivitätsbeschreibungen oben werden durch die folgenden UML-Akt
   caption: [UML-Aktivitätsdiagramm: GPX-Export mit sequentieller Optimierungskette.],
 )
 
-#pagebreak()
-
 === Sequenzdiagramme (Algorithmuspfade)
 
 Die textuellen Sequenzen werden durch die nachfolgenden UML-Sequenzdiagramme (PlantUML) visualisiert.
@@ -188,8 +180,6 @@ Die textuellen Sequenzen werden durch die nachfolgenden UML-Sequenzdiagramme (Pl
   caption: [UML-Sequenzdiagramm: Fehlerpfad bei ungültiger Koordinate / Validierung.],
 )
 
-#pagebreak()
-
 === Objektorientierte Analyse (OOA) - Domänenmodell
 
 Die OOA fokussiert *fachliche* Konzepte ohne technische Middleware. Assoziationen sind semantisch, Multiplizitäten pragmatisch.
@@ -213,8 +203,6 @@ Die OOA fokussiert *fachliche* Konzepte ohne technische Middleware. Assoziatione
   puml-fig("../plantuml/out/SWE_Kompass_OOA_Domain.svg"),
   caption: [UML-Klassendiagramm (OOA): fachliches Domänenmodell ohne technische Infrastruktur.],
 )
-
-#pagebreak()
 
 === Technischer Feinentwurf (OOD) - Klassen (Auszug)
 
@@ -242,8 +230,6 @@ Die folgende Tabelle ersetzt ein grafisches Klassendiagramm in kompakter, aber i
   caption: [UML-Klassendiagramm (OOD): zentrale Entwurfsklassen und Schnittstellen der Implementierung.],
 )
 
-#pagebreak()
-
 === Zustandsdiagramm (Session)
 
 Zustände: `IDLE` → `ACTIVE` (start) → `COMPLETED` (complete) oder `ABORTED` (abort).\
@@ -257,8 +243,6 @@ Zustände: `IDLE` → `ACTIVE` (start) → `COMPLETED` (complete) oder `ABORTED`
   caption: [UML-Zustandsdiagramm: Lebenszyklus einer `BearingSession` (vereinfacht).],
 )
 
-#pagebreak()
-
 === Komponenten- / Schichtensicht (Deployment-Logik)
 
 Die logische Schichtung aus dem Grobentwurf wird hier als UML-Komponenten-/Paketdiagramm abgebildet.
@@ -267,8 +251,6 @@ Die logische Schichtung aus dem Grobentwurf wird hier als UML-Komponenten-/Paket
   puml-fig("../plantuml/out/SWE_Kompass_Component_Layers.svg"),
   caption: [UML-Komponentendiagramm: API-, Domain- und Infrastrukturpakete.],
 )
-
-#pagebreak()
 
 === Einzelanforderungen (SOPHIST-Schablonen - Auswahl)
 
@@ -283,8 +265,6 @@ Die vollständige Menge ist tabellarisch im Lastenheft. Hier werden exemplarisch
 - * /LF320/ Pfadvalidierung:*\
   *Wenn* ein Ausgabepfad außerhalb des erlaubten Basisverzeichnisses liegt, *soll* das System eine `SecurityException` auslösen.
 
-#pagebreak()
-
 == Datenmodellierung und technischer Feinentwurf
 
 Die persistenten/transienten Daten sind in `/LD100/`-`/LD190/` beschrieben. ER-Diagramm: verzichtet auf relationale Tabellen, da keine DB-Pflicht besteht; stattdessen *Kompositionsgraph*: `Session` enthält `Track`, `Track` enthält `TrackSegment`, Segment enthält `GpsPoint`.
@@ -292,8 +272,6 @@ Die persistenten/transienten Daten sind in `/LD100/`-`/LD190/` beschrieben. ER-D
 === Klassendiagramm (struktureller Feinentwurf)
 
 Neben der tabellarischen OOD-Zusammenfassung liegen die *grafischen* Klassendiagramme (OOA und OOD) als PlantUML-Quellen unter `Vorschrieb/plantuml/` und die gerenderten SVG-Dateien unter `Vorschrieb/plantuml/out/`. Die Abbildungen sind in den Abschnitten Objektorientierte Analyse bzw. Technischer Feinentwurf eingebunden.
-
-#pagebreak()
 
 == Nichtfunktionale Spezifikation
 
@@ -316,8 +294,6 @@ Die Gewichtung ist im Lastenheft-Kapitel tabellarisch dokumentiert. Für die Spe
 )
 
 *Sicherheit:* keine XXE in eigener Erzeugung (`/LL130/`), Pfadtraversal-Schutz (`/LF320/`), keine `sun.*` APIs (`/LF440/`).
-
-#pagebreak()
 
 == Angestrebte Eigenschaften & Qualitätscheck
 
