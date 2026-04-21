@@ -1030,61 +1030,79 @@ Die folgenden Produktdaten beschreiben die persistenten bzw. transportierten Dat
 // ─────────────────────────────────────────────────────────────────────────────
 
 Die Qualitätskriterien wurden in Anlehnung an die ISO/IEC 9126 / ISO/IEC 25010 ausgewählt und gewichtet. Die Gewichtung spiegelt den Schwerpunkt der Bibliothek als reine Logik-Komponente ohne eigene UI wider.
+#let category-rows = (1, 8, 13, 19, 23, 29)
 
 #table(
   columns: (2.5fr, 0.9fr, 0.9fr, 0.9fr, 1.1fr),
   stroke: 0.5pt + rgb("#AAAAAA"),
+
   fill: (x, y) => {
-    if y == 0 { rgb("#4a4a4a") }
-    else if x == 0 and y > 0 {
-      // Category header rows (bold text rows without x marks)
-      if (y == 1 or y == 5 or y == 10 or y == 15 or y == 20 or y == 25) { rgb("#9ab8cc") }
-      else { white }
-    } else { white }
+    if y == 0 {
+      rgb("#4a4a4a")
+    } else if y in category-rows {
+      rgb("#9ab8cc")
+    } else if calc.even(y) {
+      rgb("#f2f2f2") // Zebra-Streifen
+    } else {
+      white
+    }
   },
+
   inset: (x: 7pt, y: 5pt),
   align: (x, y) => if x == 0 { left + horizon } else { center + horizon },
+
   // Header
-  table.cell(fill: rgb("#4a4a4a"))[#text(fill: white, weight: "bold")[Produktqualität]],
-  table.cell(fill: rgb("#4a4a4a"))[#text(fill: white, weight: "bold")[sehr wichtig]],
-  table.cell(fill: rgb("#4a4a4a"))[#text(fill: white, weight: "bold")[wichtig]],
-  table.cell(fill: rgb("#4a4a4a"))[#text(fill: white, weight: "bold")[normal]],
-  table.cell(fill: rgb("#4a4a4a"))[#text(fill: white, weight: "bold")[nicht relevant]],
+  table.cell(fill: rgb("#888787"))[#text(fill: white, weight: "bold")[Produktqualität]],
+  table.cell(fill: rgb("#888787"))[#text(fill: white, weight: "bold")[sehr wichtig]],
+  table.cell(fill: rgb("#888787"))[#text(fill: white, weight: "bold")[wichtig]],
+  table.cell(fill: rgb("#888787"))[#text(fill: white, weight: "bold")[normal]],
+  table.cell(fill: rgb("#888787"))[#text(fill: white, weight: "bold")[nicht relevant]],
+
   // Funktionalität
-  table.cell(fill: rgb("#9ab8cc"))[*Funktionalität*], [], [], [], [],
-  [Angemessenheit (Peilung + GPX)], [x], [], [], [],
-  [Richtigkeit (Haversine, GPX-Schema)], [x], [], [], [],
-  [Interoperabilität (GPX 1.1, Java-API)], [], [], [x], [],
-  [Sicherheit (Path-Traversal, XXE)], [], [x], [], [],
+  [*Funktionalität*], [], [], [], [],
+  [Angemessenheit], [x], [], [], [],
+  [Sicherheit], [], [], [x], [],
+  [Interoperabilität], [], [], [x], [],
+  [Konformität], [], [x], [], [],
+  [Ordnungsmäßigkeit], [], [], [x], [],
+  [Richtigkeit], [], [x], [], [],
+
   // Zuverlässigkeit
-  table.cell(fill: rgb("#9ab8cc"))[*Zuverlässigkeit*], [], [], [], [],
-  [Fehlertoleranz (Exception-Hierarchie)], [x], [], [], [],
-  [Reife (kein Absturz im Normalfall)], [], [x], [], [],
-  [Wiederherstellbarkeit (Wiederanlauf)], [], [x], [], [],
+  [*Zuverlässigkeit*], [], [], [], [],
+  [Fehlertoleranz], [], [], [x], [],
   [Konformität], [], [], [x], [],
-  // Benutzbarkeit (der API)
-  table.cell(fill: rgb("#9ab8cc"))[*Benutzbarkeit der API*], [], [], [], [],
-  [Erlernbarkeit (Javadoc, Builder)], [x], [], [], [],
-  [Verständlichkeit (Exception-Texte)], [], [x], [], [],
-  [Bedienbarkeit (Fluent API)], [], [x], [], [],
+  [Reife], [], [x], [], [],
+  [Wiederherstellbarkeit], [], [x], [], [],
+
+  // Benutzbarkeit
+  [*Benutzbarkeit*], [], [], [], [],
+  [Attraktivität], [x], [], [], [],
+  [Bedienbarkeit], [], [x], [], [],
+  [Erlernbarkeit], [x], [], [], [],
   [Konformität], [], [], [x], [],
+  [Verständlichkeit], [], [x], [], [],
+
   // Effizienz
-  table.cell(fill: rgb("#9ab8cc"))[*Effizienz*], [], [], [], [],
-  [Zeitverhalten (Peilungs-Update < 1 ms)], [x], [], [], [],
-  [Verbrauchsverhalten (Heap < 50 MB)], [], [], [x], [],
+  [*Effizienz*], [], [], [], [],
   [Konformität], [], [], [x], [],
+  [Zeitverhalten], [], [], [x], [],
+  [Verbrauchsverhalten], [], [], [], [x],
+
   // Änderbarkeit
-  table.cell(fill: rgb("#9ab8cc"))[*Änderbarkeit*], [], [], [], [],
-  [Modifizierbarkeit (Strategy-Pattern)], [x], [], [], [],
-  [Analysierbarkeit (SLF4J-Logs)], [], [x], [], [],
-  [Stabilität (immutable Config)], [x], [], [], [],
-  [Testbarkeit (85 %/90 % Coverage)], [x], [], [], [],
+  [*Änderbarkeit*], [], [], [], [],
+  [Analysierbarkeit], [], [], [x], [],
+  [Konformität], [], [], [x], [],
+  [Modifizierbarkeit], [], [x], [], [],
+  [Stabilität], [], [x], [], [],
+  [Testbarkeit], [], [], [x], [],
+
   // Übertragbarkeit
-  table.cell(fill: rgb("#9ab8cc"))[*Übertragbarkeit*], [], [], [], [],
-  [Portabilität (Win/Mac/Linux)], [x], [], [], [],
-  [Installierbarkeit (mvn test)], [x], [], [], [],
-  [Austauschbarkeit (Maven-Artefakt)], [], [x], [], [],
-  [Koexistenz (keine UI-Dep.)], [x], [], [], [],
+  [*Übertragbarkeit*], [], [], [], [],
+  [Anpassbarkeit], [], [], [], [x],
+  [Austauschbarkeit], [], [x], [], [],
+  [Installierbarkeit], [], [], [x], [],
+  [Koexistenz], [], [x], [], [],
+  [Konformität], [], [], [x], [],
 )
 
 #pagebreak()
