@@ -4,8 +4,72 @@
 #set par(justify: true)
 
 #begriffskarte(
+  "Benutzer",
+  "Person oder System, das die Peilungskomponente verwendet oder mit ihr interagiert",
+  "",
+  "Gültig für alle Interaktionen mit der öffentlichen API",
+  "Synonym: Nutzer",
+  "Allgemeine Softwaretechnik",
+)
+
+#begriffskarte(
+  "Anforderung",
+  "Beschriebene Eigenschaft oder Fähigkeit, die ein System erfüllen muss oder soll",
+  "",
+  "Gültig für alle /LF…/, /LL…/, /LD…/ Artefakte",
+  "Typen: funktional, nicht-funktional",
+  "ISO/IEC/IEEE 29148.",
+)
+
+#begriffskarte(
+  "System (Softwarekomponente)",
+  "Abgegrenzter Teil eines Softwaresystems mit klar definierten Schnittstellen und Verantwortlichkeiten",
+  "",
+  "Hier: die Peilungskomponente als eigenständige Bibliothek",
+  "",
+  "Softwarearchitektur-Grundlagen",
+)
+
+#begriffskarte(
+  "Geografische Koordinate",
+  "Angabe eines Punktes auf der Erdoberfläche durch Breiten- und Längengrade",
+  "",
+  "Gültig im WGS84-System",
+  "Notation: (lat, lon).",
+  "ISO 19111",
+)
+
+#begriffskarte(
+  "API (Application Programming Interface)",
+  "Programmierschnittstelle, über die externe Systeme mit der Peilungskomponente interagieren",
+  "",
+  "Öffentliche Methoden der Bibliothek",
+  "",
+  "Software Engineering Standardbegriff",
+)
+
+#begriffskarte(
+  "Thread-Sicherheit",
+  "Eigenschaft eines Systems, bei paralleler Ausführung durch mehrere Threads korrekt zu funktionieren",
+  "",
+  "Relevant für Observer, Immutability und Eventverarbeitung",
+  "",
+  "Nebenläufigkeit in Softwaresystemen",
+)
+
+#begriffskarte(
+  "Genauigkeit",
+  "Accuracy beschreibt die Nähe zum wahren Wert, Precision die Wiederholgenauigkeit von Messungen",
+  "",
+  "Relevant für GPS-Datenbewertung ",
+  "",
+  "Messtechnik-Grundlagen",
+)
+
+#begriffskarte(
   "Peilung (Bearing)",
-  "Bestimmung der horizontalen Zielrichtung von einem Bezugspunkt zu einem Zielpunkt.", "Keine Turn-by-Turn-Navigation" ,
+  "Bestimmung der horizontalen Zielrichtung von einem Bezugspunkt zu einem Zielpunkt.", 
+  "Keine Turn-by-Turn-Navigation" ,
   "Gültig für WGS84-Koordinaten auf der Erdoberfläche",
   "",
   "Peter Bohl",
@@ -63,55 +127,61 @@
   "",
   "Topografix GPX 1.1 Schema",
 )
-/// bis hier hin 
-/// 
+
 #begriffskarte(
   "Trackpunkt",
-  "XML-Element innerhalb eines GPX-Tracks, das mindestens Breite, Länge und Zeit trägt.", "" ,
-  "Gültig innerhalb eines `trkseg`; Zeit in UTC nach ISO-8601.",
-  "Attribute: `lat`, `lon`; Kinder u. a. `time`, `ele`, `hdop`, `speed`.",
-  "GPX 1.1 Spezifikation (Topografix).",
+  "XML-Element innerhalb eines GPX-Tracks, das mindestens Breite, Länge und Zeit trägt", 
+  "" ,
+  "Gültig innerhalb eines Tracks",
+  "Attribute: `lat`, `lon`",
+  "GPX 1.1 Spezifikation",
 )
 
 #begriffskarte(
   "Sampling (Abtastung)",
-  "Regel, nach der aus einem kontinuierlichen oder dichten Positionsstrom diskrete Speicherereignisse entstehen.", "" ,
+  "Regel, nach der aus einem kontinuierlichen oder dichten Positionsstrom diskrete Speicherereignisse entstehen.", 
+  "" ,
   "Zeitintervall konfigurierbar gemäß /LF110/; Mindestintervall 0,5 s, Maximum 60 s.",
-  "Parameter: `samplingIntervalMs`.",
+  "",
   "Digitale Signalverarbeitung; projektspezifisch /LF100/–/LF110/.",
 )
 
 #begriffskarte(
   "HDOP (Horizontal Dilution of Precision)",
-  "dimensionsloses Maß für die geometrische Güte der Satellitenkonstellation; niedriger ist typischerweise besser.","" ,
-  "Schwellwert standardmäßig ≤ 5,0 gemäß /LF130/; Werte außerhalb sind konfigurationsabhängig zu verwerfen oder zu markieren.",
-  "Einheit: dimensionslos; Attribut in GPX: `hdop`.",
-  "ICD-GPS-200; Herstellerdokumentation GNSS-Empfänger.",
+  "dimensionsloses Maß für die geometrische Güte der Satellitenkonstellation; niedriger ist typischerweise besser","" ,
+  "Schwellwert standardmäßig ≤ 5,0 gemäß /LF130/. Werte außerhalb sind konfigurationsabhängig zu verwerfen oder zu markieren",
+  "",
+  "Herstellerdokumentation GNSS-Empfänger.",
 )
 
 #begriffskarte(
-  "Session (Peilungssession)",
-  "Lebenszyklusobjekt mit UUID, Zielkoordinate, Konfiguration und Zustand (ACTIVE, COMPLETED, ABORTED).","" ,
-  "Genau eine aktive Session pro Komponenteninstanz ohne explizite Finalisierung gemäß /LF020/.",
-  "Datenobjekt /LD100/.",
-  "Objektorientierte Analyse: Zustandsdiagramm im Pflichtenheft.",
+  "Session",
+  "Eine Session ist eine zeitlich begrenzte Instanz zur Speicherung von Zustandsinformationen eines Benutzers oder Prozesses",
+  "Abzugrenzen ist die Session von einer einzelnen Anfrage, die nur einen einmaligen Zugriff beschreibt, sowie von persistenten Objekten, die dauerhaft gespeichert werden. Eine Session ist temporär und zustandsbehaftet.",
+  "Die Gültigkeit einer Session erstreckt sich über die Dauer der Interaktion und endet durch Timeout",
+  "Session-ID ",
+  "Lehrmaterial Softwareentwicklung"
 )
 
 #begriffskarte(
   "Observer / Listener",
-  "Entwurfsmuster zur Entkopplung: Subjekte benachrichtigen registrierte Beobachter über Zustandsänderungen.","" ,
-  "Synchronität gemäß Konfiguration /LF080/; Standard: sequentieller Aufruf im Host-Thread.",
-  "Java-Pattern: `java.util.EventListener`-Familie (konzeptionell).",
-  "Gamma u. a., _Design Patterns_; /LF080/.",
+  "Benachrichtigen registrierte Beobachter über Zustandsänderungen",
+  "" ,
+  "Synchronität gemäß Konfiguration /LF080/;",
+  "Java-Pattern: `java.util.EventListener`-Familie ",
+  "/LF080/",
 )
 
 #begriffskarte(
-  "Strategy (Trackoptimierung)",
-  "Austauschbare Algorithmen hinter gemeinsamer Schnittstelle zur Reduktion oder Vereinfachung von Trackpunkten.","" ,
-  "Gültig nach Session-Ende oder vor GPX-Serialisierung; Douglas–Peucker optional /LF270/.",
-  "Schnittstelle: `TrackOptimizer` gemäß /LF480/.",
-  "Gamma u. a., _Design Patterns_; /LF480/.",
+  "Trackoptimierung",
+  "Austauschbare Algorithmen hinter gemeinsamer Schnittstelle zur Reduktion oder Vereinfachung von Trackpunkten",
+  "" ,
+  "Gültig nach Session-Ende oder vor GPX-Serialisierung, /LF270/.",
+  "",
+  "/LF480/",
 )
+
+//bis hier 
 
 #begriffskarte(
   "Builder (Konfigurationsaufbau)",
