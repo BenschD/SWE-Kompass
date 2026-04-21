@@ -1,0 +1,27 @@
+@startuml SWE_Kompass_Package_Architecture
+skinparam monochrome true
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+package "com.example.bearing.api" as API
+package "com.example.bearing.app" as APP
+package "com.example.bearing.domain" as DOMAIN
+package "com.example.bearing.spi" as SPI
+package "com.example.bearing.adapter.gpx" as AD_GPX
+package "com.example.bearing.adapter.w3w" as AD_W3W
+package "com.example.bearing.adapter.system" as AD_SYS
+
+API --> APP : uses
+APP --> DOMAIN : orchestrates
+APP --> SPI : uses ports
+DOMAIN --> SPI : optional contracts
+
+AD_GPX ..> SPI : implements
+AD_W3W ..> SPI : implements
+AD_SYS ..> SPI : implements
+
+note bottom
+Dependency rule:
+API -> APP -> DOMAIN -> SPI <- ADAPTERS
+end note
+@enduml

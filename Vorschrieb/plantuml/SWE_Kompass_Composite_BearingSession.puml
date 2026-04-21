@@ -1,0 +1,42 @@
+@startuml SWE_Kompass_Composite_BearingSession
+skinparam monochrome true
+skinparam shadowing false
+skinparam componentStyle rectangle
+
+interface "HostApiPort" as P_HOST
+interface "GpxWriterPort" as P_GPX
+interface "W3wClientPort" as P_W3W
+interface "ClockPort" as P_CLK
+interface "FileSinkPort" as P_FS
+interface "LoggerPort" as P_LOG
+
+component "BearingSession" as SESSION {
+  [SessionStateMachine] as SM
+  [InputValidator] as VAL
+  [BearingCalculator] as BC
+  [TrackAggregator] as TA
+  [OptimizationCoordinator] as OC
+  [SnapshotAssembler] as SA
+  [EventPublisher] as EP
+}
+
+P_HOST --> SESSION
+SESSION --> P_GPX
+SESSION ..> P_W3W
+SESSION ..> P_CLK
+SESSION ..> P_FS
+SESSION ..> P_LOG
+
+SM --> VAL
+VAL --> BC
+VAL --> TA
+TA --> OC
+BC --> SA
+TA --> SA
+SA --> EP
+
+note right of SESSION
+Interne Komposition der zentralen Session-Komponente.
+Fachlogik bleibt innerhalb der Session gekapselt.
+end note
+@enduml

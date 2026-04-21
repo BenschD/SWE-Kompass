@@ -1,0 +1,26 @@
+@startuml SWE_Kompass_Deployment_Runtime
+skinparam monochrome true
+skinparam shadowing false
+
+node "Endgeraet / Rechner" as DEVICE {
+  node "JVM-Prozess" as JVM {
+    artifact "Host-Anwendung" as HOST
+    artifact "Java-Peilungskomponente" as LIB
+  }
+  node "Lokales Dateisystem" as FS
+}
+
+node "GNSS/Sensorstack (hostseitig)" as GNSS
+cloud "What3Words API" as W3W
+
+GNSS --> HOST : Positions- und Kursdaten
+HOST --> LIB : Java-API Aufrufe
+LIB --> HOST : Snapshots, Events, GPX (String/Bytes)
+LIB --> FS : optionaler GPX-Datei-Export
+LIB --> W3W : HTTPS (optional)
+
+note bottom
+Keine direkte Hardwaresteuerung durch die Bibliothek.
+Netzwerkzugriff ist optional und entkoppelt.
+end note
+@enduml

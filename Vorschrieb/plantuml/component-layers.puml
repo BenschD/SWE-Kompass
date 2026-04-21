@@ -1,77 +1,29 @@
 @startuml SWE_Kompass_Component_Layers
 skinparam monochrome true
 skinparam shadowing false
-skinparam componentStyle rectangle
 
-rectangle "Host-System (ausserhalb der Komponente)" {
-  [UI / App] as UI
-  [Sensor-Adapter] as SA
-}
-
-package "1) API / Application Service" {
+package "API-Schicht" {
   [BearingSessionFactory] as F
   [BearingSession] as S
-  [SessionConfig] as CFG
-  [BearingSnapshot] as SNAP
 }
 
-package "2) Domain Core" {
+package "Domain-Schicht" {
   [BearingCalculator] as BC
   [TrackAggregator] as TA
-  [TrackOptimizer] as OP
-  [SamplingPolicy] as SP
-  [ValidationPolicy] as VP
-  [SegmentationPolicy] as SEG
+  [OptimizationPipeline] as OP
 }
 
-package "3) Ports (SPI)" {
-  interface "GpxWriterPort" as P_GPX
-  interface "W3wClientPort" as P_W3W
-  interface "ClockPort" as P_CLK
-  interface "FileSinkPort" as P_FS
-  interface "LoggerPort" as P_LOG
+package "Infrastruktur" {
+  [GpxSerializer] as GX
+  [W3wAdapter] as W3W
+  [FileSink] as FS
 }
-
-package "4) Infrastruktur / Adapter" {
-  [GpxXmlWriter] as GX
-  [W3wHttpClient] as W3W
-  [SystemClock] as CLK
-  [SafeFileSink] as FS
-  [Slf4jLogger] as LOG
-}
-
-UI --> F : startSession(config, target)
-SA --> S : onPositionUpdate(fix)
-SA --> S : onCourseUpdate(deg)
 
 F --> S
 S --> BC
 S --> TA
 S --> OP
-TA --> SP
-TA --> VP
-TA --> SEG
-
-S --> P_GPX : export
-S ..> P_W3W : optional lookup
-S ..> P_CLK : timestamps
-S ..> P_FS : optional persist
-S ..> P_LOG : structured logging
-
-GX ..|> P_GPX
-W3W ..|> P_W3W
-CLK ..|> P_CLK
-FS ..|> P_FS
-LOG ..|> P_LOG
-
-note right of BC
-  Domain ist I/O-frei.
-  Keine direkte Abhaengigkeit
-  zur Infrastruktur.
-end note
-
-note bottom
-  Abhaengigkeitsregel:
-  Host -> API -> Domain -> Ports -> Adapter
-end note
+S --> GX
+S ..> W3W
+S ..> FS
 @enduml
