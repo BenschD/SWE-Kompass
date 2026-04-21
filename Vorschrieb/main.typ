@@ -285,7 +285,7 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
 #lf-card(
   "/LF020/",
   "Peilung nur einfach aktiv",
-  "Gespräch mit Herr Bohl",
+  "Klärungsgespräch",
   "/LF010/",
   "Host-App",
   "Das System muss verhindern, dass parallel mehrere aktive Peilungen standfinden. Ein erneuter Startaufruf ohne vorheriges Beenden führt zu einer definierten Exception.",
@@ -359,11 +359,11 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
 
 #lf-card(
   "/LF100/",
-  "Trackpunkte aufzeichnen",
+  "GPS-Punkte aufzeichnen",
   "Projektauftrag SWE",
   "/LF030/",
   "Host-App",
-  "Das System muss während einer aktiven Session GPS-Punkte mit Zeitstempel speichern, sofern sie die konfigurierte Sampling-Policy erfüllen. Jeder gespeicherte Punkt enthält mindestens: Zeitstempel (Instant), Breitengrad, Längengrad.",
+  "Das System muss während einer aktiven Peilung GPS-Punkte mit Zeitstempel speichern. Jeder gespeicherte Punkt enthält mindestens: Zeitstempel, Breitengrad, Längengrad.",
 )
 
 #lf-card(
@@ -372,22 +372,22 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "Klärungsgespräch",
   "/LF100/",
   "Host-App",
-  "Das System muss ein konfigurierbares Mindestintervall zwischen gespeicherten Punkten unterstützen. Der konfigurierbare Bereich umfasst 0,5 s bis 60 s; der Standardwert beträgt 2 Sekunden.",
+  "Der Nutzer muss das Zeitintervall, in wechem die GPS-Punkte gespeichert werden manuel ändern können. Der konfigurierbare Bereich umfässt dabei 0,5 Sekunden bis 60 Sekunden. Der Defaultwert beträgt 2 Sekunden.",
 )
 
 #lf-card(
   "/LF120/",
   "Punktbudget konfigurieren",
-  "Fragenkatalog Team",
+  "Klärungsgespräch",
   "/LF100/",
   "Host-App",
-  "Das System muss optional eine Obergrenze (Soft-Limit und Hard-Limit) für die Anzahl gespeicherter Punkte pro Session unterstützen. Das Überschreiten des Soft-Limits löst ein Warn-Event aus; das Erreichen des Hard-Limits stoppt die Aufzeichnung kontrolliert.",
+  "Die Peilungskomponente muss eine Obergrenze für die Anzahl gespeicherter GPS-Punkte pro Peilung unterstützen. Bei überschreitung des Limits, werden durch werwendung von optimierungs Algorithmen, die Anzahl an GPS-Punkte verringert. Nach möglichkeit ohne das Informationen über die Strecke verlohren gehen. So werden beispielsweiße gerade Strecken mit lediglich zwei GPS-Punkten dargestellt.",
 )
 
 #lf-card(
   "/LF130/",
   "HDOP/Satelliten auswerten",
-  "Fragenkatalog Team",
+  "Klärungsgespräch",
   "/LF100/, /LL020/",
   "Host-App",
   "Das System muss optional Punkte mit einem HDOP-Wert über einem konfigurierbaren Schwellwert (Standard: HDOP ≤ 5,0) verwerfen oder als unzuverlässig markieren, abhängig von der Konfiguration.",
@@ -399,7 +399,7 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "Datenqualitätsrichtlinie",
   "/LF100/",
   "Host-App",
-  "Das System muss unrealistische Positions-Sprünge erkennen, die physikalisch nicht möglich sind (z. B. mehr als 300 km/h Geschwindigkeitsänderung), und diese gemäß konfigurierter Policy verwerfen oder nur protokollieren.",
+  "Das System muss unrealistische Positions-Sprünge erkennen, die physikalisch nicht möglich sind (z. B. mehr als 300 km/h Geschwindigkeitsänderung), und diese gemäß konfigurierter Policy verwerfen.",
 )
 
 #lf-card(
@@ -408,7 +408,7 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "Fragenkatalog Team",
   "/LF100/",
   "Host-App",
-  "Das System muss optionale Felder wie Höhe (Elevation), HDOP und Geschwindigkeit in GPS-Trackpunkten abbilden, sofern der Host diese Werte liefert. Fehlende Felder werden in GPX weggelassen statt mit Nullwerten befüllt.",
+  "Das System muss optionale Felder wie Höhe (Elevation), HDOP und Geschwindigkeit in GPS-Trackpunkten abbilden können, sofern der Host diese Werte liefert. Fehlende Felder werden in der GPX-Darstellung weggelassen statt mit Nullwerten befüllt.",
 )
 
 #lf-card(
@@ -417,7 +417,7 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "Qualitätsrichtlinie",
   "/LF100/",
   "Host-App",
-  "Das System muss identische Koordinaten mit identischem Zeitstempel nicht mehrfach als separate logische Messung speichern. Duplikate werden erkannt und verworfen; der Vorgang wird protokolliert.",
+  "Das System muss identische Koordinaten mit identischem Zeitstempel nicht mehrfach als separate logische Messung speichern. Duplikate werden erkannt und gelöscht.",
 )
 
 #lf-card(
