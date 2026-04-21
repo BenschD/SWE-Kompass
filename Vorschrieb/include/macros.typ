@@ -17,16 +17,15 @@
   v(1em)
   set text(size: 11pt)
 
-  block(breakable: true, width: 100%)[
+  // ÄNDERUNG: breakable auf 'false' setzen
+  block(breakable: false, width: 100%)[
     #table(
-      // 'auto' sorgt dafür, dass die linke Spalte so breit wird wie das längste Label
       columns: (auto, 1fr), 
       stroke: 0.5pt + _b-stroke,
       fill: (x, _y) => if x == 0 { _b-fill } else { white },
       inset: (x: 10pt, y: 8pt),
       align: (left + top),
       
-      // Nutze 'box', um sicherzustellen, dass die Labels NIEMALS umgebrochen werden
       [*Begriff*], [*#begriff*],
       [*Definition*], [#definition],
       [*Abgrenzung*], [#abgrenzung],
