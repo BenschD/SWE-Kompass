@@ -7,16 +7,48 @@ Die Architektur folgt einer Schichtenarchitektur mit klarer Abhängigkeitsrichtu
 
 == Schichtendiagramm 
 
-#diagramm-box("Logische Schichten (C4 Level-2 vereinfacht)")[
+#diagramm-box("Detailliertes Schichtenmodell")[
+  *0. Host-System (außerhalb der Komponente)*\
+  Beliebige Java-UI (Desktop, Web, Mobile), Sensoradapter und App-Lifecycle. Übergibt Positions- und Rechnungsdaten ausschließlich über die API-Fassade.
+
+  ↓ Nur API-Aufrufe; keine direkten Infrastrukturzugriffe
+
   *1. API / Application Service*\
-  Koordiniert Session-Lebenszyklus, validiert Eingaben, orchestriert Domäne und Infrastruktur. Keine UI.
+  `BearingSessionFactory`, `BearingSession`, `SessionConfig`, `BearingSnapshot`.
+  Verantwortet Vorbedingungen, Session-Zustandsautomat (`IDLE`, `ACTIVE`, `COMPLETED`, `ABORTED`), Fehler-Mapping und Orchestrierung der Fachfälle.
 
-  *2. Domain*\
-  Pure Business Logic: Haversine, Azimut, Ordinalzuordnung, Sampling-Policy, Track-Segmentierung, Optimierungs-Pipeline.
+  ↓ Nutzt ausschließlich Domänenlogik und definierte Ports
 
-  *3. Infrastructure*\
-  XML-Serialisierung GPX, sicheres Dateischreiben, HTTP-Client für W3W , Clock-Injection.
+  *2. Domain Core*\
+  Entitäten/Value Objects: `GeoPoint`, `Target`, `Track`, `TrackSegment`, `GpsPoint`.
+  Services/Policies: `BearingCalculator`, `TrackAggregator`, `SamplingPolicy`, `ValidationPolicy`, `SegmentationPolicy`, `TrackOptimizer`.
+  Fachregeln: Azimut/Distanz, Ordinalrichtung, Datenqualitätsfilter, Segmentierung, Optimierung.
+
+  ↓ Abstraktion externer Abhängigkeiten über Ports 
+
+  *3. Port-Schicht (Schnittstellenverträge)*\
+  `GpxWriterPort`, `W3wClientPort`, `ClockPort`, `FileSinkPort`, `LoggerPort`.
+  Stabiler Vertrag zwischen Domäne/API und konkreten technischen Adaptern; erleichtert Mocking, Testbarkeit und Austauschbarkeit.
+
+  ↓ Konkrete Implementierungen der Ports
+
+  *4. Infrastruktur*\
+  `GpxXmlWriter` (GPX 1.1), `W3wHttpClient`, `SafeFileSink`, `SystemClock`, `Slf4jLogger`.
+  Zuständig für XML, HTTP, Dateisystem und Bibliotheksintegration;
 ]
+
+#table(
+  columns: (3.2cm, 3.2cm, 2.2cm, 1fr),
+  stroke: 0.45pt + rgb("#9a9a9a"),
+  inset: 6pt,
+  [*Von*], [*Nach*], [*Erlaubt?*], [*Regel / Begründung*],
+  [Host-System], [API], [Ja], [Integration ausschließlich über öffentliche Java-API],
+  [Host-System], [Domain], [Nein], [Kapselung der Fachlogik hinter Session-Fassade],
+  [API], [Domain], [Ja], [Use-Case-Orchestrierung ohne Infrastrukturkopplung],
+  [Domain], [Ports], [Ja], [Externe Effekte nur über abstrahierte Verträge],
+  [Domain], [Infrastruktur], [Nein], [Unabhängigkeit der Business-Logik von I/O],
+  [Infrastruktur], [Domain], [Nein], [Keine Rückkopplung/Seiteneffekte in Fachregeln],
+)
 
 == Paket- und Modulschnitt
 
