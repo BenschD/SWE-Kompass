@@ -3,7 +3,7 @@
 
 == Problemstellung
 
-Im Rahmen der Projektarbeit wird die iOS-Anwendung _Kompass Professional_ als fachliche Referenz analysiert. Der Fokus liegt auf der Peilungsfunktion und nicht auf einer vollständigen Navigationslösung. Unter *Peilung* wird in dieser Arbeit die Berechnung der Richtung und Entfernung von der aktuellen Position zu einem Zielpunkt verstanden; optional kann die Abweichung zum aktuellen Kurs berücksichtigt werden, sofern ein Kurswert vom Host-System bereitgestellt wird.
+Im Rahmen der Projektarbeit wird die iOS-Anwendung _Kompass Professional_ als fachliche Referenz analysiert. Der Fokus liegt auf der Peilungsfunktion und nicht auf einer vollständigen Navigationslösung. Unter *Peilung* wird in dieser Arbeit die Berechnung der Richtung und Entfernung von der aktuellen Position zu einem Zielpunkt verstanden; optional kann die Abweichung zum aktuellen Kurs berücksichtigt werden, sofern ein Kurswert vom Host-System bereitgestellt wird. 
 
 Aus der Aufgabenstellung ergeben sich vier eng miteinander verknüpfte Kernprobleme:
 
@@ -21,8 +21,6 @@ Das übergeordnete Ziel ist eine *vollständige, prüfbare Spezifikation* zusamm
 - *Qualitätssicherung:* Nachvollziehbare Testfälle pro fachlichem Modul, automatisierte Ausführung über Maven und reproduzierbare Ergebnisse als Grundlage der Abnahme.
 - *Lieferfähigkeit:* Abgabe des lauffähigen Quellcodes (keine ausführbare Fat-JAR als Hauptartefakt) mit sofort ausführbarer Test-Suite.
 
-Die Arbeit adressiert explizit das in der Aufgabenstellung genannte Mindestformat von *mindestens 50 Druckseiten* (A4, Fließtext und tabellarische Anforderungsdokumente) und berücksichtigt das Semester-3-Feedback zu *Inhaltsverzeichnis*, *Seitennummerierung* und *formalen SOPHIST-konformen Anforderungen*.
-
 == Abgrenzung und Scope
 
 *Im Scope:*
@@ -39,7 +37,7 @@ Die Arbeit adressiert explizit das in der Aufgabenstellung genannte Mindestforma
 
 - Magnetische Peilung inklusive automatischer Deklinationskorrektur (siehe Glossar; Host-Verantwortung).
 - Kartendarstellung, Kartenmatching, Routing, Geocoding allgemeiner Adressstrings (außer W3W-Option).
-- Hardwareanbindung (GNSS-Treiber, Sensorfusion) – der Host liefert Messwerte.
+- Hardwareanbindung (GNSS-Treiber, Sensorfusion) - der Host liefert Messwerte.
 - Persistenzvorgaben wie ein festes Dateiziel fuer GPX-Export; Entscheidung ueber Speicherort und Dateiverwaltung liegt beim Host.
 - Cloud-Persistenz, Benutzerverwaltung, Rechteverwaltung.
 

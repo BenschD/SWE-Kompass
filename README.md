@@ -4,6 +4,10 @@
 
 Prof. Dr. Bohl | DHBW Stuttgart | Softwareentwicklung Semester 4 | 2026-04-18
 
+## Implementierung (Code)
+
+Die Maven-Multi-Module-Bibliothek gemäß Vorschrieb liegt unter **[implementation/](implementation/)** (`com.example.bearing.*`). Kurzstart: **`mvn test` im Repo-Root** (Aggregator-POM) oder im Ordner `implementation/` — beides baut dieselben Module. Details: [implementation/README.md](implementation/README.md), Traceability: [implementation/TRACEABILITY.md](implementation/TRACEABILITY.md).
+
 ---
 
 ## 🎯 PROJEKTÜBERSICHT
@@ -437,3 +441,6 @@ Diese Komponente demonstriert **umfassendes Verständnis** aller SWE-Themengebie
 ---
 
 **Viel Erfolg! 🚀**
+
+cd implementation
+mvn -pl bearing-api -am "-Dsurefire.failIfNoSpecifiedTests=false" "-Dtest=BearingSessionVisualizationTest" test
