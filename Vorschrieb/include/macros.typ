@@ -6,28 +6,32 @@
 #let _b-stroke = rgb("#c8d4e6")
 
 /// Normierte Begriffskarte für Glossar und Haupttext.
-/// bezeichnung: fachliche Kurzbezeichnung / Symbol / Einheit
 #let begriffskarte(
   begriff,
   definition,
+  abgrenzung,
   gueltigkeit,
   bezeichnung,
   quelle,
 ) = {
-  v(0.55em)
+  v(1em)
   set text(size: 11pt)
-  block(breakable: true)[
-    #text(weight: "bold", size: 12pt)[#begriff]
-    #v(0.35em)
+
+  block(breakable: true, width: 100%)[
     #table(
-      columns: (2.35cm, 1fr),
-      stroke: 0.45pt + _b-stroke,
-      fill: (_x, y) => if y == 0 { _b-fill } else { white },
-      inset: (x: 8pt, y: 6pt),
-      align: (left + top, left + top),
+      // 'auto' sorgt dafür, dass die linke Spalte so breit wird wie das längste Label
+      columns: (auto, 1fr), 
+      stroke: 0.5pt + _b-stroke,
+      fill: (x, _y) => if x == 0 { _b-fill } else { white },
+      inset: (x: 10pt, y: 8pt),
+      align: (left + top),
+      
+      // Nutze 'box', um sicherzustellen, dass die Labels NIEMALS umgebrochen werden
+      [*Begriff*], [*#begriff*],
       [*Definition*], [#definition],
-      [*Gültigkeit / Domäne*], [#gueltigkeit],
-      [*Bezeichnung / Symbol*], [#bezeichnung],
+      [*Abgrenzung*], [#abgrenzung],
+      [*Gültigkeit*], [#gueltigkeit],
+      [#box[*Bezeichnung / Symbol*]], [#bezeichnung],
       [*Quellverweis*], [#quelle],
     )
   ]
