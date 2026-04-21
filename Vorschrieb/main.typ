@@ -279,16 +279,16 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "Projektauftrag SWE",
   "–",
   "Host-App",
-  "Das System muss eine neue Peilungssession anlegen, wenn der Host eine gültige Zielkoordinate und eine gültige Konfiguration übergibt. Die Session erhält eine eindeutige UUID und startet im Zustand ACTIVE.",
+  "Das System muss eine neue Peilung starten, wenn der Host eine gültige Zielkoordinate und eine gültige Konfiguration übergibt. Die Peilung erhält eine eindeutige UUID und startet im Zustand ACTIVE.",
 )
 
 #lf-card(
   "/LF020/",
   "Peilung nur einfach aktiv",
-  "Architekturregel",
+  "Gespräch mit Herr Bohl",
   "/LF010/",
   "Host-App",
-  "Das System muss verhindern, dass parallel mehrere aktive Sessions derselben Komponenteninstanz ohne explizite Finalisierung existieren. Ein erneuter Startaufruf ohne vorheriges Beenden führt zu einer definierten Exception.",
+  "Das System muss verhindern, dass parallel mehrere aktive Peilungen standfinden. Ein erneuter Startaufruf ohne vorheriges Beenden führt zu einer definierten Exception.",
 )
 
 #lf-card(
