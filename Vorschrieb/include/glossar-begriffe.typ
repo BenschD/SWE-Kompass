@@ -3,74 +3,70 @@
 #let glossar-begriffe-kapitel = [
 #set par(justify: true)
 
-*Hinweis:* Das Glossar normiert zentrale Fachbegriffe der Peilungskomponente. Jeder Eintrag folgt der Vorgabe _Begriff – Definition – Gültigkeit – Bezeichnung – Quellverweis_, um Prüfbarkeit und Zitationsfähigkeit zu gewährleisten.
-
 #begriffskarte(
-  "Peilung (Richtungspeilung)",
-  "Bestimmung der horizontalen Zielrichtung von einem Bezugspunkt (Standort) zu einem Zielpunkt, typischerweise als geografischer Azimut relativ zu Nord; keine Turn-by-Turn-Navigation.", "" ,
-  "Gültig für WGS84-Koordinaten auf der Erdoberfläche; magnetische Peilung ist nicht Bestandteil dieser Komponente, sofern nicht explizit ergänzt.",
-  "Synonyme: Zielpeilung; UI: Richtungspfeil in Referenz-Apps.",
-  "DIN 18716-1 (Orientierung im Gelände); vergleichende Systembeschreibung: Apple App Store, „Kompass Professional“.",
+  "Peilung (Bearing)",
+  "Bestimmung der horizontalen Zielrichtung von einem Bezugspunkt zu einem Zielpunkt.", "Keine Turn-by-Turn-Navigation" ,
+  "Gültig für WGS84-Koordinaten auf der Erdoberfläche",
+  "",
+  "Peter Bohl",
 )
 
 #begriffskarte(
   "Geografischer Azimut",
-  "Horizontaler Winkel zwischen der geografischen Nordrichtung (WGS84-Nord) und der Großkreisrichtung zum Ziel, im Uhrzeigersinn von 0° bis unter 360°.", "" ,
-  "Gültig für Entfernungen > 0 m; am Pol (Singularität) numerisch instabil – Domäne muss durch Mindestentfernung abgesichert werden.",
+  "Horizontaler Winkel zwischen der geografischen Nordrichtung und der Großkreisrichtung zum Ziel",
+  "" ,
+  "Gültig für Entfernungen > 0 m",
   "Symbol: α oder `azimuthDeg`; Einheit: ° (Grad).",
-  "ISO 19111:2019 (Referenzsysteme); gängige Navigationsliteratur.",
+  "Gängige Navigationsliteratur.",
 )
 
 #begriffskarte(
-  "Kurs (Heading, True Heading)",
-  "Orientierung der lokalen Horizontalebene relativ zu geografisch Nord, typischerweise als Winkel 0°–360° aus einer IMU/GNSS-Koppelung.","" ,
-  "Gültig, wenn der Host verlässliche Kursinformation liefert; ohne Kurs entfällt die Ableitung einer Kursabweichung.",
+  "Kurs (Heading)",
+  "Orientierung der lokalen Horizontalebene relativ zu geografisch Nord, typischerweise als Winkel 0°–360°",
+  "" ,
+  "Gültig, wenn der Host verlässliche Kursinformation liefert",
   "Symbol: ψ oder `headingDeg`; Einheit: °.",
-  "RTCA DO-229 (GNSS); allgemein: Kreisel-/Kompassmesstechnik.",
+  "Kreisel-/Kompassmesstechnik.",
 )
 
 #begriffskarte(
   "Kursabweichung (relative Bearing)",
-  "Winkel zwischen aktuellem Kurs und der Zielrichtung, zentriert typischerweise in [−180°, +180°] zur Steuerung von „links/rechts“-Hinweisen.", "" ,
-  "Nur definiert bei gleichzeitiger Verfügbarkeit von Azimut und Kurs.",
+  "Winkel zwischen aktuellem Kurs und der Zielrichtung, zentriert typischerweise in [−180°, +180°]", 
+  "" ,
+  "",
   "Symbol: Δ oder `bearingErrorDeg`; Einheit: °.",
   "Interne Systemdefinition gemäß Lastenheft /LF040/.",
 )
 
 #begriffskarte(
-  "Großkreisentfernung (orthodrome Distanz)",
-  "Kürzeste Distanz zwischen zwei Ellipsoidpunkten entlang einer Großkreislinie auf der Kugelapproximation der Erde.", "" ,
-  "Gültig für WGS84-Lat/Lon; für kurze Distanzen (< 20 km) ist die sphärische Näherung üblicherweise ausreichend.",
-  "Symbol: d oder `distanceM`; Einheit: m (SI).",
-  "WGS84 (NIMA TR8350.2); Haversine-Formel als Referenznäherung.",
+  "Großkreisentfernung",
+  "Kürzeste Distanz zwischen zwei Ellipsoidpunkten entlang einer Großkreislinie auf der Kugelapproximation der Erde", 
+  "" ,
+  "für kurze Distanzen < 20 km ist die sphärische Näherung üblicherweise ausreichend",
+  "Symbol: d oder `distanceM`; Einheit: m",
+  "Haversine-Formel als Referenznäherung.",
 )
 
 #begriffskarte(
   "Haversine-Formel",
   "Sphärische Formel zur Berechnung der Zentriwinkelspanne und daraus der Großkreisdistanz aus zwei Breiten-/Längengraden.","" ,
-  "Gültig für Kugelradius R (hier: mittlerer Erdradius); Ellipsoid-Höhen werden nicht vollständig modelliert.",
+  "Gültig für Kugelradius R",
   "Implementationsreferenz: `greatCircleDistanceMeters(lat1,lon1,lat2,lon2)`.",
-  "R. W. Sinnott, „Virtues of the Haversine“, Sky and Telescope, 1984 (häufig zitierte Herleitung).",
-)
-
-#begriffskarte(
-  "WGS 84",
-  "World Geodetic System 1984: standardisiertes Referenzellipsoid und Lagebezugssystem für GNSS.", "" ,
-  "Gültig als alleiniges Koordinatensystem dieser Komponente; andere CRS sind außerhalb des Scopes.",
-  "EPSG:4326 (Breite vor Länge in Notation und Serialisierung zu beachten).",
-  "NIMA TR8350.2; ISO 19111.",
+  "Wikipedia: Haversine-Formel",
 )
 
 #begriffskarte(
   "GPX (GPS Exchange Format)",
-  "XML-basiertes Austauschformat für Wegpunkte, Routen und Tracks.", "" ,
-  "Version 1.1 ist verbindlich für dieses Projekt; ältere 1.0-Dateien sind nicht Ziel der Serialisierung.",
-  "Namespace-URI: `http://www.topografix.com/GPX/1/1`.",
-  "Topografix GPX 1.1 Schema; https://www.topografix.com/GPX/1/1",
+  "XML-basiertes Austauschformat für Wegpunkte, Routen und Tracks.", 
+  "" ,
+  "Version 1.1 ist verbindlich für dieses Projekt",
+  "",
+  "Topografix GPX 1.1 Schema",
 )
-
+/// bis hier hin 
+/// 
 #begriffskarte(
-  "Trackpunkt (`trkpt`)",
+  "Trackpunkt",
   "XML-Element innerhalb eines GPX-Tracks, das mindestens Breite, Länge und Zeit trägt.", "" ,
   "Gültig innerhalb eines `trkseg`; Zeit in UTC nach ISO-8601.",
   "Attribute: `lat`, `lon`; Kinder u. a. `time`, `ele`, `hdop`, `speed`.",
