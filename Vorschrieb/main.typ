@@ -537,19 +537,19 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
 #lf-card(
   "/LF300/",
   "Koordinatenbereich prüfen",
-  "Mathematik / Geodäsie",
+  "-",
   "/LL010/",
   "Host-App",
-  "Die Peilungs-Komponente muss Breiten- und Längengrade auf den WGS84-Zulässigkeitsbereich prüfen (Breitengrad: -90° bis +90°, Längengrad: -180° bis +180°). Ungültige Werte führen zu einer IllegalArgumentException.",
+  "Die Peilungs-Komponente muss Breiten- und Längengrade auf den bei WGS84-Zulässigkeitsbereich prüfen (Breitengrad: -90° bis +90°, Längengrad: -180° bis +180°). Ungültige Werte werden ignoriert und nich im GPX-Format zurückgegeben.",
 )
 
 #lf-card(
   "/LF310/",
   "Zeitstempel validieren",
-  "GPS-Realität",
+  "Klärungsgespräch",
   "/LF100/",
   "Host-App",
-  "Das System muss Zeitstempel ablehnen, die in der Zukunft liegen oder älter als ein konfigurierbarer Schwellwert sind (Standard: 24 Stunden). Ungültige Zeitstempel werden mit einem semantisch klassifizierten Fehler zurückgewiesen.",
+  "Die komponente muss Zeitstempel ablehnen, die in der Zukunft liegen oder älter als ein anpassbarer Schwellwert sind (Default: 24 Stunden). GPS-Punkte mit einem ungültige Zeitstempel werden ignoriert und nich im GPX-Format zurückgegeben.",
 )
 
 #lf-card(
@@ -567,7 +567,7 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "Qualitätsrichtlinie",
   "/LF180/",
   "Host-App",
-  "Das System muss jeden Datenverlust oder jede Aggregation durch strukturierte Log-Einträge (mindestens Level WARN) nachvollziehbar machen. Stille Verwürfe sind nicht zulässig.",
+  "Die Komponente muss jeden Datenverlust oder jede Aggregation durch strukturierte Log-Einträge (mindestens Level WARN) nachvollziehbar machen. Stille Verwürfe sind nicht zulässig.",
 )
 
 #lf-card(
@@ -585,7 +585,7 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "Nebenläufigkeitsrichtlinie",
   "/LF030/",
   "Host-App",
-  "Das System muss in der Javadoc klar angeben, welche Methoden thread-sicher sind. Der Standardbetrieb sieht vor, dass ein einzelner Host-Thread die Session steuert. Abweichungen sind explizit zu kennzeichnen.",
+  "Die Komponente muss in der Javadoc klar angeben, welche Methoden thread-sicher sind. Standartmäßig soll ein einzelner Host-Thread die Peilung steuern. Abweichungen müssen gekennzeichnet werden.",
 )
 
 
