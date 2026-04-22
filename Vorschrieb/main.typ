@@ -885,10 +885,10 @@ Die folgenden Produktdaten beschreiben die persistenten bzw. transportierten Dat
 
 #ll-card(
   "/LL010/",
-  "Robustheit und Eingabevalidierung",
+  "Eingabevalidierung",
   "Qualitätsrichtlinie",
   "/LF300/, /LF310/",
-  "Ungültige Eingaben dürfen keine undefinierten Zustände erzeugen. Alle Fehlerpfade werden durch negative Testfälle und optional durch Mutationstests (PIT) abgesichert.",
+  "Ungültige Eingaben dürfen keine undefinierten Zustände erzeugen. Alle Fehlerpfade werden durch Testfälle abgesichert.",
 )
 
 #ll-card(
@@ -896,7 +896,7 @@ Die folgenden Produktdaten beschreiben die persistenten bzw. transportierten Dat
   "Genauigkeit der Peilungsberechnung",
   "Fachanforderung",
   "/LF050/",
-  "Für Distanzen über 10 m darf der berechnete Azimut maximal ±1° von einer Referenzimplementierung (Haversine-Formel) abweichen. Die Überprüfung erfolgt anhand definierter Referenzpunkte (Äquator, Polnähe, Stuttgart).",
+  "Für Distanzen von über 10 m darf der berechnete Azimut maximal ±1° von einer Referenz (Haversine-Formel) abweichen. Die Überprüfung erfolgt anhand definierter Referenzpunkte (Äquator, Polnähe, Stuttgart).",
 )
 
 #ll-card(
@@ -904,7 +904,7 @@ Die folgenden Produktdaten beschreiben die persistenten bzw. transportierten Dat
   "Performance der Peilungsberechnung",
   "Echtzeit-Anforderung",
   "/LF030/",
-  "Ein vollständiger Update-Zyklus (Positionsupdate → Azimut/Distanz berechnen) soll auf üblicher Laptop-Hardware typischerweise deutlich unter 1 ms liegen. Der dokumentierte Worst-Case-Grenzwert beträgt 100 ms ohne GC-Pause.",
+  "Ein vollständiger Update-Zyklus (Positionsupdate -> Azimut/Distanz berechnen) soll auf üblicher Laptop-Hardware typischerweise deutlich unter 1 ms liegen. Der  Worst-Case-Grenzwert beträgt dabei 100 ms ohne GC-Pause.",
 )
 
 #ll-card(
@@ -912,7 +912,7 @@ Die folgenden Produktdaten beschreiben die persistenten bzw. transportierten Dat
   "Performance des GPX-Exports",
   "Performanceanforderung",
   "/LF200/",
-  "Der GPX-Export für 10.000 Punkte ohne Douglas–Peucker-Optimierung soll auf Laptop-Hardware in unter 2 Sekunden erfolgen. Dieser Richtwert ist zu dokumentieren und in einem Benchmark-Test zu messen.",
+  "Der GPX-Export für 10.000 Punkte ohne Douglas-Peucker-Optimierung soll auf Laptop-Hardware in unter 2 Sekunden erfolgen. Dieser Richtwert ist zu dokumentieren und in einem Benchmark-Test zu messen.",
 )
 
 #ll-card(
@@ -920,7 +920,7 @@ Die folgenden Produktdaten beschreiben die persistenten bzw. transportierten Dat
   "Speicherverbrauch",
   "Ressourcenanforderung",
   "/LF180/",
-  "Für einen Track mit 10.000 Punkten soll der Heap-Zuwachs der Bibliothek typischerweise unter 50 MB bleiben. Dieser Richtwert ist durch einen Profiling-Test zu validieren.",
+  "Für einen Track mit 10.000 Punkten soll der Heap-Zuwachs der Bibliothek typischerweise unter 50 MB bleiben. Dieser Richtwert ist durch einen Test zu validieren.",
 )
 
 
@@ -931,24 +931,24 @@ Die folgenden Produktdaten beschreiben die persistenten bzw. transportierten Dat
   "/LL100/",
   "Wartbarkeit und Dokumentationsqualität",
   "Vorlesung SWE",
-  "–",
-  "Die gesamte öffentliche API muss vollständig mit Javadoc dokumentiert sein. Ein Checkstyle-Plugin im Maven-Build prüft die Einhaltung der Dokumentationsregeln. Fehlende Javadoc führen zu einem Build-Fehler.",
+  "-",
+  "Die gesamte öffentliche API der Komponente muss vollständig mit Javadoc dokumentiert sein. Ein Checkstyle-Plugin im Maven-Build prüft die Einhaltung der Dokumentationsregeln. Fehlende Javadoc führen zu einem Build-Fehler.",
 )
 
 #ll-card(
   "/LL110/",
   "Portabilität",
   "Projektauftrag",
-  "–",
-  "Die Bibliothek darf keine plattformspezifischen Pfade, Zeilentrennzeichen oder `sun.*`-APIs verwenden. Sie muss auf Windows, macOS und Linux ohne Anpassungen kompilierbar und ausführbar sein.",
+  "-",
+  "Die Komponente darf keine plattformspezifischen Pfade, Zeilentrennzeichen oder `sun.*`-APIs verwenden. Sie muss auf Windows, macOS und Linux ohne Anpassungen kompilierbar und ausführbar sein. Ist dies nicht realisierbar sein, muss eine ausführliche Anleitung in einer README Datei zur verfügung gestelt werden",
 )
 
 #ll-card(
   "/LL120/",
   "Übertragbarkeit / Build-Reproduzierbarkeit",
   "Projektauftrag",
-  "–",
-  "Der Maven-Build muss auf einem frisch geklonten Repository ohne manuelle Schritte außer einer JDK-Installation (Java 11+) erfolgreich durchlaufen. Kein Zugriff auf lokale Systemkonfigurationen ist erlaubt.",
+  "-",
+  "Der Maven-Build muss auf einem frisch geklonten Repository ohne manuelle Schritte außer einer JDK-Installation (Java 11+) erfolgreich durchlaufen. Kein Zugriff auf lokale Systemkonfigurationen ist erlaubt. st dies nicht realisierbar sein, muss eine ausführliche Anleitung in einer README Datei zur verfügung gestelt werden",
 )
 
 #ll-card(
@@ -970,7 +970,7 @@ Die folgenden Produktdaten beschreiben die persistenten bzw. transportierten Dat
 #ll-card(
   "/LL150/",
   "Testabdeckung",
-  "Lehrauftrag",
+  "Vorlesung SWE",
   "/LF340/",
   "Die Kernmodule (bearing-core, gps-tracker, gpx-exporter) müssen gemäß Spezifikation eine Zeilenabdeckung von mindestens 85 % erreichen. Für kritische Domänenklassen (Session-Lebenszyklus, Peilungsberechnung) gilt ein Mindestwert von 90 %.",
 )
@@ -979,8 +979,8 @@ Die folgenden Produktdaten beschreiben die persistenten bzw. transportierten Dat
   "/LL160/",
   "Wiederanlauf nach Exception",
   "Betriebsanforderung",
-  "–",
-  "Nach einer unerwarteten Exception muss die Komponenteninstanz in einen definierten Leerlaufzustand zurückkehren können, ohne dass ein Neustart der JVM erforderlich ist. Der Zustand IDLE muss erreichbar sein.",
+  "-",
+  "Nach einer unerwarteten Exception muss die Komponente in einen definierten Leerlaufzustand zurückkehren können, ohne dass ein Neustart der JVM erforderlich ist. Der Zustand IDLE muss erreichbar sein.",
 )
 
 #ll-card(
@@ -995,23 +995,23 @@ Die folgenden Produktdaten beschreiben die persistenten bzw. transportierten Dat
   "/LL180/",
   "Energieeffizienz des Samplings",
   "Betriebsanforderung",
-  "–",
-  "Das Sampling-Intervall soll so gestaltet sein, dass keine unnötig hohen Punktmengen erzeugt werden, die die Batterie des Host-Geräts belasten. Der Standardwert von 2 Sekunden stellt einen Kompromiss aus Genauigkeit und Effizienz dar.",
+  "-",
+  "Das Sampling-Intervall soll so gestaltet sein, dass keine unnötig hohen Punktmengen erzeugt werden, die die Batterie des Host-Geräts belasten. Der Standardwert von 2 Sekunden stellt dabei einen Kompromiss aus Genauigkeit und Effizienz dar.",
 )
 
 #ll-card(
   "/LL190/",
   "Determinismus bei gleichen Eingaben",
   "Qualitätsanforderung",
-  "–",
-  "Gleiche Eingabesequenzen mit festem `Clock`-Mock führen stets zum selben Track und denselben GPX-Ausgaben. Nicht-deterministische Verhaltensweisen in Kernpfaden sind nicht zulässig.",
+  "-",
+  "Gleiche Eingabesequenzen mit festem `Clock`-Mock müssen stets zum selben Track und denselben GPX-Ausgabe führen. Die wichtigsten Funktionen müssen stehts immer zum gleichen Ergebnis führen.",
 )
 
 #ll-card(
   "/LL200/",
   "Abhängigkeitslizenzierung",
   "Rechtliche Anforderung",
-  "–",
+  "-",
   "Im Standard-Build dürfen nur permissiv lizenzierte Bibliotheken (Apache 2.0, MIT, BSD) verwendet werden. Die W3W-Client-Abhängigkeit ist optional und nur im Maven-Profil `w3w` aktiviert.",
 )
 
