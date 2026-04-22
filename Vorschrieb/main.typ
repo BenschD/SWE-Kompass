@@ -447,7 +447,7 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "Klärungsgespräch",
   "/LF100/",
   "Host-App",
-  "Das System muss aus einer abgeschlossenen oder abgebrochenen Session einen GPX-1.1-konformen Datenstrom erzeugen können. Die Ausgabe muss den GPX-1.1-Namespace `http://www.topografix.com/GPX/1/1` enthalten.",
+  "Die Peilungskomponente muss aus einer abgeschlossenen oder abgebrochenen Peilung, den Aufgezeichneten GPS-Track in Form des GPX 1.1 Standarts erzeugen.",
 )
 
 #lf-card(
@@ -483,7 +483,7 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "Klärungsgespräch",
   "/LF200/",
   "Host-App",
-  "Das System muss eine punktbasierte Reduktionsstrategie implementieren, die nur jeden n-ten Punkt behält. Start- und Endpunkt des Tracks werden dabei stets erhalten.",
+  "Die Peilungskomponente soll einen Reduktionsalgorithmus enthalten, welcher nur jeden n-ten GPS Punkt behält. Der Startpunkt und der Endpunkt, werden dabei immer erhalten.",
 )
 
 #lf-card(
@@ -501,16 +501,16 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "Klärungsgespräch",
   "/LF200/",
   "Host-App",
-  "Das System muss nahezu kollineare Punktfolgen innerhalb eines konfigurierbaren Toleranzbandes auf Start- und Endpunkt reduzieren können. Eine Garantie für enge Kurvenradien besteht explizit nicht.",
+  "Die Komponente muss Punkte welche näherungsweiße auf einer Geraden liegen, auf lediglich zwei Punkte Reduzieren können. Um so die Gesamtanzahl an gespeicherten GPS-Punkte zu reduzieren",
 )
 
 #lf-card(
   "/LF270/",
-  "Optimierung: Douglas–Peucker (optional)",
+  "Optimierung: Douglas-Peucker (optional)",
   "Erweiterungsanforderung (1+)",
   "/LF200/",
   "Host-App",
-  "Das System muss optional den Douglas–Peucker-Algorithmus mit konfigurierbarer metrischer Toleranz (Epsilon in Metern) für die Track-Vereinfachung anbieten. Die Strategie ist über die Strategy-Schnittstelle austauschbar.",
+  "Das System muss optional den Douglas-Peucker-Algorithmus mit konfigurierbarer metrischer Toleranz (Epsilon in Metern) für die Track-Vereinfachung anbieten. Die Strategie ist über die Strategy-Schnittstelle austauschbar.",
 )
 
 #lf-card(
@@ -519,7 +519,7 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "Klärungsgespräch",
   "/LF050/",
   "Host-App",
-  "Das System muss optional Koordinaten in eine What3Words-Adresse auflösen, sofern ein gültiger API-Key und Netzwerkzugang vorhanden sind. Bei Fehler oder fehlenden Credentials wird ein definierter Fallback geliefert.",
+  "Die Java-Komponente muss in der Lage seim Koordinaten in eine What3Words-Adresse auflösen, sofern ein gültiger API-Key und Netzwerkzugang vorhanden sind. Bei Fehler oder fehlenden Credentials wird eine Expression ausgelösst.",
 )
 
 #lf-card(
@@ -540,7 +540,7 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "Mathematik / Geodäsie",
   "/LL010/",
   "Host-App",
-  "Das System muss Breiten- und Längengrade auf den WGS84-Zulässigkeitsbereich prüfen (Breitengrad: −90° bis +90°, Längengrad: −180° bis +180°). Ungültige Werte führen zu einer IllegalArgumentException.",
+  "Die Peilungs-Komponente muss Breiten- und Längengrade auf den WGS84-Zulässigkeitsbereich prüfen (Breitengrad: -90° bis +90°, Längengrad: -180° bis +180°). Ungültige Werte führen zu einer IllegalArgumentException.",
 )
 
 #lf-card(
