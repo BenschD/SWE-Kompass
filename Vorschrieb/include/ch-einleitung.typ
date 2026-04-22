@@ -5,23 +5,24 @@
 
 Im Rahmen der Projektarbeit wird die iOS-Anwendung _Kompass Professional_ als fachliche Referenz analysiert. Der Fokus liegt auf der Peilungsfunktion und nicht auf einer vollständigen Navigationslösung. Unter *Peilung* wird in dieser Arbeit die Berechnung der Richtung und Entfernung von der aktuellen Position zu einem Zielpunkt verstanden; optional kann die Abweichung zum aktuellen Kurs berücksichtigt werden, sofern ein Kurswert vom Host-System bereitgestellt wird. 
 
-Aus der Aufgabenstellung ergeben sich vier eng miteinander verknüpfte Kernprobleme:
+Die zentrale Problemstellung dieser Arbeit besteht in der konsistenten und reproduzierbaren Berechnung von Zielrichtung (Azimut), Entfernung und diskreter Ordinalrichtung auf Basis von WGS84-Koordinaten unter klar definierten Eingangs- und Schnittstellenbedingungen. In der praktischen Anwendung erschweren fehlerbehaftete Positionsdaten, zeitliche Lücken und unplausible Messwerte eine stabile Verarbeitung, sodass geeignete Filter- und Segmentierungsmechanismen erforderlich sind. Zusätzlich muss die Verarbeitung als kontinuierlicher Session-Prozess mit Start, Laufzeit und Abbruch konzipiert werden, bei dem Track-Daten trotz Unterbrechungen vollständig exportierbar bleiben und gleichzeitig durch kontrollierte Datenreduktion effizient gehalten werden. Insgesamt ergibt sich daraus die Anforderung einer robusten, nachvollziehbaren und erweiterbaren Verarbeitung von Positions- und Bewegungsdaten inklusive standardisiertem GPX-Export.
 
-+ *Fachliche Eindeutigkeit:* Die Begriffe, Eingangsgrößen und Berechnungsregeln der Peilung müssen präzise definiert, nachvollziehbar und reproduzierbar sein.
-+ *Systemneutrale Integration:* Die Lösung ist als UI-freie Java-Komponente zu entwerfen, die in beliebige Java-Oberflächen integrierbar ist und ihre Daten ausschließlich über klar spezifizierte Schnittstellen erhält.
-+ *Datenqualität und Nachvollziehbarkeit:* Während einer Peilung ist ein GPS-Track robust aufzuzeichnen, bei ungültigen Messwerten kontrolliert zu reagieren und ein konsistenter Datenstand auch bei Abbruch bereitzustellen.
-+ *SWE-konforme Umsetzung:* Die Benotung verlangt eine durchgängige Kette aus Anforderungsanalyse, Spezifikation, objektorientiertem Entwurf, Implementierung und Test mit den in beiden Semestern vermittelten Methoden.
+
 
 == Zielsetzung
 
-Das übergeordnete Ziel ist eine *vollständige, prüfbare Spezifikation* zusammen mit einer *Referenzimplementierung* als Maven-Projekt. Konkret:
+Ziel der Arbeit ist eine vollständige, prüfbare Spezifikation zusammen mit einer Implementierung als Maven-Projekt.
 
-- *Anforderungsanalyse und Spezifikation:* SOPHIST-konforme, eindeutig prüfbare Anforderungen (funktional, nicht-funktional, Daten, Schnittstellen, Randbedingungen) inklusive Qualitäts- und Risikoaspekten sowie objektorientierter Analyse- und Entwurfsartefakte.
-- *Implementierung:* UI-freie Java-Komponente mit klaren Eingabeschnittstellen für Positions- und Rechnungsdaten, konfigurierbarer Aufzeichnung, GPX-1.1-konformem Export und optionaler What3Words-Integration.
-- *Qualitätssicherung:* Nachvollziehbare Testfälle pro fachlichem Modul, automatisierte Ausführung über Maven und reproduzierbare Ergebnisse als Grundlage der Abnahme.
-- *Lieferfähigkeit:* Abgabe des lauffähigen Quellcodes (keine ausführbare Fat-JAR als Hauptartefakt) mit sofort ausführbarer Test-Suite.
+In der *Anforderungsanalyse und Spezifikation* sollen die Anforderungen SOPHIST-konform und eindeutig prüfbar formuliert werden, also funktional, nicht-funktional, zu Daten, Schnittstellen und Randbedingungen, ergänzt um Qualitäts- und Risikoaspekte sowie um objektorientierte Analyse- und Entwurfsartefakte.
 
-== Abgrenzung und Scope
+Die *Implementierung* soll als UI-freie Java-Komponente vorliegen, mit klaren Eingabeschnittstellen für Positions- und Rechnungsdaten, konfigurierbarer Aufzeichnung, GPX-1.1-konformem Export und optionaler What3Words-Anbindung.
+
+Die *Qualitätssicherung* soll über nachvollziehbare Testfälle pro fachlichem Modul erfolgen, mit automatisierter Ausführung über Maven und reproduzierbaren Ergebnissen als Grundlage für die Abnahme.
+
+Die *Lieferfähigkeit* umfasst lauffähigen Quellcode ohne eine ausführbare Fat-JAR als Hauptartefakt sowie eine Test-Suite, die sich direkt ausführen lässt.
+
+
+== Abgrenzung
 
 *Im Scope:*
 
