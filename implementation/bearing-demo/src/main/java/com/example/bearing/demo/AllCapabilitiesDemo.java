@@ -73,6 +73,38 @@ public final class AllCapabilitiesDemo {
         System.out.println(String.format("  %-34s %s", label + ":", value));
     }
 
+    /**
+     * Synthetischer Wanderweg: laengerer Verlauf mit Ueberhoehungen durch Sinus/Cosinus (nicht nur
+     * Gerade). Schrittweite in der Zeit bleibt {@code stepSeconds}, Koordinaten klein genug fuer
+     * plausible Geschwindigkeiten.
+     */
+    private static double[] demoCurvedLatLon(int index, int total, double lat0, double lon0) {
+        if (total <= 1) {
+            return new double[] {lat0, lon0};
+        }
+        double u = index / (double) (total - 1);
+        double lat = lat0 + 0.0019 * u + 0.00013 * Math.sin(u * Math.PI * 6);
+        double lon = lon0 + 0.0023 * u + 0.00015 * Math.cos(u * Math.PI * 4.5);
+        return new double[] {lat, lon};
+    }
+
+    private static void feedCurvedTrack(
+            DefaultBearingSession session,
+            SettableClock clock,
+            Instant t0,
+            int pointCount,
+            long stepSeconds,
+            double lat0,
+            double lon0) {
+        for (int i = 0; i < pointCount; i++) {
+            Instant ti = t0.plusSeconds(stepSeconds * i);
+            clock.set(ti);
+            double[] p = demoCurvedLatLon(i, pointCount, lat0, lon0);
+            session.onPositionUpdate(
+                    new GpsFix(ti, p[0], p[1], Optional.empty(), Optional.empty(), Optional.empty()));
+        }
+    }
+
     private static void runDomainBearingCalculator() {
         outHeader("1) Domain: BearingCalculator (Distanz, Azimut, Ordinal, Snapshot)");
         GeoCoordinate target = new GeoCoordinate(48.78, 9.18);
@@ -173,13 +205,9 @@ public final class AllCapabilitiesDemo {
                     }
                 });
         s.start(SessionConfig.builder().samplingIntervalMs(500).build(), new GeoCoordinate(48.78, 9.18));
-        clock.set(t0);
-        s.onPositionUpdate(
-                new GpsFix(t0, 48.77, 9.17, Optional.empty(), Optional.empty(), Optional.empty()));
-        Instant t1 = t0.plusSeconds(2);
-        clock.set(t1);
-        s.onPositionUpdate(
-                new GpsFix(t1, 48.771, 9.171, Optional.empty(), Optional.empty(), Optional.empty()));
+        int trackPoints = 26;
+        feedCurvedTrack(s, clock, t0, trackPoints, 2L, 48.77, 9.17);
+        out("Demo-Track Rohpunkte (geplant)", trackPoints);
         s.onCourseUpdate(120.0);
         BearingSnapshot snap = s.currentSnapshot();
         out("Listener started", started.get());
@@ -206,15 +234,9 @@ public final class AllCapabilitiesDemo {
                         .addOptimizer(new LineCollinearityOptimizer(4.0))
                         .build();
         s.start(cfg, new GeoCoordinate(48.79, 9.19));
-        int n = 28;
-        for (int i = 0; i < n; i++) {
-            Instant ti = t0.plusSeconds(2L * i);
-            clock.set(ti);
-            double t = i / (double) (n - 1);
-            double lat = 48.77 + 0.0004 * t;
-            double lon = 9.17 + 0.0005 * t;
-            s.onPositionUpdate(new GpsFix(ti, lat, lon, Optional.empty(), Optional.empty(), Optional.empty()));
-        }
+        int n = 96;
+        out("Demo-Track Rohpunkte (Sinus/Cosinus-Kruemmung)", n);
+        feedCurvedTrack(s, clock, t0, n, 2L, 48.768, 9.165);
         GpxResult r = s.complete();
         out("Rohdaten gespeicherte Punkte (Statistik)", r.statistics().storedPointCount());
         out("GPX <trkpt> nach Pipeline", countTrkptTags(r.asUtf8String()));
@@ -238,18 +260,7 @@ public final class AllCapabilitiesDemo {
                             .completePersistPath(rel)
                             .build();
             s.start(cfg, new GeoCoordinate(48.78, 9.18));
-            clock.set(t0);
-            s.onPositionUpdate(
-                    new GpsFix(t0, 48.77, 9.17, Optional.empty(), Optional.empty(), Optional.empty()));
-            clock.set(t0.plusSeconds(2));
-            s.onPositionUpdate(
-                    new GpsFix(
-                            t0.plusSeconds(2),
-                            48.771,
-                            9.171,
-                            Optional.empty(),
-                            Optional.empty(),
-                            Optional.empty()));
+            feedCurvedTrack(s, clock, t0, 20, 2L, 48.77, 9.17);
             s.complete();
             Path written = base.resolve("export").resolve("fertig.gpx");
             out("Datei existiert", Files.exists(written));

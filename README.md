@@ -441,6 +441,3 @@ Diese Komponente demonstriert **umfassendes Verständnis** aller SWE-Themengebie
 ---
 
 **Viel Erfolg! 🚀**
-
-cd implementation
-mvn -pl bearing-api -am "-Dsurefire.failIfNoSpecifiedTests=false" "-Dtest=BearingSessionVisualizationTest" test

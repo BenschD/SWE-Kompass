@@ -45,17 +45,6 @@ mvn -f bearing-demo/pom.xml exec:java
 
 Linux/macOS: `./run-all-capabilities.sh` (Maven im `PATH`).
 
-### Demo-Visualisierung (HTML + Konsole)
-
-Ein Test schreibt nach dem Lauf eine **SVG-Karte** und gibt eine **ASCII-Karte** auf stdout aus:
-
-```powershell
-cd implementation
-mvn -pl bearing-api -am "-Dsurefire.failIfNoSpecifiedTests=false" "-Dtest=BearingSessionVisualizationTest" test
-```
-
-Danach im Browser öffnen: `bearing-api/target/bearing-session-visualization.html` (Pfad steht auch in der Maven-Ausgabe).
-
 ## Traceability
 
 Siehe [TRACEABILITY.md](TRACEABILITY.md).
