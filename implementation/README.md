@@ -17,6 +17,8 @@ Maven-Multi-Modul-Projekt gemäß Vorschrieb unter [`../Vorschrieb/`](../Vorschr
 
 Maven liegt bei dir unter `C:\tools\apache-maven-3.9.15` (oder ähnlich). **PATH** sollte `…\bin` enthalten, damit `mvn` überall funktioniert. Nach der Installation ggf. **Terminal/Cursor neu starten**, damit die Umgebungsvariable geladen wird.
 
+Umgebungsvariablen (Vorlage zum Kopieren): [`.env.example`](../.env.example) → lokale Datei `.env` im Repo-Root anlegen (nicht versioniert). Optional: `MVN_CMD` für die Demo-Skripte, `W3W_API_KEY` für echte W3W-Calls in eurer Anwendung.
+
 ```powershell
 # Entweder Repo-Root (Aggregator-POM ../pom.xml) oder dieses Verzeichnis:
 cd implementation
@@ -27,6 +29,21 @@ mvn test
 ```
 
 Coverage-Report (JaCoCo): `mvn verify` → `bearing-api/target/site/jacoco/index.html` (pro Modul).
+
+### Alles auf einmal (Konsolen-Demo / Skript)
+
+Modul **`bearing-demo`** enthält `AllCapabilitiesDemo`: Domain-Rechner, Session (Start, Fehler, HDOP, Listener, Snapshot, `complete`/`abort`), **alle vier Track-Optimierer** in einer Pipeline, **SafeFileSink** (Jimfs), Path-Traversal-Schutz, W3W-Noop, ungültiger Kurs.
+
+```powershell
+# Aus implementation/:
+.\run-all-capabilities.ps1
+
+# Oder manuell (zwei Schritte: Reactor installieren, Demo nur aus bearing-demo starten):
+mvn -pl bearing-demo -am install -DskipTests
+mvn -f bearing-demo/pom.xml exec:java
+```
+
+Linux/macOS: `./run-all-capabilities.sh` (Maven im `PATH`).
 
 ### Demo-Visualisierung (HTML + Konsole)
 

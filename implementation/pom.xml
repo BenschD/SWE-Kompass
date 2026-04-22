@@ -18,6 +18,7 @@
     <module>bearing-adapter-system</module>
     <module>bearing-adapter-w3w</module>
     <module>bearing-api</module>
+    <module>bearing-demo</module>
   </modules>
 
   <properties>
