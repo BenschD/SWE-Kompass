@@ -185,193 +185,172 @@
 
 #begriffskarte(
   "Builder (Konfigurationsaufbau)",
-  "Erzeugungsmuster für schrittweise Konstruktion komplexer unveränderlicher Konfigurationsobjekte.","" ,
-  "Gültig vor Sessionstart; nach /LF410/ einfrieren.",
-  "`SessionConfig.Builder` (konzeptionell).",
-  "Gamma u. a., _Design Patterns_; Joshua Bloch, _Effective Java_ (Builder für Immutables).",
+  "Muster, mit dem man eine Konfiguration Schritt für Schritt baut statt mit einem langen Konstruktor.","" ,
+  "Im Projekt über `SessionConfig.builder()`, beim Start werden die relevanten Parameter als `RecordingParameters` eingefroren (/LF410/).",
+  "Beispiel: `SessionConfig.builder().samplingIntervalMs(2000).build()`",
+  "Design Patterns",
 )
 
 #begriffskarte(
-  "Immutability (Unveränderlichkeit)",
-  "Objektzustand nach Erzeugung nicht änderbar; Änderungen nur durch neues Objekt.","" ,
-  "Konfiguration und dominante Wertobjekte (z. B. `GpsPoint`) nach Erzeugung unveränderlich.",
-  "Vorteil: Thread-Sicherheit der Datenübertragung zwischen Schichten.",
-  "Joshua Bloch, _Effective Java_, Item 17.",
+  "Immutability",
+  "Ein Objekt bleibt nach der Erzeugung unverändert, für Änderungen wird ein neues Objekt erstellt","" ,
+  "Trifft hier u. a. auf `SessionConfig` und `GpsPoint` zu.",
+  "Hilft bei Nebenläufigkeit, weil Leser keine veränderbaren Zwischenzustände sehen",
+  "Software Engineering Best Practices",
 )
 
 #begriffskarte(
   "What3Words (W3W)",
-  "Geokodierungssystem, das Erdoberflächenpositionen durch drei Wörter adressiert.","" ,
-  "Nur optional; erfordert API-Key und Netzwerk /LF280/; Cache /LF290/.",
-  "Rückgabe: drei Wörter, Sprache konfigurierbar.",
-  "what3words Limited, öffentliche API-Dokumentation.",
+  "Dienst, der Koordinaten in ein Drei-Wort-Format umwandelt","" ,
+  "Optionaler Teil des Systems (/LF280/), Ergebnisse werden gecacht (/LF290/).",
+  "",
+  "what3words Limited, Peter Bohl",
 )
 
 #begriffskarte(
   "UTC und `Instant`",
-  "UTC ist die einheitliche astronomische/kivilzeitbasis ohne Sommerzeit; `java.time.Instant` modelliert einen Zeitpunkt auf der UTC-Skala.","" ,
-  "Alle internen Zeitstempel in UTC; lokale Darstellung nur im Host.",
-  "ISO-8601 in GPX `time`-Elementen.",
+  "UTC ist die einheitliche Zeitbasis ohne Sommerzeit; `java.time.Instant` beschreibt einen exakten Zeitpunkt auf dieser Skala","" ,
+  "Interne Zeitstempel laufen durchgängig über `Instant`; Ausgabe nach GPX erfolgt als ISO-8601 in UTC.",
+  "Im Code: `ClockPort.instant()` und `DateTimeFormatter.ISO_INSTANT`.",
   "ISO 8601; Java SE Date-Time-Package.",
 )
 
 #begriffskarte(
   "Ordinalrichtung (Himmelsrichtung)",
-  "Diskretisierte Kompassrose mit acht Sekundärhimmelsrichtungen.","" ,
-  "Gültig für alle Azimute; Grenzfälle an Oktantgrenzen per definierter Rundung.",
+  "Vereinfachte 8er-Kompassangabe statt eines exakten Gradwerts.","" ,
+  "Wird aus dem Azimut abgeleitet und für eine leicht verständliche Richtungsanzeige genutzt.",
   "Werte: N, NE, E, SE, S, SW, W, NW.",
   "Kartographie; Anforderung /LF050/.",
 )
 
 #begriffskarte(
   "Path Traversal",
-  "Angriffsform, bei der relative Pfadsegmente (`..`) unerlaubt außerhalb eines Zielverzeichnisses referenzieren.","" ,
-  "Muss unterbunden werden /LF320/ bei Dateiexport.",
-  "Mitigation: Normalisierung, Canonicalisierung, Basispfad-Prüfung.",
-  "OWASP Path Traversal; CWE-22.",
+  "Sicherheitsproblem, bei dem ein Pfad absichtlich aus dem erlaubten Zielordner ausbricht (z. B. mit `..`).","" ,
+  "Beim Export verpflichtend zu verhindern (/LF320/).",
+  "Umsetzung in `SafeFileSink`: Pfad normalisieren und gegen erlaubtes Basisverzeichnis prüfen.",
+  "OWASP Path Traversal",
 )
 
 #begriffskarte(
   "XXE (XML External Entity)",
-  "Klasse von XML-Verarbeitungsangriffen über externe Entities.", "" ,
-  "Export generiert XML – Parser im Host sollten sicher konfiguriert sein; Bibliothek vermeidet externe Entities /LL130/.",
-  "Deaktivierung von DTDs/Entities in konsumierenden Parsern.",
-  "OWASP XML Security; W3C XML Recommendation.",
+  "Angriffsklasse beim XML-Parsing über externe Entities", "" ,
+  "Die Komponente erzeugt XML selbst und escaped Inhalte (/LL130/); das XXE-Risiko liegt vor allem bei fremden Parsern, die diese XML später lesen",
+  "Empfehlung: DTD/External-Entity-Verarbeitung im konsumierenden Parser deaktivieren",
+  "W3C XML Recommendation",
 )
 
 #begriffskarte(
-  "Atomares Schreiben (write-rename)",
-  "Schreiben in temporäre Datei mit anschließendem umbenanntem Commit an Zielpfad zur Vermeidung korrupt halbgeschriebener Dateien.","" ,
-  "Gültig auf POSIX und Windows NTFS (rename-overwrite semantik beachten).",
-  "Pattern: `*.tmp` → `rename()`.",
-  "POSIX.1-2008 `rename`; Anforderung /LF220/.",
+  "Atomares Schreiben",
+  "Datei wird zuerst temporär geschrieben und dann in den Zielpfad verschoben, um halbfertige Dateien zu vermeiden","" ,
+  "Wichtig für die Konsistenz bei Exporten",
+  "temporäre Datei (`*.tmp`)",
+  "Anforderung /LF220/.",
 )
 
 #begriffskarte(
   "Soft-Limit / Hard-Limit (Punktbudget)",
-  "Zwei Stufen der Punktmengenbegrenzung: Warnung vs. kontrollierter Stopp/Overflow-Modus.","" ,
-  "Konfigurierbar /LF120/, /LF180/; `0` deaktiviert Limit.",
-  "Ereignisse: WARN vs. LIMIT_REACHED.",
-  "Ressourcen-Schutz in eingebetteten Systemen (allgemein); projektspezifisch.",
+  "Zweistufige Begrenzung der gespeicherten Trackpunkte: erst Warnung, dann harter Stopp.","" ,
+  "Konfigurierbar über `softLimitPoints` und `hardLimitPoints`; `0` bedeutet deaktiviert (/LF120/, /LF180/).",
+  "Code: `SOFT_LIMIT_WARN`, `HARD_LIMIT_REACHED`",
+  "Ressourcen-Schutz in eingebetteten Systemen; projektspezifisch.",
 )
 
 #begriffskarte(
   "Douglas–Peucker-Algorithmus",
-  "Linienvereinfachung durch rekursive Entfernung von Punkten unterhalb einer metrischen Toleranz ε.","" ,
-  "Gültig für planare oder projizierte Geometrie; auf Kugeloberfläche nur approximativ, in Kurven keine Garantie minimale Kurvenapproximation.",
-  "Parameter: `epsilonMeters` /LF270/.",
-  "D. Douglas, T. Peucker, _Algorithms for the reduction of the number of points required to represent a digitized line or its caricature_, 1973.",
+  "Algorithmus zur Linienvereinfachung: Punkte mit geringer Abweichung von der Verbindungslinie werden rekursiv entfernt.","" ,
+  "Im Projekt mit metrischer Toleranz in Metern und lokaler Tangentialebene als Näherung (/LF270/).",
+  "Parameter im Code: `epsilonM`.",
+  "D. Douglas, T. Peucker, Algorithms for the reduction of the number of points required to represent a digitized line or its caricature76, 1973.",
 )
 
 #begriffskarte(
-  "Kollinearitätsreduktion (Geraden-Heuristik)",
+  "Kollinearitätsreduktion",
   "Reduktion fast kollinearer Punktfolgen auf Start- und Endpunkt innerhalb eines Winkel-/Seitenbandes.","" ,
   "Explizit keine Garantie für enge Kurvenradien /LF260/.",
   "Heuristikparameter: Toleranzband.",
-  "Klärungsgespräch Projektbetreuer; /LF260/.",
+  "Klärungsgespräch Peter Bohl; /LF260/.",
 )
 
 #begriffskarte(
   "SOPHIST-Regeln",
-  "Qualitätskriterien für einzelne Anforderungen: eindeutig, vollständig, konsistent, überprüfbar, notwendig, realisierbar, wirksam, adressatengerecht, verständlich, mehrdeutigkeitsfrei, umsetzungsneutral.", "" ,
-  "Gelten für die Formulierung sämtlicher `/LF…/`, `/LL…/`, `/LD…/`-Artefakte.",
-  "Checkliste in Reviews und Selbstinspektion.",
-  "SOPHIST GmbH, _Requirements Engineering nach SOPHIST_ (Lehrbuch).",
+  "Regelsatz, um Anforderungen klar, überprüfbar und ohne Widersprüche zu formulieren.", "" ,
+  "Dient als Qualitätsmaßstab für die Formulierung der `/LF…/`, `/LL…/` und `/LD…/`-Artefakte.",
+  "Wird in Reviews als kompakte Checkliste eingesetzt.",
+  "Software Engineering Vorlesung, SOPHIST-Regeln",
 )
 
 #begriffskarte(
   "Lastenheft vs. Pflichtenheft",
-  "Lastenheft: fachliche, wirtschaftliche und politische Zielsetzung aus Auftraggebersicht. Pflichtenheft: technische Umsetzungsvorgaben aus Entwicklersicht.","" ,
+  "Lastenheft: fachliche, wirtschaftliche und politische Zielsetzung aus Auftraggebersicht. Pflichtenheft: technische Umsetzungsvorgaben aus Entwicklersicht","" ,
   "In dieser Arbeit: Kapitel „Anforderungsanalyse“ ≈ Lastenheft; Kapitel „Systemspezifikation“ ≈ Pflichtenheft.",
-  "IEEE 830-1998 unterscheidet ähnliche Begriffe (SRS).",
-  "IEEE Std 830-1998 (superseded, historisch); aktuell: ISO/IEC/IEEE 29148.",
+  "IEEE 830-1998",
+  "Software Engineering Vorlesung",
 )
 
 #begriffskarte(
   "Traceability (Rückverfolgbarkeit)",
-  "Nachweisbare Verknüpfung zwischen Anforderung, Entwurfselement, Code und Testfall.","" ,
-  "Über gesamten Lebenszyklus; besonders für `/LF…/` und `/TC…/`.",
-  "Matrix: Anforderung × Modul × Test-ID.",
-  "ISO/IEC/IEEE 29148:2018, Abschnitt zu traceability.",
+  "Nachvollziehbare Verbindung zwischen Anforderung, Design, Code und Test.","" ,
+  "Wichtig über den gesamten Lebenszyklus, besonders bei `/LF…/` und `/TC…/`.",
+  "Im Projekt als Matrix in `implementation/TRACEABILITY.md`.",
+  "Software Engineering Vorlesung",
 )
 
 #begriffskarte(
   "SLF4J (Simple Logging Facade for Java)",
-  "Fassaden-API für Logging-Frameworks (Logback, Log4j2).","" ,
-  "Bibliothek loggt nur über SLF4J-Schnittstelle /LL140/.",
-  "Logger-Factory: `LoggerFactory.getLogger(...)`.",
+  "Einheitliche Logging-Schnittstelle, die konkrete Logger-Backends austauschbar macht.","" ,
+  "Die Komponente bindet Logging über den Adapter `Slf4jLoggerAdapter` ein (/LL140/).",
+  "Typischer Einstieg: `LoggerFactory.getLogger(...)`.",
   "https://www.slf4j.org/",
 )
 
 #begriffskarte(
   "JUnit 5",
-  "Testframework für Java mit Extension Model, parametrierten Tests und Assertions.","" ,
-  "Alle modularen Unit-Tests; ArchUnit optional für Architekturregeln.",
-  "Annotationen: `@Test`, `@ParameterizedTest`, …",
+  "Modernes Java-Testframework für Unit- und Integrationsnahe Tests.","" ,
+  "In diesem Projekt Grundlage der Modul-Tests; aktuell vor allem mit `@Test`.",
+  "Bietet u. a. Assertions, Lifecycle-Hooks und Erweiterungen.",
   "https://junit.org/junit5/",
 )
 
 #begriffskarte(
   "Mutationstest (PIT)",
-  "Verfahren, das Mutanten des Produktcodes erzeugt und prüft, ob Tests diese töten.","" ,
-  "Optional für `/LL010/` Nachweis; nicht Pflicht des Minimal-Builds.",
-  "Metrik: Mutations-Score.",
-  "PITest Dokumentation; akademisch: DeMillo et al., Mutation Testing.",
+  "Testtechnik, bei der kleine Codeänderungen (Mutanten) erzeugt werden, um die Schärfe der Tests zu prüfen.","" ,
+  "Als Qualitätsvertiefung möglich, aber nicht Teil des Standard-Builds.",
+  "Kennzahl: Mutations-Score.",
+  "Software Engineering Vorlesung",
 )
 
 #begriffskarte(
   "Property-Based Testing (jqwik)",
-  "Testen gegen universelle Eigenschaften statt Einzelbeispiele.","" ,
-  "Einsatz für Koordinateninvarianten (Symmetrie Distanz, Grenzen Azimut).",
-  "Framework: jqwik (optional).",
-  "Claessen & Hughes, _QuickCheck: A Lightweight Tool for Random Testing of Haskell Programs_, ICFP 2000.",
+  "Testansatz, bei dem allgemeine Eigenschaften statt einzelner Beispiele geprüft werden.","" ,
+  "Sinnvoll für Invarianten wie Distanzsymmetrie oder Grenzfälle bei Winkeln.",
+  "Kann optional mit jqwik umgesetzt werden.",
+  "https://jqwik.net/",
 )
 
 #begriffskarte(
   "Checkstyle",
-  "Statisches Analysewerkzeug für Kodierungsstandards inkl. Javadoc-Pflicht.","" ,
-  "Build-Integration gemäß /LL100/.",
-  "Konfiguration via `checkstyle.xml`.",
+  "Werkzeug für statische Stil- und Strukturprüfungen im Java-Code.","" ,
+  "Im Build integriert; die aktuelle Projektkonfiguration ist bewusst schlank gehalten.",
+  "Konfiguration in `implementation/checkstyle.xml`.",
   "https://checkstyle.org/",
 )
 
 #begriffskarte(
   "Maven",
-  "Build- und Abhängigkeitsmanagement für Java-Projekte.","" ,
-  "Standardkommando: `mvn test` /LF450/.",
-  "Artefakt-Koordinaten: `groupId:artifactId:version`.",
-  "Apache Maven Project Dokumentation.",
+  "Standardwerkzeug für Build, Testlauf und Abhängigkeitsverwaltung in Java-Projekten.","" ,
+  "Im Projekt zentraler Einstieg für Build und Tests (`mvn test`, /LF450/).",
+  "Artefakte werden über `groupId:artifactId:version` aufgelöst.",
+  "Apache Maven Project Dokumentation, Software Engineering Vorlesung",
 )
 
-#begriffskarte(
-  "ISO/IEC 25010",
-  "System- und Softwareproduktqualitätsmodell mit acht Hauptmerkmalen und Untermerkmalen.","" ,
-  "Dient der Gewichtung in der Qualitätsmatrix dieses Dokuments.",
-  "Merkmale u. a.: Funktionalität, Zuverlässigkeit, Performance, Sicherheit, Wartbarkeit, Portabilität.",
-  "ISO/IEC 25010:2011 (aktualisierte Fassungen beachten).",
-)
 
-#begriffskarte(
-  "FMEA (Fehlermöglichkeits- und Einflussanalyse)",
-  "Systematische Risikoanalyse: Fehlerart, Folge, Auftretenswahrscheinlichkeit, Entdeckung, Maßnahmen.","" ,
-  "Angewandt auf Datenpfade GPS → Track → GPX.",
-  "Bewertung in RPZ oder qualitativ.",
-  "AIAG/VDA FMEA Handbuch (Industrie); Lehradaptation im QS-Kapitel.",
-)
 
 #begriffskarte(
   "Abbruchverhalten (Abort)",
-  "Beendigung der Session durch Host vor regulärem Abschluss bei Beibehaltung der bisherigen Trackdaten.","" ,
-  "Status ABORTED; GPX als String/Bytes verfügbar /LF070/, /LF230/; Dateischreiben nur wenn konfiguriert.",
-  "Kein stiller Datenverlust.",
-  "Klärungsgespräch; /LF070/.",
+  "Vorzeitiges Beenden einer aktiven Session durch den Host, ohne die bis dahin erfassten Daten zu verlieren","" ,
+  "Session wechselt auf `ABORTED`; Rückgabe erfolgt als `GpxResult` (UTF-8-Bytes plus String-Zugriff) gemäß /LF070/ und /LF230/",
+  "Persistenz beim Abort erfolgt nur bei aktivem `persistOnAbort`",
+  "Klärungsgespräch; /LF070/",
 )
 
-#begriffskarte(
-  "Deklination (magnetische Missweisung)",
-  "Winkel zwischen magnetischem und geografischem Nord – hier nicht automatisiert, da magnetische Peilung außerhalb des Kernumfangs liegt.","" ,
-  "Wenn Host magnetische Nord verwendet, muss er die Deklination selbst modellieren.",
-  "Symbol: δ; regional variabel.",
-  "IAGA World Magnetic Model (WMM) – externe Quelle.",
-)
 ]
