@@ -597,7 +597,7 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "Robustheitsrichtlinie",
   "/LF010/",
   "Host-App",
-  "Das System muss beim Sessionstart prüfen, dass alle Konfigurationswerte zulässig sind (z. B. Intervall > 0, Punktbudget > 0, kein negativer HDOP-Schwellwert). Ungültige Kombinationen führen zu einem Fehler vor Sessionstart.",
+  "Die Komponente muss beim Start der eilung prüfen, dass alle übergebene Werte der Konfiguration zulässig sind (z. B. Intervall > 0, Punktbudget > 0, kein negativer HDOP-Schwellwert). Ungültige Werte führen zu einem Fehler.",
 )
 
 #lf-card(
@@ -606,7 +606,7 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "SWE Best Practice",
   "/LF010/",
   "Host-App",
-  "Das System muss die Konfiguration nach dem Start einer Session unveränderlich einfrieren. Nachträgliche Änderungsversuche müssen abgewiesen werden. Dies gewährleistet konsistentes Verhalten über die gesamte Session-Laufzeit.",
+  "Die Komponente muss die Konfiguration nach dem Start einer Peilung unveränderlich einfrieren. Nachträgliche Änderungsversuche müssen abgewiesen werden. Dies gewährleistet ein konsistentes Verhalten über die gesamte Laufzeit der Peilung.",
 )
 
 #lf-card(
@@ -622,27 +622,27 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "/LF430/",
   "Keine UI-Abhängigkeiten",
   "Projektauftrag",
-  "–",
+  "-",
   "Team",
-  "Das System darf keinerlei Klassen aus UI-Frameworks (AWT, Swing, JavaFX, Android-UI etc.) referenzieren. Die Bibliothek ist reine Logik- und I/O-Schicht.",
+  "Die Komponente darf keinerlei Klassen aus UI-Frameworks (AWT, Swing, JavaFX, Android-UI etc.) referenzieren. Die Bibliothek ist reine Logik- und I/O-Schicht.",
 )
 
 #lf-card(
   "/LF440/",
   "Java-Version",
   "Rahmenbedingung",
-  "–",
+  "-",
   "Team",
-  "Das System muss mit Java 11 oder höher kompilierbar sein, ohne Verwendung von APIs, die in späteren Versionen entfernt wurden (`sun.*`-Klassen, deprecated APIs).",
+  "Die Komponente muss mit Java 11 oder höher kompilierbar sein, ohne Verwendung von APIs, die in späteren Versionen entfernt wurden wie beispielsweiße `sun.*`-Klassen und deprecated APIs.",
 )
 
 #lf-card(
   "/LF450/",
   "Build-Tooling",
   "Abgabeanforderung",
-  "–",
+  "-",
   "Team",
-  "Das System muss per Maven (`mvn test`) ohne manuelle Zwischenschritte vollständig kompilierbar und testbar sein. Alle Abhängigkeiten sind über Maven Central auflösbar.",
+  "Die Komponente muss per Maven (`mvn test`) ohne manuelle Zwischenschritte vollständig kompilierbar und testbar sein. Alle Abhängigkeiten sind über Maven Central auflösbar. Ist dies nicht der Fall, soll eine ausführliche Anleitung in einer README Datei bereit gestellt werden.",
 )
 
 #lf-card(
@@ -651,25 +651,25 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "GPS-Standard",
   "/LF100/",
   "Host-App",
-  "Das System muss alle Zeitstempel intern als `java.time.Instant` (UTC) verarbeiten. Die Konvertierung in lokale Zeitzone ist ausschließlich Aufgabe des Hosts.",
+  "Die Komponente muss alle Zeitstempel intern als `java.time.Instant` (UTC) verarbeiten. Die Konvertierung in lokale Zeitzone ist ausschließlich Aufgabe des Hosts.",
 )
 
 #lf-card(
   "/LF470/",
   "Null-sichere öffentliche API",
   "Qualitätsrichtlinie",
-  "–",
+  "-",
   "Host-App",
-  "Das System muss in der gesamten öffentlichen API die Null-Semantik in Javadoc explizit festlegen. Rückgabewerte, die leer sein können, sind als `Optional<T>` zu deklarieren. Dies ist durch Tests abzusichern.",
+  "Die Komponente muss in der gesamten öffentlichen API die Null-Semantik in Javadoc explizit festlegen. Rückgabewerte, die leer sein können, sind als `Optional<T>` zu deklarieren. Dies ist durch Tests abzusichern.",
 )
 
 #lf-card(
   "/LF480/",
   "Optimierer austauschbar halten",
-  "Erweiterungsanforderung (1+)",
-  "/LF240/–/LF270/",
+  "Erweiterungsanforderung",
+  "/LF240/-/LF270/",
   "Team",
-  "Das System muss alle Optimierungsstrategien über eine gemeinsame Strategy-Schnittstelle (`TrackOptimizer`) austauschbar halten, sodass zukünftige Algorithmen ohne Änderung der Kernklassen integrierbar sind.",
+  "Die Komponente muss alle Optimierungsstrategien über eine gemeinsame Strategy-Schnittstelle (`TrackOptimizer`) austauschbar halten, sodass zukünftige Algorithmen ohne Änderung der Kernklassen integrierbar sind.",
 )
 
 #lf-card(
@@ -678,16 +678,16 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "Wartbarkeitsrichtlinie",
   "/LF200/",
   "Team",
-  "Das System muss die GPX-Serialisierung von optionalen Post-Processing-Schritten (Optimierung, Metadaten-Anreicherung) strukturell trennen, um unabhängige Erweiterbarkeit beider Aspekte zu gewährleisten.",
+  "In der Komponente müssen die GPX-Speicherung klar von den optionalen Schritten der Optimierung trennen. Damit beide Bereiche später einfach erweiterbar sind, ohne dass sie sich gegenseitig beeinflussen.",
 )
 
 #lf-card(
   "/LF500/",
   "Statistikobjekt nach Abschluss",
-  "Erweiterungsanforderung (1+)",
+  "Erweiterungsanforderung",
   "/LF060/",
   "Host-App",
-  "Das System muss nach regulärem oder abgebrochenem Abschluss einer Session ein Statistikobjekt bereitstellen, das mindestens Gesamtdistanz in Metern, Gesamtdauer und Anzahl gespeicherter Punkte enthält.",
+  "Die Komponente muss nach regulärem oder abgebrochenem Abschluss einer Peilung ein Übersicht über die Peilung bereitstellen, welche mindestens die Gesamtdistanz in Metern, die Gesamtdauer in Sekunden und die Anzahl der gespeicherter Wegpunkte enthält.",
 )
 
 #pagebreak()
