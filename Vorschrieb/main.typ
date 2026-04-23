@@ -315,7 +315,7 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "Projektauftrag SWE",
   "/LF030/",
   "Host-App",
-  "Das System muss auf Anfrage die aktuelle Zielrichtung (geografischer Azimut in Grad), die Entfernung zum Ziel in Metern sowie eine diskrete Himmelsrichtung (N, NE, E, SE, S, SW, W, NW) liefern.",
+  "Die Peilungskomponente muss auf Anfrage die aktuelle Zielrichtung (geografischer Azimut in Grad), die Entfernung zum Ziel in Metern sowie eine diskrete Himmelsrichtung (N, NE, E, SE, S, SW, W, NW) liefern.",
 )
 
 #lf-card(
@@ -324,7 +324,7 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "Projektauftrag SWE",
   "/LF110/, /LF120/",
   "Host-App",
-  "Die Peilungskomponente muss beendet werden und im anschluss daran den GPS-Trak in GPX-Form (nach GPX 1.1) zurückgeben Nach regulärem Abschluss sind keine weiteren Positionsupdates zulässig.",
+  "Die Peilungskomponente muss beendet werden und im anschluss daran den GPS-Trak in GPX-Form (nach GPX 1.1) zurückgeben. Nach regulärem Abschluss sind keine weiteren Positionsupdates zulässig.",
 )
 
 #lf-card(
@@ -342,7 +342,7 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "Vorlesung SWE (Observer)",
   "/LF030/, /LF060/",
   "Host-App",
-  "Das System muss Ereignisse für Start, Update, Abschluss und Fehler über registrierte Listener veröffentlichen. Die Listener-Benachrichtigung erfolgt synchron oder konfigurierbar serialisiert.",
+  "Die Komponente muss Ereignisse für Start, Update, Abschluss und Fehler über registrierte Listener veröffentlichen. Die Listener-Benachrichtigung erfolgt synchron oder konfigurierbar serialisiert.",
 )
 
 #lf-card(
@@ -351,7 +351,7 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "Qualitätsrichtlinie",
   "/LL010/",
   "Host-App",
-  "Das System muss Eingabe-, Zustands- und I/O-Fehler über eine klar dokumentierte Exception-Hierarchie unterscheidbar machen. Jede Exception enthält einen maschinenlesbaren Fehlercode.",
+  "Die Komponente muss Eingabe-, Zustands- und I/O-Fehler über eine klar dokumentierte Exception-Hierarchie unterscheidbar machen.",
 )
 
 
