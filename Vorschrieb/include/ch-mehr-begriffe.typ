@@ -3,8 +3,6 @@
 #let ch-mehr-begriffe-kapitel = [
 #set par(justify: true)
 
-*Ergänzende Begriffskarten (Fortsetzung Glossar)*
-
 #begriffskarte(
   "ECEF (Earth-Centered, Earth-Fixed)",
   "Rechtshändiges kartesisches Koordinatensystem mit Ursprung im Erdmittelpunkt (vereinfacht), Z-Achse durch den Nordpol.",
