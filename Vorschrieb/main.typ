@@ -174,13 +174,9 @@
 ////////////////////////////////
 = Abstract
 
-*neu Formulieren*
-
-
-
-Diese technische Dokumentation beschreibt die Anforderungsanalyse und Systemspezifikation einer UI-freien Java-Bibliothek zur Peilung (Richtungs- und Distanzangabe zu einem Zielpunkt auf Basis von WGS84-Koordinaten) sowie zur Aufzeichnung und zum Export eines GPS-Tracks im GPX-Format Version 1.1. Ausgangspunkt ist die fachliche Orientierungshilfe der iOS-Referenzanwendung Kompass Professional , jedoch *ohne* Übernahme von UI, Routing oder Hardwarezugriff: Die Bibliothek erhält Positions- und Kursdaten vom Host und liefert berechnete Peilungsgrößen, Ereignisse und serialisierte GPX-Daten.
-
-Der dokumentierte Umfang erfüllt die formalen Anforderungen der Lehrveranstaltung Softwareengineering: SOPHIST-konforme Anforderungen mit Quellen- und Akteursangaben, Produktdaten, nicht-funktionale Kriterien nach ISO/IEC 25010, objektorientierte Analyse und Entwurf, textuelle UML-Aktivitäts- und Sequenzbeschreibungen sowie ein Qualitätssicherungskonzept inklusive Testfällen und Traceability.
+Die präzise Bestimmung von Richtung und Entfernung zu einem Zielpunkt ist eine alltägliche Aufgabe in der mobilen Navigation. Die iOS-Anwendung Kompass Professional bietet hierfür eine etablierte fachliche Orientierung, doch ihre Peilungslogik ist fest mit der grafischen Oberfläche und der Hardwareanbindung verknüpft. Diese Arbeit löst die Kernfunktionalität aus diesem Gesamtkontext heraus und überführt sie in eine eigenständige, UI-freie Java-Bibliothek.
+Im Mittelpunkt steht die robuste Berechnung von Azimut, Distanz und diskreter Himmelsrichtung auf Basis von WGS84-Koordinaten. Die Bibliothek verarbeitet Positions- und Kursdaten, die ein Host-System liefert. Ein kontrollierbarer Session-Lebenszyklus ermöglicht das Aufzeichnen, Unterbrechen und Fortsetzen von Tracks, wobei die Daten durch konfigurierbare Reduktionsstrategien effizient gehalten werden. Der Export erfolgt standardkonform im GPX-Format Version 1.1. Zusätzlich lässt sich auch der What3Words-Dienst anbinden.
+Neben der Implementierung als Maven-Projekt legt die Arbeit besonderen Wert auf eine nachvollziehbare Spezifikation: Die Anforderungen sind SOPHIST-konform formuliert und durchgängig prüfbar, nicht-funktionale  und objektorientierte Analyse- sowie Entwurfsartefakte begleiten die Architektur. Ein umfassendes Qualitätssicherungskonzept mit automatisierten Testfällen und Traceability sichert die reproduzierbare Abnahme der Bibliothek.
 
 #pagebreak()
 
