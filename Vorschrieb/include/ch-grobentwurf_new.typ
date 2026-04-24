@@ -257,6 +257,7 @@ Entwurfsentscheidung zugeordnet, damit der Nachweis prüfbar bleibt.
   [Wiederverwendung],      [Policies und Optimizer als austauschbare Strategien definiert],        [Neues Optimierungsverfahren erfordert nur eine neue Port-Implementierung],
 )
 
+#pagebreak()
 // ──────────────────────────────────────────────────────────────────────────
 == Methodische Dekomposition
 // ──────────────────────────────────────────────────────────────────────────
