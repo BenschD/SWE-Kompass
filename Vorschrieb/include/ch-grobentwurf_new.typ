@@ -227,8 +227,12 @@ Track-Aufzeichnung) läuft ohne Netzwerkverbindung.
 Diese Entscheidung sichert Offline-Betrieb und vereinfacht Deployment und
 Test erheblich: Für Integrationstests reichen lokale Mocks der Ports.
 
+
+//seite davor???? 
 #figure(
-  puml-fig("../plantuml/out/SWE_Kompass_Deployment_Runtime.svg"),
+  box(width: 100%,
+    puml-fig("../plantuml/out/SWE_Kompass_Deployment_Runtime.svg")
+  ),
   caption: [UML-Verteilungsdiagramm: Laufzeitknoten, Artefakte und Kommunikationspfade.],
 )
 
