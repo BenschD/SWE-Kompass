@@ -352,13 +352,13 @@ Klassifizierung auf die relevanten Risiken der Peilungskomponente an.
   columns: (2.8cm, 1.8cm, 1fr, 1fr),
   stroke: tbl-stroke, inset: tbl-inset,
   [*Risiko*],                   [*Klasse*],        [*Architekturmaßnahme*],                                    [*Ort im Entwurf*],
-  [Pfadmanipulation beim GPX-Export],[Vermeidung], [Whitelisting erlaubter Basisverzeichnisse; Host konfiguriert Pfad explizit],[API + FileSinkPort + SafeFileSink],
-  [XML-Injection in GPX],       [Vermeidung],      [Konsequentes Escaping aller Nutzerdaten bei der Serialisierung],[GpxWriterPort + GpxXmlWriter],
-  [Ausfall des W3W-Dienstes],   [Minderung],       [Timeout-Limit, begrenzte Retry-Anzahl, Fallback ohne W3W-Daten],[W3wClientPort + W3wHttpClient],
-  [Unkontrollierter Speicherverbrauch],[Vermeidung],[Punktbudget und Segmentierungs-Schwelle im Domain Core],[Domain Core],
-  [Unklare Fehlerbehandlung],   [Erkennung],       [Semantische Exception-Hierarchie; jeder Fehler hat eindeutigen Code],[API / Application Service],
+  [Pfadmanipulation beim GPX-Export],[Vermeidung], [Whitelisting erlaubter Basisverzeichnisse; Host konfiguriert Pfad explizit],[Data Access Layer],
+  [XML-Injection in GPX],       [Vermeidung],      [Konsequentes Escaping aller Nutzerdaten bei der Serialisierung],[Data Access Layer],
+  [Ausfall des W3W-Dienstes],   [Minderung],       [Timeout-Limit, begrenzte Retry-Anzahl, Fallback ohne W3W-Daten],[Service Layer und Data Access Layer],
+  [Unkontrollierter Speicherverbrauch],[Vermeidung],[Punktbudget und Segmentierungs-Schwelle im Domain Core],[Business Rules Layer],
+  [Unklare Fehlerbehandlung],   [Erkennung],       [Semantische Exception-Hierarchie; jeder Fehler hat eindeutigen Code],[Service Layer],
 )
-
+#pagebreak()
 // ──────────────────────────────────────────────────────────────────────────
 == Soll-Ist-Abdeckungsmatrix
 // ──────────────────────────────────────────────────────────────────────────
