@@ -338,10 +338,17 @@ Die Anordnung der Subsysteme folgt einer streng hierarchischen Struktur, um die 
 
 #pagebreak()
 
-// ──────────────────────────────────────────────────────────────────────────
-== Security Engineering im Grobentwurf
-// ──────────────────────────────────────────────────────────────────────────
 
+== Security Engineering im Grobentwurf
+Das Security Engineering der Peilungskomponente stellt sicher, dass das System durch sein Design böswilligen Angriffen auf die Logik und die erfassten Geodaten widersteht. Der Fokus liegt hierbei auf der *Application Security*: Das System wird so konstruiert, dass es inhärent sicher ist, anstatt sich allein auf externe Infrastruktur-Sicherheitsmaßnahmen zu verlassen. Sicherheit wird dabei als fundamentale Voraussetzung für die Zuverlässigkeit und Verfügbarkeit der Peilungsdaten betrachtet.
+
+Die Sicherheitsarchitektur stützt sich auf drei zentrale Dimensionen:
+
+/ Vertraulichkeit: Schutz der sensiblen Bewegungsdaten und Ziele vor unbefugter Offenlegung.
+/ Integrität: Sicherstellung, dass GPS-Tracks und Kursberechnungen nicht unbemerkt manipuliert oder korrumpiert werden können.
+/ Verfügbarkeit: Gewährleistung, dass die Peilungsfunktion und der Datenexport auch unter Last oder bei Ausfällen externer Dienste (wie W3W) erhalten bleiben.
+
+=== Sicherheitsanforderungen
 Sicherheitsanforderungen werden laut Vorlesung in drei Klassen eingeteilt:
 Risikovermeidung (Schwachstelle gar nicht erst einbauen), Risikoerkennung
 (Angriff neutralisieren bevor Schaden entsteht) und Risikominderung
@@ -352,42 +359,11 @@ Klassifizierung auf die relevanten Risiken der Peilungskomponente an.
   columns: (2.8cm, 1.8cm, 1fr, 1fr),
   stroke: tbl-stroke, inset: tbl-inset,
   [*Risiko*],                   [*Klasse*],        [*Architekturmaßnahme*],                                    [*Ort im Entwurf*],
-  [Pfadmanipulation beim GPX-Export],[Vermeidung], [Whitelisting erlaubter Basisverzeichnisse; Host konfiguriert Pfad explizit],[Data Access Layer],
+  [Pfadmanipulation beim GPX-Export],[Vermeidung], [Whitelisting erlaubter Basisverzeichnisse und der Host konfiguriert Pfad explizit],[Data Access Layer],
   [XML-Injection in GPX],       [Vermeidung],      [Konsequentes Escaping aller Nutzerdaten bei der Serialisierung],[Data Access Layer],
   [Ausfall des W3W-Dienstes],   [Minderung],       [Timeout-Limit, begrenzte Retry-Anzahl, Fallback ohne W3W-Daten],[Service Layer und Data Access Layer],
   [Unkontrollierter Speicherverbrauch],[Vermeidung],[Punktbudget und Segmentierungs-Schwelle im Domain Core],[Business Rules Layer],
   [Unklare Fehlerbehandlung],   [Erkennung],       [Semantische Exception-Hierarchie; jeder Fehler hat eindeutigen Code],[Service Layer],
 )
-#pagebreak()
-// ──────────────────────────────────────────────────────────────────────────
-== Soll-Ist-Abdeckungsmatrix
-// ──────────────────────────────────────────────────────────────────────────
-
-Die Matrix weist nach, dass alle Inhalte des Foliensatzes 07 adressiert sind.
-
-#table(
-  columns: (3.0cm, 2.5cm, 1.8cm, 1fr),
-  stroke: tbl-stroke, inset: tbl-inset,
-  [*Forderung (Foliensatz)*],     [*Soll*],                           [*Status*],[*Nachweis*],
-  [Subsystem-Spezifikation],      [Zerlegung in handhabbare Einheiten],[Erfüllt], [Abschnitt Statische Sicht — Subsystem-Spezifikation],
-  [Schnittstellen-Spezifikation], [Dienste nach außen präzisieren],   [Erfüllt], [Abschnitt Methodische Dekomposition — Schritt 2],
-  [Systemsicht],                  [Systemgrenze + externe Schnittstellen],[Erfüllt],[Abschnitt Systemsicht + Kontextdiagramm],
-  [Statische Sicht],              [Komponentenstruktur + Abhängigkeiten],[Erfüllt],[Schichtenmodell, Kommunikationsregeln, Paket-/Kompositionssicht],
-  [Dynamische Sicht],             [Laufzeitzusammenwirken],           [Erfüllt], [Szenarien A–C + Aktivitäts-/Sequenzdiagramme],
-  [Physische Sicht],              [Verteilung auf Knoten],            [Erfüllt], [Abschnitt Physische Sicht + Verteilungsdiagramm],
-  [Hohe Kohäsion],                [Starker innerer Zusammenhalt],     [Erfüllt], [Entwurfsprinzipien — Kohäsion-Zeile],
-  [Schwache Kopplung],            [Geringe Kopplung zwischen Modulen],[Erfüllt], [Ports/SPI + Kommunikationsregeln],
-  [Information Hiding / SoC],     [Klare Trennung fachlich/technisch],[Erfüllt], [Domain vs. Infrastruktur + Port-Schicht],
-  [Wiederverwendung],             [Gemeinsamkeiten nutzen],           [Erfüllt], [Strategien und Adapter],
-  [Dekomposition Schritt 1],      [Subsystem-Identifikation],         [Erfüllt], [Methodische Dekomposition — Schritt 1],
-  [Dekomposition Schritt 2],      [Dienstspezifikation],              [Erfüllt], [Methodische Dekomposition — Schritt 2],
-  [Dekomposition Schritt 3],      [Subsystem-Anordnung],              [Erfüllt], [Methodische Dekomposition — Schritt 3],
-  [UML-Komponentendiagramm],      [Bausteine + Abhängigkeiten],       [Erfüllt], [SWE_Kompass_Component_Layers],
-  [UML-Paketdiagramm],            [Hierarchische Organisation],       [Erfüllt], [SWE_Kompass_Package_Architecture],
-  [UML-Kompositionsstruktur],     [Interne Struktur einer Komponente],[Erfüllt], [SWE_Kompass_Composite_BearingSession],
-  [UML-Verteilungsdiagramm],      [Architektur zur Laufzeit],         [Erfüllt], [SWE_Kompass_Deployment_Runtime],
-  [Security Engineering],         [Sicherheitsanforderungen im Entwurf],[Erfüllt],[Abschnitt Security Engineering],
-)
-
 #pagebreak()
 ]
