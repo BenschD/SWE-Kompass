@@ -51,9 +51,9 @@ gelesen. Der User ist verantwortlich für Sensorfusion und Gerätezugriff und
 übergibt fertige Messwerte über die öffentliche API.
 
 #table(
-  columns: (2.8cm, 2.9cm, 1fr),
+  columns: (4.0cm, 2.9cm, 1fr),
   stroke: tbl-stroke, inset: tbl-inset,
-  [*Externe Schnittstelle*], [*Richtung*], [*Zweck*],
+  [*Externe Schnittstellen*], [*Richtung*], [*Zweck*],
   [User-Anwendung],   [eingehend],          [Steuerung des Session-Lebenszyklus, Übergabe von Positions- und Kursdaten],
   [Listener / Result],[ausgehend],          [Snapshots, Statuswechsel, Fehlerereignisse, GPX-Rückgabe an den Host],
   [Dateisystem],      [ausgehend, optional],[GPX-Persistenz nur bei expliziter Konfiguration durch den Host],
@@ -80,20 +80,20 @@ ist sichergestellt, dass eine Änderung in einem Subsystem, z. B. ein anderer
 GPX-Writer, keine Fachlogik berührt.
 
 
-//ändern
 #table(
-  columns: (2.7cm, 1fr, 1fr),
+  columns: (3.9cm, 5.5cm, 1fr),
   stroke: tbl-stroke, inset: tbl-inset,
   [*Subsystem*],             [*Kernverantwortung*],                                          [*Bereitgestellte Dienste*],
-  [API / Application Service],[Orchestrierung der Use Cases; Session-Zustand; Fehler-Mapping],[Session starten, beenden und abbrechen; konsistenten Snapshot liefern],
-  [Domain Core],             [Fachregeln ohne jegliche I/O-Kopplung],                        [Azimut, Distanz, Ordinalrichtung; Sampling, Validierung, Segmentierung, Optimierung],
-  [Ports (SPI)],             [Abstraktion technischer Abhängigkeiten],                       [Stabile Verträge für GPX, Zeit, Dateisystem, Logging, W3W],
+  [API / Application Service],[Orchestrierung der Use Cases, Session-Verwaltung, Fehler-Mapping],[Session starten, beenden und abbrechen, konsistenten Snapshot liefern],
+  [Domain Core],             [Fachregeln ohne jegliche 
+    I/O-Kopplung],                        [Azimut, Distanz, Ordinalrichtung, Sampling, Validierung, Segmentierung, Optimierung],
+  [Ports],             [Abstraktion technischer Abhängigkeiten],                       [Stabile Verträge für GPX, Zeit, Dateisystem, Logging, W3W],
   [Infrastruktur / Adapter], [Konkrete Realisierung der Ports],                              [XML-Serialisierung, Datei-I/O, HTTP-Client, Systemuhr, Logging],
 )
 
 
 #pagebreak()
-=== Schichtenmodell
+=== Schichtenmodell nachfragen bei Bohl
 
 Die vier Subsysteme sind als streng gerichtete Schichten angeordnet. Jede
 Schicht kommuniziert ausschließlich mit der direkt darunterliegenden. Ein
@@ -119,7 +119,7 @@ Abhängigkeiten, und jede Schicht ist einzeln testbar und austauschbar.
   Sampling, Filterung, Segmentierung, Optimierung). Vollständig I/O-frei.
   Kein Import von Infrastruktur-Klassen.
 
-  ↓ nur über Port-Interfaces (SPI)
+  ↓ nur über Port-Interfaces 
 
   *Port-Schicht*\
   Technologieunabhängige Verträge. Die Domain formuliert, was sie braucht
@@ -136,18 +136,22 @@ Abhängigkeiten, und jede Schicht ist einzeln testbar und austauschbar.
 #pagebreak()
 === Kommunikationsregeln
 
-#table(
-  columns: (3.0cm, 3.0cm, 2.0cm, 1fr),
-  stroke: tbl-stroke, inset: tbl-inset,
-  [*Von*],          [*Nach*],        [*Erlaubt?*],[*Begründung*],
-  [Host],           [API],           [Ja],        [Einziger legaler Einstiegspunkt; kapselt alles dahinter],
-  [Host],           [Domain],        [Nein],      [Würde Fachlogik exponieren und Kapselung der API-Fassade unterlaufen],
-  [Host],           [Infrastruktur], [Nein],      [Technische Details sind kein Teil der öffentlichen Schnittstelle],
-  [API],            [Domain],        [Ja],        [Use-Case-Orchestrierung ohne I/O-Kopplung],
-  [API],            [Infrastruktur], [Nein],      [Infrastruktur wird ausschließlich über Ports angesprochen],
-  [Domain],         [Ports (SPI)],   [Ja],        [Externe Effekte ausschließlich über abstrakte Verträge],
-  [Domain],         [Infrastruktur], [Nein],      [Hält die Fachlogik I/O-frei und testbar],
-  [Infrastruktur],  [Domain],        [Nein],      [Keine Rückkopplung; verhindert zyklische Abhängigkeiten],
+#figure(
+  caption: [Kommunikationsregeln: Erlaubte und verbotene Abhängigkeiten zwischen den Subsystemen.],
+  kind: table,
+  align(left, table(
+    columns: (2.1cm, 2.1cm, 2.3cm, 1fr),
+    stroke: tbl-stroke, inset: tbl-inset,
+    [*Von*],          [*Nach*],        [*Erlaubt?*],[*Begründung*],
+    [Host],           [API],           [Ja],        [Die API-Fassade ist der einzige definierte Einstiegspunkt; der Host darf ausschließlich über sie kommunizieren],
+    [Host],           [Domain],        [Nein],      [Der direkte Zugriff würde die Fachlogik gegenüber dem Aufrufer exponieren und die Kapselungswirkung der API-Fassade vollständig aushebeln],
+    [Host],           [Infrastruktur], [Nein],      [Technische Implementierungsdetails gehören nicht zur öffentlichen Bibliotheksschnittstelle und dürfen dem Host nicht bekannt sein],
+    [API],            [Domain],        [Ja],        [Die API-Schicht orchestriert Use Cases, indem sie reine Fachlogik aufruft, ohne dabei I/O-Abhängigkeiten in den Domain Core einzuschleppen],
+    [API],            [Infrastruktur], [Nein],      [Die API kommuniziert ausschließlich über die definierten Ports; ein Direktzugriff würde die Austauschbarkeit der Adapter zerstören],
+    [Domain],         [Ports],         [Ja],        [Externe Seiteneffekte werden ausschließlich über abstrakte Port-Schnittstellen ausgelöst],
+    [Domain],         [Infrastruktur], [Nein],      [Ein direkter Infrastrukturzugriff würde I/O-Abhängigkeiten in die Fachlogik einführen und deren isolierte Testbarkeit zerstören],
+    [Infrastruktur],  [Domain],        [Nein],      [Eine Rückkopplung von der Infrastruktur in den Domain Core würde zyklische Abhängigkeiten erzeugen und das Schichtenmodell strukturell verletzen],
+  ))
 )
 
 #pagebreak()
@@ -157,16 +161,20 @@ Jedes Subsystem wird als eigenständiges Maven-Modul realisiert. Dadurch
 erzwingt das Build-System die Schichtregeln: Ein Modul kann nur importieren,
 was als Abhängigkeit deklariert ist.
 
-#table(
-  columns: (2.5cm, 3.4cm, 1fr),
-  stroke: tbl-stroke, inset: tbl-inset,
-  [*Modul*],                  [*Paketbasis*],                            [*Verantwortung*],
-  [`bearing-api`],            [`com.example.bearing.api`],               [Öffentliche Fassade, DTOs, Fehlercodes, Session-Konfiguration],
-  [`bearing-domain`],         [`com.example.bearing.domain`],            [Fachlogik, Policies, Zustandsmodell, Value Objects],
-  [`bearing-spi`],            [`com.example.bearing.spi`],               [Technologieunabhängige Port-Interfaces],
-  [`bearing-adapter-gpx`],    [`com.example.bearing.adapter.gpx`],       [GPX-1.1-Writer],
-  [`bearing-adapter-w3w`],    [`com.example.bearing.adapter.w3w`],       [Optionaler W3W-HTTP-Client mit Cache],
-  [`bearing-adapter-system`], [`com.example.bearing.adapter.system`],    [Dateisystem, Systemuhr, Logging],
+#figure(
+  caption: [Paket- und Modulschnitt: Jedes Subsystem als eigenständiges Maven-Modul mit klarer Verantwortungszuweisung.],
+  kind: table,
+  align(left, table(
+    columns: (2.2cm, 6cm, auto),
+    stroke: tbl-stroke, inset: tbl-inset,
+    [*Modul*],                  [*Paketbasis*],                            [*Verantwortung*],
+    [`bearing-api`],            [`com.example.-bearing.api`],               [Öffentliche Fassade, DTOs, Fehlercodes, Session-Konfiguration],
+    [`bearing-domain`],         [`com.example.-bearing.domain`],            [Fachlogik, Policies, Zustandsmodell, Value Objects],
+    [`bearing-spi`],            [`com.example.-bearing.spi`],               [Technologieunabhängige Port-Interfaces],
+    [`bearing-adapter-gpx`],    [`com.example.-bearing.adapter.gpx`],       [GPX-1.1-Writer],
+    [`bearing-adapter-w3w`],    [`com.example.-bearing.adapter.w3w`],       [Optionaler W3W-HTTP-Client mit Cache],
+    [`bearing-adapter-system`], [`com.example.-bearing.adapter.system`],    [Dateisystem, Systemuhr, Logging],
+  ))
 )
 
 // UML-Diagramme
