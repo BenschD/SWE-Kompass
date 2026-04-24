@@ -255,7 +255,10 @@ ausreichend.
 
 Die Tabelle ordnet den geforderten Qualitätskriterien die entsprechenden Entwurfsentscheidungen der Architektur zu. Diese direkte Verknüpfung dient als prüfbarer Nachweis für die Erfüllung der Vorgaben.
 
-#table(
+#figure(
+  caption: [Entwurfsprinzip: Ordnung der Architekturentscheidungen nach Prinzipien der Software-Architektur.],
+  kind: table,
+  align(left, table(
   columns: (3.2cm, 1fr, 1fr),
   stroke: tbl-stroke, 
   inset: tbl-inset,
@@ -280,7 +283,7 @@ Die Tabelle ordnet den geforderten Qualitätskriterien die entsprechenden Entwur
   [Wiederverwendbarkeit], 
   [Einsatz des Strategy-Patterns für Policies und Optimizer, um Logik austauschbar zu machen.], 
   [Neue Algorithmen lassen sich ohne Eingriffe in den bestehenden Kontrollfluss integrieren.],
-)
+)))
 
 #pagebreak()
 // ──────────────────────────────────────────────────────────────────────────
@@ -294,7 +297,10 @@ Der erste Schritt konzentriert sich darauf, die fachlichen Operationen sinnvoll 
 
 Die folgende Übersicht gruppiert die Operationen und definiert die Verträge der daraus resultierenden Dienste. Diese Verträge legen fest, welches Verhalten nach außen garantiert wird und wie die Komponente auf ungültige Zustände reagiert, während technische Implementierungsdetails dem Feinentwurf vorbehalten bleiben.
 
-#table(
+#figure(
+  caption: [Subsystem-Identifikation: Zuordnung von Operationen zu Diensten und Definition von Verträgen mit Fehlerfällen.],
+  kind: table,
+  align(left, table(
 columns: (2.5cm, 1.8fr, 1fr),
 stroke: tbl-stroke,
 inset: tbl-inset,
@@ -323,7 +329,7 @@ inset: tbl-inset,
 [API-Präsentation],
 [Stellt Schnittstellen im Presentation Layer für den Host bereit.],
 [Ungültiger API-Aufruf],
-)
+)))
 #pagebreak()
 
 === Zweiter Schritt: Subsystem-Anordnung
@@ -355,7 +361,10 @@ Risikovermeidung (Schwachstelle gar nicht erst einbauen), Risikoerkennung
 (Schaden nach Angriff begrenzen). Die folgende Tabelle wendet diese
 Klassifizierung auf die relevanten Risiken der Peilungskomponente an.
 
-#table(
+#figure(
+  caption: [Sicherheitsanforderungen: Identifikation von Risiken und Zuordnung von Maßnahmen zur Vermeidung, Erkennung oder Minderung.],
+  kind: table,
+  align(left, table(
   columns: (2.8cm, 1.8cm, 1fr, 1fr),
   stroke: tbl-stroke, inset: tbl-inset,
   [*Risiko*],                   [*Klasse*],        [*Architekturmaßnahme*],                                    [*Ort im Entwurf*],
@@ -364,6 +373,6 @@ Klassifizierung auf die relevanten Risiken der Peilungskomponente an.
   [Ausfall des W3W-Dienstes],   [Minderung],       [Timeout-Limit, begrenzte Retry-Anzahl, Fallback ohne W3W-Daten],[Service Layer und Data Access Layer],
   [Unkontrollierter Speicherverbrauch],[Vermeidung],[Punktbudget und Segmentierungs-Schwelle im Domain Core],[Business Rules Layer],
   [Unklare Fehlerbehandlung],   [Erkennung],       [Semantische Exception-Hierarchie; jeder Fehler hat eindeutigen Code],[Service Layer],
-)
+)))
 #pagebreak()
 ]
