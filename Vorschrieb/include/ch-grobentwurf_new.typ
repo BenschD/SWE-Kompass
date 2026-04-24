@@ -50,14 +50,18 @@ jegliche Benutzeroberfläche. Sensordaten (GNSS, Kompass) werden nicht direkt
 gelesen. Der User ist verantwortlich für Sensorfusion und Gerätezugriff und
 übergibt fertige Messwerte über die öffentliche API.
 
-#table(
-  columns: (4.0cm, 2.9cm, 1fr),
-  stroke: tbl-stroke, inset: tbl-inset,
-  [*Externe Schnittstellen*], [*Richtung*], [*Zweck*],
-  [User-Anwendung],   [eingehend],          [Steuerung des Session-Lebenszyklus, Übergabe von Positions- und Kursdaten],
-  [Listener / Result],[ausgehend],          [Snapshots, Statuswechsel, Fehlerereignisse, GPX-Rückgabe an den Host],
-  [Dateisystem],      [ausgehend, optional],[GPX-Persistenz nur bei expliziter Konfiguration durch den Host],
-  [W3W-HTTP],         [ausgehend, optional],[Reverse-Lookup mit lokalem Cache, ohne Netzwerk vollständig deaktivierbar],
+#figure(
+  caption: [Externe Schnittstellen der Bibliothek und ihre Kommunikationsrichtungen.],
+  kind: table,
+  align(left, table(
+    columns: (4.0cm, 2.9cm, 1fr),
+    stroke: tbl-stroke, inset: tbl-inset,
+    [*Externe Schnittstellen*], [*Richtung*], [*Zweck*],
+    [User-Anwendung],   [eingehend],          [Steuerung des Session-Lebenszyklus; Übergabe von Positions- und Kursdaten],
+    [Listener / Result],[ausgehend],          [Snapshots, Statuswechsel, Fehlerereignisse; GPX-Rückgabe an den Host],
+    [Dateisystem],      [ausgehend, optional],[GPX-Persistenz nur bei expliziter Konfiguration durch den Host],
+    [W3W-HTTP],         [ausgehend, optional],[Reverse-Lookup mit lokalem Cache; ohne Netzwerk vollständig deaktivierbar],
+  ))
 )
 
 #figure(
@@ -80,15 +84,18 @@ ist sichergestellt, dass eine Änderung in einem Subsystem, z. B. ein anderer
 GPX-Writer, keine Fachlogik berührt.
 
 
-#table(
-  columns: (3.9cm, 5.5cm, 1fr),
-  stroke: tbl-stroke, inset: tbl-inset,
-  [*Subsystem*],             [*Kernverantwortung*],                                          [*Bereitgestellte Dienste*],
-  [API / Application Service],[Orchestrierung der Use Cases, Session-Verwaltung, Fehler-Mapping],[Session starten, beenden und abbrechen, konsistenten Snapshot liefern],
-  [Domain Core],             [Fachregeln ohne jegliche 
-    I/O-Kopplung],                        [Azimut, Distanz, Ordinalrichtung, Sampling, Validierung, Segmentierung, Optimierung],
-  [Ports],             [Abstraktion technischer Abhängigkeiten],                       [Stabile Verträge für GPX, Zeit, Dateisystem, Logging, W3W],
-  [Infrastruktur / Adapter], [Konkrete Realisierung der Ports],                              [XML-Serialisierung, Datei-I/O, HTTP-Client, Systemuhr, Logging],
+#figure(
+  caption: [Subsysteme und ihre Verantwortlichkeiten im Überblick.],
+  kind: table,
+  align(left, table(
+    columns: (3.9cm, 5.5cm, 1fr),
+    stroke: tbl-stroke, inset: tbl-inset,
+    [*Subsystem*],             [*Kernverantwortung*],                                              [*Bereitgestellte Dienste*],
+    [API / Application Service],[Use-Case-Orchestrierung; Session-Verwaltung; Fehlerbehandlung],   [Session starten, beenden und abbrechen; konsistenten Zustandsschnappschuss liefern],
+    [Domain Core],             [Fachlogik ohne I/O-Abhängigkeiten],                               [Azimut, Distanz, Ordinalrichtung; Sampling, Validierung, Segmentierung, Optimierung],
+    [Ports],                   [Abstraktion technischer Abhängigkeiten],                          [Stabile Schnittstellen für GPX, Zeitgeber, Dateisystem, Logging und W3W],
+    [Infrastruktur / Adapter], [Konkrete Implementierung der Ports],                              [XML-Serialisierung, Datei-I/O, HTTP-Client, Systemuhr, Logging-Backend],
+  ))
 )
 
 
@@ -190,19 +197,14 @@ was als Abhängigkeit deklariert ist.
 == Dynamische Sicht
 // ──────────────────────────────────────────────────────────────────────────
 
-Die dynamische Sicht beschränkt sich auf die drei wesentlichen Laufzeitszenarien.
-Vollständige Ablaufdetails auf Methodenebene gehören in den Feinentwurf.
+Die dynamische Sicht beschreibt die drei wesentlichen Laufzeitszenarien der Komponente: reguläre Positionsupdates, regulären Session-Abschluss und Fehlerpfade bei ungültigen Eingaben. In jedem Szenario werden die beteiligten Subsysteme, die Kommunikationspfade und die Auswirkungen auf den Systemzustand beschrieben.
 
-=== Szenario A — Regulärer Positionsupdate
+=== Szenario A: Regulärer Positionsupdate
 
-Der Host übergibt einen GPS-Fix an die API. Die API validiert Vorbedingungen
-(Session aktiv, Fix nicht null). Der Domain Core prüft den Fix gegen die
-Sampling-Policy und die Qualitätsfilter. Bei bestandener Prüfung wird der
-Track-Zustand aktualisiert und ein neuer Snapshot bereitgestellt. Bei einem
-Qualitätsproblem wird ein semantisches Fehlerereignis an den Listener
-weitergeleitet; der Track-Zustand bleibt konsistent.
+Der Host übergibt einen GPS-Fix an die API. Diese validiert diese und aktualisiert den Track-Zustand und ein neuer Snapshot bereitgestellt. Ein
+Qualitätsproblem wird ignoriert und der Track-Zustand bleibt konsistent.
 
-=== Szenario B — Regulärer Session-Abschluss
+=== Szenario B: Regulärer Session-Abschluss
 
 Der Host ruft `complete` auf. Die API delegiert an den Domain Core, der den
 Track finalisiert und ggf. eine Segmentgrenze schließt. Anschließend wird
@@ -211,7 +213,7 @@ das GPX-Ergebnis zurück, das die API als `GpxResult` an den Host weitergibt.
 Optional schreibt `SafeFileSink` die Daten ins Dateisystem, falls der Host
 dies konfiguriert hat.
 
-=== Szenario C — Fehlerpfad: ungültige Koordinate
+=== Szenario C: Fehlerpfad: ungültige Koordinate
 
 Der Host übergibt einen Fix mit NaN-Koordinaten. Die API erkennt den Fehler
 bereits bei der Eingangsvalidierung und erzeugt eine `ValidationException`.
@@ -221,28 +223,29 @@ gemeldet.
 
 #pagebreak()
 
-// ──────────────────────────────────────────────────────────────────────────
+#block(breakable: false)[
 == Physische Sicht
-// ──────────────────────────────────────────────────────────────────────────
 
 Die Komponente wird als Bibliothek in den Host-Prozess eingebettet und läuft
 in dessen JVM. Es existiert kein eigener Prozess, kein eigenständiger Server
 und kein Nachrichtensystem. Externe Kommunikation findet ausschließlich über
 zwei optionale Kanäle statt: HTTPS zur W3W-API und Dateisystemzugriffe für
-den GPX-Export. Beide Kanäle sind abschaltbar; die Kernfunktion (Peilung,
+den GPX-Export. Beide Kanäle sind abschaltbar, die Kernfunktion (Peilung,
 Track-Aufzeichnung) läuft ohne Netzwerkverbindung.
 
 Diese Entscheidung sichert Offline-Betrieb und vereinfacht Deployment und
-Test erheblich: Für Integrationstests reichen lokale Mocks der Ports.
+Test erheblich. Außerdem sind für Integrationstests lokale Mocks der Ports
+ausreichend.
 
-
-//seite davor???? 
 #figure(
-  box(width: 100%,
-    puml-fig("../plantuml/out/SWE_Kompass_Deployment_Runtime.svg")
+  scale(80%, reflow: true,
+    box(width: 100%,
+      puml-fig("../plantuml/out/SWE_Kompass_Deployment_Runtime.svg")
+    )
   ),
   caption: [UML-Verteilungsdiagramm: Laufzeitknoten, Artefakte und Kommunikationspfade.],
 )
+]
 
 #pagebreak()
 

@@ -353,4 +353,13 @@
   "Klärungsgespräch; /LF070/",
 )
 
+#begriffskarte(
+  "JVM (Java Virtual Machine)",
+  "Laufzeitumgebung, die Java-Bytecode plattformunabhängig ausführt; die Bibliothek setzt eine JVM voraus, stellt selbst jedoch keine bereit",
+  "",
+  "Ziel-Kompatibilität: Java 17 LTS; die Bibliothek wird als reines Source-Artefakt ohne ausführbares JAR ausgeliefert",
+  "Die JVM-Version des Host-Projekts muss ≥ 17 sein; niedrigere Versionen werden nicht unterstützt",
+  "Systemvoraussetzungen; /LF000/",
+)
+
 ]
