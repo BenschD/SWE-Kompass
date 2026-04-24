@@ -231,7 +231,7 @@ Neben der Implementierung als Maven-Projekt legt die Arbeit besonderen Wert auf 
 = Anforderungsanalyse (Lastenheft)
 // ─────────────────────────────────────────────────────────────────────────────
 
-Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomponente. Es folgt dem formalen Aufbau einer klassischen Anforderungssammlung: Zielbestimmung, Produkteinsatz, funktionale Anforderungen, Produktdaten, nicht-funktionale Anforderungen sowie Qualitätsanforderungen. Ergänzend werden SWE-Artefakte integriert, die in der Vorlesung gefordert sind.
+Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomponente. Es folgt dem formalen Aufbau einer klassischen Anforderungssammlung: Zielbestimmung, Produkteinsatz, funktionale Anforderungen, Produktdaten, Qualitätsanforderungen (ISO/IEC 25010) sowie die daraus abgeleiteten nicht-funktionalen Anforderungen (`/LL…/`).
 
 // ─────────────────────────────────────────────────────────────────────────────
 == Zielbestimmung und Produkteinsatz
@@ -254,7 +254,7 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
 *Einsatzgebiet:* Integration in beliebige Java-Anwendungen, die selbst Sensordaten beschaffen und an die Bibliothek übergeben.
 
 - *Outdoor-Applikation* mit eigener Karten-UI (Bibliothek liefert nur Zahlen und GPX).
-- *Feld-Dienst* mit periodischen GPS-Fixes; Bibliothek übernimmt Sampling-Policy und Export.
+- *Feld-Dienst* mit periodischen GPS-Fixes; der Host steuert die Aufrufhäufigkeit, die Bibliothek validiert und speichert Rohdaten sowie exportiert GPX (optional mit Export-Optimierern).
 - *Labor:* Mock-GPS-Streams treiben deterministische Tests.
 
 *Schnittstelle zur Außenwelt:* Die Bibliothek spricht keine Hardware-APIs an. Stattdessen definiert sie eine klare Java-API. Persistenz erfolgt optional über das Dateisystem des Hosts.
@@ -318,7 +318,7 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "/LF060/",
   "Peilung regulär beenden",
   "Projektauftrag SWE",
-  "/LF110/, /LF120/",
+  "/LF100/, /LF120/",
   "Host-App",
   "Die Peilungskomponente muss beendet werden und im anschluss daran den GPS-Trak in GPX-Form (nach GPX 1.1) zurückgeben. Nach regulärem Abschluss sind keine weiteren Positionsupdates zulässig.",
 )
@@ -351,7 +351,9 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
 )
 
 
-=== GPS-Track und Sampling (/LF100/)
+=== GPS-Track (/LF100/)
+
+Die Anforderungen /LF110/, /LF130/, /LF140/ und /LF160/ sind *nicht* Teil des Lieferumfangs dieser Bibliothek (siehe Anhang *Nicht im Lieferumfang*).
 
 #lf-card(
   "/LF100/",
@@ -359,16 +361,7 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "Projektauftrag SWE",
   "/LF030/",
   "Host-App",
-  "Das System muss während einer aktiven Peilung GPS-Punkte mit Zeitstempel speichern. Jeder gespeicherte Punkt enthält mindestens: Zeitstempel, Breitengrad, Längengrad.",
-)
-
-#lf-card(
-  "/LF110/",
-  "Zeitintervall konfigurieren",
-  "Klärungsgespräch",
-  "/LF100/",
-  "Host-App",
-  "Der Nutzer muss das Zeitintervall, in wechem die GPS-Punkte gespeichert werden manuel ändern können. Der konfigurierbare Bereich umfässt dabei 0,5 Sekunden bis 60 Sekunden. Der Defaultwert beträgt 2 Sekunden.",
+  "Das System muss während einer aktiven Peilung jeden validierten GPS-Fix mit Zeitstempel vollständig im Rohspeicher ablegen. Jeder gespeicherte Punkt enthält mindestens: Zeitstempel, Breitengrad, Längengrad.",
 )
 
 #lf-card(
@@ -377,25 +370,7 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "Klärungsgespräch",
   "/LF100/",
   "Host-App",
-  "Die Peilungskomponente muss eine Obergrenze für die Anzahl gespeicherter GPS-Punkte pro Peilung unterstützen. Bei überschreitung des Limits, werden durch werwendung von optimierungs Algorithmen, die Anzahl an GPS-Punkte verringert. Nach möglichkeit ohne das Informationen über die Strecke verlohren gehen. So werden beispielsweiße gerade Strecken mit lediglich zwei GPS-Punkten dargestellt.",
-)
-
-#lf-card(
-  "/LF130/",
-  "HDOP/Satelliten auswerten",
-  "Klärungsgespräch",
-  "/LF100/, /LL020/",
-  "Host-App",
-  "Das System muss optional Punkte mit einem HDOP-Wert über einem konfigurierbaren Schwellwert (Standard: HDOP ≤ 5,0) verwerfen oder als unzuverlässig markieren, abhängig von der Konfiguration.",
-)
-
-#lf-card(
-  "/LF140/",
-  "Geschwindigkeits-Sprünge erkennen",
-  "Datenqualitätsrichtlinie",
-  "/LF100/",
-  "Host-App",
-  "Das System muss unrealistische Positions-Sprünge erkennen, die physikalisch nicht möglich sind (z. B. mehr als 300 km/h Geschwindigkeitsänderung), und diese gemäß konfigurierter Policy verwerfen.",
+  "Die Peilungskomponente muss eine Obergrenze für die Anzahl gespeicherter GPS-Punkte pro Peilung unterstützen (Soft-Warnung, Hard-Limit mit kontrolliertem Stopp). Eine automatische Punktreduktion durch die Bibliothek beim Einlesen erfolgt nicht; optional können beim GPX-Export `TrackOptimizer`-Strategien registriert werden.",
 )
 
 #lf-card(
@@ -405,15 +380,6 @@ Dieses Kapitel dokumentiert die *Anforderungsanalyse* für die Java-Peilungskomp
   "/LF100/",
   "Host-App",
   "Das System muss optionale Felder wie Höhe (Elevation), HDOP und Geschwindigkeit in GPS-Trackpunkten abbilden können, sofern der Host diese Werte liefert. Fehlende Felder werden in der GPX-Darstellung weggelassen statt mit Nullwerten befüllt.",
-)
-
-#lf-card(
-  "/LF160/",
-  "Deduplizierung von Punkten",
-  "Qualitätsrichtlinie",
-  "/LF100/",
-  "Host-App",
-  "Das System muss identische Koordinaten mit identischem Zeitstempel nicht mehrfach als separate logische Messung speichern. Duplikate werden erkannt und gelöscht.",
 )
 
 #lf-card(
@@ -722,10 +688,10 @@ Die folgenden Produktdaten beschreiben die persistenten bzw. transportierten Dat
       columns: (1fr, 1fr),
       stroke: 0.3pt + gray,
       inset: 5pt,
-      [samplingIntervalMs], [long (Standard: 2000 ms)],
       [softLimitPoints], [int (Optional, 0 = deaktiviert)],
       [hardLimitPoints], [int (Optional, 0 = deaktiviert)],
-      [hdopThreshold], [double (Standard: 5.0)],
+      [segmentGapThreshold], [Duration (Standard: 5 min)],
+      [maxFixAge], [Duration (Validierung, Standard: 24 h)],
       [persistOnAbort], [boolean (Standard: false)],
       [w3wApiKey], [Optional\<String\>],
     )
@@ -874,8 +840,101 @@ Die folgenden Produktdaten beschreiben die persistenten bzw. transportierten Dat
 #pagebreak()
 
 // ─────────────────────────────────────────────────────────────────────────────
+== Qualitätsanforderungen
+// ─────────────────────────────────────────────────────────────────────────────
+
+Die Qualitätskriterien wurden in Anlehnung an die ISO/IEC 9126 / ISO/IEC 25010 ausgewählt und gewichtet. Die Gewichtung spiegelt den Schwerpunkt der Bibliothek als reine Logik-Komponente ohne eigene UI wider.
+
+#let category-rows = (1, 8, 13, 19, 23, 29)
+
+
+#{
+  show figure: set block(breakable: true)
+  figure(
+    caption: [Gewichtung der Qualitätsmerkmale nach ISO/IEC 25010 (Relevanzstufen je Unterkriterium).],
+    kind: table,
+    table(
+  columns: (2.5fr, 0.9fr, 0.9fr, 0.9fr, 1.1fr),
+  stroke: 0.5pt + rgb("#AAAAAA"),
+
+  fill: (x, y) => {
+    if y == 0 {
+      rgb("#4a4a4a")
+    } else if y in category-rows {
+      rgb("#9ab8cc")
+    } else if calc.even(y) {
+      rgb("#f2f2f2") // Zebra-Streifen
+    } else {
+      white
+    }
+  },
+
+  inset: (x: 7pt, y: 5pt),
+  align: (x, y) => if x == 0 { left + horizon } else { center + horizon },
+
+  // Header
+  table.cell(fill: rgb("#888787"))[#text(fill: white, weight: "bold")[Produktqualität]],
+  table.cell(fill: rgb("#888787"))[#text(fill: white, weight: "bold")[sehr wichtig]],
+  table.cell(fill: rgb("#888787"))[#text(fill: white, weight: "bold")[wichtig]],
+  table.cell(fill: rgb("#888787"))[#text(fill: white, weight: "bold")[normal]],
+  table.cell(fill: rgb("#888787"))[#text(fill: white, weight: "bold")[nicht relevant]],
+
+  // Funktionalität
+  [*Funktionalität*], [], [], [], [],
+  [Angemessenheit], [x], [], [], [],
+  [Sicherheit], [], [], [x], [],
+  [Interoperabilität], [], [], [x], [],
+  [Konformität], [], [x], [], [],
+  [Ordnungsmäßigkeit], [], [], [x], [],
+  [Richtigkeit], [], [x], [], [],
+
+  // Zuverlässigkeit
+  [*Zuverlässigkeit*], [], [], [], [],
+  [Fehlertoleranz], [], [], [x], [],
+  [Konformität], [], [], [x], [],
+  [Reife], [], [x], [], [],
+  [Wiederherstellbarkeit], [], [x], [], [],
+
+  // Benutzbarkeit
+  [*Benutzbarkeit*], [], [], [], [],
+  [Attraktivität], [x], [], [], [],
+  [Bedienbarkeit], [], [x], [], [],
+  [Erlernbarkeit], [x], [], [], [],
+  [Konformität], [], [], [x], [],
+  [Verständlichkeit], [], [x], [], [],
+
+  // Effizienz
+  [*Effizienz*], [], [], [], [],
+  [Konformität], [], [], [x], [],
+  [Zeitverhalten], [], [], [x], [],
+  [Verbrauchsverhalten], [], [], [], [x],
+
+  // Änderbarkeit
+  [*Änderbarkeit*], [], [], [], [],
+  [Analysierbarkeit], [], [], [x], [],
+  [Konformität], [], [], [x], [],
+  [Modifizierbarkeit], [], [x], [], [],
+  [Stabilität], [], [x], [], [],
+  [Testbarkeit], [], [], [x], [],
+
+  // Übertragbarkeit
+  [*Übertragbarkeit*], [], [], [], [],
+  [Anpassbarkeit], [], [], [], [x],
+  [Austauschbarkeit], [], [x], [], [],
+  [Installierbarkeit], [], [], [x], [],
+  [Koexistenz], [], [x], [], [],
+  [Konformität], [], [], [x], [],
+    ),
+  )
+}
+
+#pagebreak()
+
+// ─────────────────────────────────────────────────────────────────────────────
 == Nichtfunktionale Anforderungen
 // ─────────────────────────────────────────────────────────────────────────────
+
+Die folgenden Anforderungen konkretisieren die priorisierten Qualitätsmerkmale aus der vorstehenden Matrix mess- und testbar.
 
 === Leistungs- und Performanceanforderungen (/LL010/)
 
@@ -989,10 +1048,10 @@ Die folgenden Produktdaten beschreiben die persistenten bzw. transportierten Dat
 
 #ll-card(
   "/LL180/",
-  "Energieeffizienz des Samplings",
+  "Energieeffizienz der Positionsaufrufe",
   "Betriebsanforderung",
   "-",
-  "Das Sampling-Intervall soll so gestaltet sein, dass keine unnötig hohen Punktmengen erzeugt werden, die die Batterie des Host-Geräts belasten. Der Standardwert von 2 Sekunden stellt dabei einen Kompromiss aus Genauigkeit und Effizienz dar.",
+  "Die Aufrufhäufigkeit von `onPositionUpdate` liegt beim Host. Der Host soll vermeiden, unnötig dichte Fix-Ströme zu erzeugen, die Speicher und Batterie belasten; die Bibliothek reduziert beim Einlesen nicht stillschweigend.",
 )
 
 #ll-card(
@@ -1009,88 +1068,6 @@ Die folgenden Produktdaten beschreiben die persistenten bzw. transportierten Dat
   "Rechtliche Anforderung",
   "-",
   "Im Standard-Build dürfen nur permissiv lizenzierte Bibliotheken (Apache 2.0, MIT, BSD) verwendet werden. Die W3W-Client-Abhängigkeit ist optional und nur im Maven-Profil `w3w` aktiviert.",
-)
-
-#pagebreak()
-
-// ─────────────────────────────────────────────────────────────────────────────
-== Qualitätsanforderungen
-// ─────────────────────────────────────────────────────────────────────────────
-
-Die Qualitätskriterien wurden in Anlehnung an die ISO/IEC 9126 / ISO/IEC 25010 ausgewählt und gewichtet. Die Gewichtung spiegelt den Schwerpunkt der Bibliothek als reine Logik-Komponente ohne eigene UI wider.
-#let category-rows = (1, 8, 13, 19, 23, 29)
-
-#table(
-  columns: (2.5fr, 0.9fr, 0.9fr, 0.9fr, 1.1fr),
-  stroke: 0.5pt + rgb("#AAAAAA"),
-
-  fill: (x, y) => {
-    if y == 0 {
-      rgb("#4a4a4a")
-    } else if y in category-rows {
-      rgb("#9ab8cc")
-    } else if calc.even(y) {
-      rgb("#f2f2f2") // Zebra-Streifen
-    } else {
-      white
-    }
-  },
-
-  inset: (x: 7pt, y: 5pt),
-  align: (x, y) => if x == 0 { left + horizon } else { center + horizon },
-
-  // Header
-  table.cell(fill: rgb("#888787"))[#text(fill: white, weight: "bold")[Produktqualität]],
-  table.cell(fill: rgb("#888787"))[#text(fill: white, weight: "bold")[sehr wichtig]],
-  table.cell(fill: rgb("#888787"))[#text(fill: white, weight: "bold")[wichtig]],
-  table.cell(fill: rgb("#888787"))[#text(fill: white, weight: "bold")[normal]],
-  table.cell(fill: rgb("#888787"))[#text(fill: white, weight: "bold")[nicht relevant]],
-
-  // Funktionalität
-  [*Funktionalität*], [], [], [], [],
-  [Angemessenheit], [x], [], [], [],
-  [Sicherheit], [], [], [x], [],
-  [Interoperabilität], [], [], [x], [],
-  [Konformität], [], [x], [], [],
-  [Ordnungsmäßigkeit], [], [], [x], [],
-  [Richtigkeit], [], [x], [], [],
-
-  // Zuverlässigkeit
-  [*Zuverlässigkeit*], [], [], [], [],
-  [Fehlertoleranz], [], [], [x], [],
-  [Konformität], [], [], [x], [],
-  [Reife], [], [x], [], [],
-  [Wiederherstellbarkeit], [], [x], [], [],
-
-  // Benutzbarkeit
-  [*Benutzbarkeit*], [], [], [], [],
-  [Attraktivität], [x], [], [], [],
-  [Bedienbarkeit], [], [x], [], [],
-  [Erlernbarkeit], [x], [], [], [],
-  [Konformität], [], [], [x], [],
-  [Verständlichkeit], [], [x], [], [],
-
-  // Effizienz
-  [*Effizienz*], [], [], [], [],
-  [Konformität], [], [], [x], [],
-  [Zeitverhalten], [], [], [x], [],
-  [Verbrauchsverhalten], [], [], [], [x],
-
-  // Änderbarkeit
-  [*Änderbarkeit*], [], [], [], [],
-  [Analysierbarkeit], [], [], [x], [],
-  [Konformität], [], [], [x], [],
-  [Modifizierbarkeit], [], [x], [], [],
-  [Stabilität], [], [x], [], [],
-  [Testbarkeit], [], [], [x], [],
-
-  // Übertragbarkeit
-  [*Übertragbarkeit*], [], [], [], [],
-  [Anpassbarkeit], [], [], [], [x],
-  [Austauschbarkeit], [], [x], [], [],
-  [Installierbarkeit], [], [], [x], [],
-  [Koexistenz], [], [x], [], [],
-  [Konformität], [], [], [x], [],
 )
 
 #pagebreak()

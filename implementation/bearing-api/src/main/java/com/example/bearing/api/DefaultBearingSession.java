@@ -18,7 +18,6 @@ import com.example.bearing.spi.model.GpxDocument;
 import com.example.bearing.spi.model.GpxMetadata;
 import java.nio.file.Path;
 import java.time.Instant;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -28,7 +27,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
- * Standardimplementierung ({@code /LF020/}–{@code /LF500/}).
+ * Standardimplementierung ({@code /LF020/}-{@code /LF500/}). Sammelt validierte Fixes im Rohtrack;
+ * vor GPX-Export optional {@link SessionConfig#optimizers()}.
  */
 public final class DefaultBearingSession implements BearingSession {
 
@@ -113,7 +113,6 @@ public final class DefaultBearingSession implements BearingSession {
         validate(fix);
         lastFix = Optional.of(fix);
         TrackAcceptResult res = aggregator.accept(fix);
-        logFlags(res.flags());
         fire(l -> l.onPositionUpdate(sessionId, new TrackAcceptSummary(res.flags())));
         if (res.has(TrackAcceptResult.Flag.SOFT_LIMIT_WARN)) {
             fire(l -> l.onSoftLimitWarn(sessionId));
@@ -221,19 +220,6 @@ public final class DefaultBearingSession implements BearingSession {
         }
         if (fix.time().isBefore(now.minus(frozenConfig.maxFixAge()))) {
             throw new ValidationException(ErrorCode.TIMESTAMP_INVALID, "Fix time too old");
-        }
-    }
-
-    private void logFlags(EnumSet<TrackAcceptResult.Flag> flags) {
-        for (TrackAcceptResult.Flag f :
-                EnumSet.of(
-                        TrackAcceptResult.Flag.DUPLICATE_DISCARDED,
-                        TrackAcceptResult.Flag.HDOP_DISCARDED,
-                        TrackAcceptResult.Flag.SPEED_JUMP_DISCARDED,
-                        TrackAcceptResult.Flag.SAMPLING_SKIPPED)) {
-            if (flags.contains(f)) {
-                logger.warn("track", sessionId, f.name(), "discarded/marked: " + f);
-            }
         }
     }
 

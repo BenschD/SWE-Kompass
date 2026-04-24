@@ -20,3 +20,5 @@ Kurzmatrix gemäß Vorschrieb (`/LF…/`, `/TC…/`). Detaillierte Anforderungen
 | /LF220/ Atomares Schreiben | `SafeFileSink` | `SafeFileSinkJimfsTest` |
 
 Weitere `/LF`-IDs sind in den jeweiligen Klassen-Javadocs referenziert.
+
+**Nicht implementiert (Out-of-Scope, siehe Vorschrieb-Anhang):** `/LF110/`, `/LF130/`, `/LF140/`, `/LF160/` — keine zusätzliche Eingangsreduktion; Rohspeicher mit Limits und Segmentierung.

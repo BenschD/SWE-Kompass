@@ -32,7 +32,7 @@ Coverage-Report (JaCoCo): `mvn verify` → `bearing-api/target/site/jacoco/index
 
 ### Alles auf einmal (Konsolen-Demo / Skript)
 
-Modul **`bearing-demo`** enthält `AllCapabilitiesDemo`: Domain-Rechner, Session (Start, Fehler, HDOP, Listener, Snapshot, `complete`/`abort`), **alle vier Track-Optimierer** in einer Pipeline, **SafeFileSink** (Jimfs), Path-Traversal-Schutz, W3W-Noop, ungültiger Kurs.
+Modul **`bearing-demo`** enthält `AllCapabilitiesDemo`: Domain-Rechner, Session (Start, Fehler, Rohtrack inkl. HDOP-Feldern, Listener, Snapshot, `complete`/`abort`), **alle vier Track-Optimierer** in einer Pipeline, **SafeFileSink** (Jimfs), Path-Traversal-Schutz, W3W-Noop, ungültiger Kurs.
 
 ```powershell
 # Aus implementation/:

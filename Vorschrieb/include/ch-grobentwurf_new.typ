@@ -92,7 +92,7 @@ GPX-Writer, keine Fachlogik berührt.
     stroke: tbl-stroke, inset: tbl-inset,
     [*Subsystem*],             [*Kernverantwortung*],                                              [*Bereitgestellte Dienste*],
     [API / Application Service],[Use-Case-Orchestrierung; Session-Verwaltung; Fehlerbehandlung],   [Session starten, beenden und abbrechen; konsistenten Zustandsschnappschuss liefern],
-    [Domain Core],             [Fachlogik ohne I/O-Abhängigkeiten],                               [Azimut, Distanz, Ordinalrichtung; Sampling, Validierung, Segmentierung, Optimierung],
+    [Domain Core],             [Fachlogik ohne I/O-Abhängigkeiten],                               [Azimut, Distanz, Ordinalrichtung; Rohspeicher, Validierung, Segmentierung, Export-Optimierer],
     [Ports],                   [Abstraktion technischer Abhängigkeiten],                          [Stabile Schnittstellen für GPX, Zeitgeber, Dateisystem, Logging und W3W],
     [Infrastruktur / Adapter], [Konkrete Implementierung der Ports],                              [XML-Serialisierung, Datei-I/O, HTTP-Client, Systemuhr, Logging-Backend],
   ))
@@ -123,7 +123,7 @@ Abhängigkeiten, und jede Schicht ist einzeln testbar und austauschbar.
 
   *Domain Core*\
   Enthält alle fachlichen Regeln und Berechnungen (Azimut, Distanz,
-  Sampling, Filterung, Segmentierung, Optimierung). Vollständig I/O-frei.
+  Rohspeicher, Segmentierung, Punktbudget; Export-Optimierer als Strategien). Vollständig I/O-frei.
   Kein Import von Infrastruktur-Klassen.
 
   ↓ nur über Port-Interfaces 
@@ -305,7 +305,7 @@ werden im Feinentwurf festgelegt.
   stroke: tbl-stroke, inset: tbl-inset,
   [*Dienst*],            [*Vertrag (Kurzbeschreibung)*],                              [*Fehlerfälle*],
   [Session starten],     [Legt genau eine aktive Session an; liefert Session-ID zurück],  [Bereits aktive Session; ungültiges Ziel],
-  [Positionsupdate],     [Verarbeitet validen Fix gemäß Sampling-Policy; aktualisiert Track],[Ungültige Koordinaten; keine aktive Session],
+  [Positionsupdate],     [Validiert Fix, legt im Rohspeicher ab; aktualisiert Track],[Ungültige Koordinaten; keine aktive Session],
   [Kursupdate],          [Optionaler Kursbezug für Abweichungsberechnung],             [Ungültiger Kurswert; keine aktive Session],
   [Session abschließen], [Finalisiert Session; liefert GPX-Ergebnis],                  [Keine aktive Session; Serialisierungsfehler],
   [Session abbrechen],   [Bricht ab; liefert bis dahin erfasste GPX-Daten],            [Keine aktive Session; Serialisierungsfehler],
@@ -339,7 +339,7 @@ Klassifizierung auf die relevanten Risiken der Peilungskomponente an.
   [Pfadmanipulation beim GPX-Export],[Vermeidung], [Whitelisting erlaubter Basisverzeichnisse; Host konfiguriert Pfad explizit],[API + FileSinkPort + SafeFileSink],
   [XML-Injection in GPX],       [Vermeidung],      [Konsequentes Escaping aller Nutzerdaten bei der Serialisierung],[GpxWriterPort + GpxXmlWriter],
   [Ausfall des W3W-Dienstes],   [Minderung],       [Timeout-Limit, begrenzte Retry-Anzahl, Fallback ohne W3W-Daten],[W3wClientPort + W3wHttpClient],
-  [Unkontrollierter Speicherverbrauch],[Vermeidung],[Punktbudget, Sampling-Intervall und Segmentierungslimit im Domain Core],[Domain Core],
+  [Unkontrollierter Speicherverbrauch],[Vermeidung],[Punktbudget und Segmentierungs-Schwelle im Domain Core],[Domain Core],
   [Unklare Fehlerbehandlung],   [Erkennung],       [Semantische Exception-Hierarchie; jeder Fehler hat eindeutigen Code],[API / Application Service],
 )
 

@@ -1,6 +1,23 @@
 #let ch-anhang-kapitel = [
 #set par(justify: true)
 
+== Nicht im Lieferumfang (Out of Scope)
+
+Die folgenden ehemals formulierten funktionalen Anforderungen werden in dieser Bibliotheksversion *nicht* umgesetzt. Begründung: Die Komponente speichert jeden validierten GNSS-Fix unverändert im Roh-Track; Qualitätsfilterung, Abtastlogik und Dublettenbereinigung obliegen der *Host-Anwendung* oder einem späteren Release. Die IDs bleiben zur Nachverfolgbarkeit gegenüber älteren Dokumentversionen erhalten.
+
+#table(
+  columns: (1.6cm, 2.4cm, 1fr),
+  stroke: 0.45pt + rgb("#9a9a9a"),
+  inset: 6pt,
+  [*ID*], [*Kurztitel*], [*Hinweis*],
+  [/LF110/], [Zeitintervall / Abtastung], [Kein konfigurierbares Speicherintervall in der Bibliothek; Host steuert Aufrufhäufigkeit von `onPositionUpdate`.],
+  [/LF130/], [HDOP / Satelliten], [HDOP-Felder werden in GPX durchgereicht, keine automatische Verwerfung beim Einlesen.],
+  [/LF140/], [Geschwindigkeitssprünge], [Keine implizite Geschwindigkeitsprüfung im Rohspeicher.],
+  [/LF160/], [Duplikate], [Identische Messungen werden nicht still entfernt.],
+)
+
+#pagebreak()
+
 == Vorlesungs-Themen-Matrix (Abdeckung SWE)
 
 Die folgende Matrix ordnet typische Inhalte der Softwareengineering-Vorlesung (beide Semester, zusammenfassend) den Dokumentations- und Implementationsartefakten dieses Projekts zu. Sie dient der expliziten Abdeckung der in der Aufgabenstellung genannten Anforderung, *alle* Themengebiete sinnvoll einzubringen.

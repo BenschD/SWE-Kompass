@@ -5,7 +5,7 @@
 
 Im Rahmen der Projektarbeit wird die iOS-Anwendung _Kompass Professional_ als fachliche Referenz analysiert. Der Fokus liegt auf der Peilungsfunktion und nicht auf einer vollständigen Navigationslösung. Unter Peilung wird in dieser Arbeit die Berechnung der Richtung und Entfernung von der aktuellen Position zu einem Zielpunkt verstanden; optional kann die Abweichung zum aktuellen Kurs berücksichtigt werden, sofern ein Kurswert vom Host-System bereitgestellt wird. 
 
-Die zentrale Problemstellung dieser Arbeit besteht in der konsistenten und reproduzierbaren Berechnung von Zielrichtung (Azimut), Entfernung und diskreter Ordinalrichtung auf Basis von WGS84-Koordinaten unter klar definierten Eingangs- und Schnittstellenbedingungen. Zusätzlich muss die Verarbeitung als kontinuierlicher Session-Prozess mit Start, Laufzeit und Abbruch konzipiert werden, bei dem Track-Daten trotz Unterbrechungen vollständig exportierbar bleiben und gleichzeitig durch kontrollierte Datenreduktion effizient gehalten werden. Insgesamt ergibt sich daraus die Anforderung einer robusten, nachvollziehbaren und erweiterbaren Verarbeitung von Positions- und Bewegungsdaten inklusive standardisiertem GPX-Export.
+Die zentrale Problemstellung dieser Arbeit besteht in der konsistenten und reproduzierbaren Berechnung von Zielrichtung (Azimut), Entfernung und diskreter Ordinalrichtung auf Basis von WGS84-Koordinaten unter klar definierten Eingangs- und Schnittstellenbedingungen. Zusätzlich muss die Verarbeitung als kontinuierlicher Session-Prozess mit Start, Laufzeit und Abbruch konzipiert werden, bei dem Track-Daten trotz Unterbrechungen vollständig exportierbar bleiben. Eine optionale Datenreduktion erfolgt beim GPX-Export. Insgesamt ergibt sich daraus die Anforderung einer robusten, nachvollziehbaren und erweiterbaren Verarbeitung von Positions- und Bewegungsdaten inklusive standardisiertem GPX-Export.
 
 
 
@@ -30,13 +30,13 @@ Die *Lieferfähigkeit* umfasst lauffähigen Quellcode ohne eine ausführbare Fat
 - Geografische Berechnung von Zielrichtung (Azimut), Entfernung und diskreter Ordinalrichtung auf WGS84-Basis mit optionale Kursabweichung bei verfügbarem Kurswert.
 - Klar definierte Integrationsschnittstellen, über die der Host Positionsdaten und weitere Rechnungsdaten (z. B. Zeitstempel, Geschwindigkeit, Genauigkeit) bereitstellt.
 - Session-Lebenszyklus mit Start, laufender Aufzeichnung und Abbruch. Bei Abbruch werden die bis dahin erfassten Track-Daten weiterhin exportierbar bereitgestellt.
-- Konfigurierbare Aufzeichnungslogik mit zeitlicher Abtastung, maximaler Punktzahl und Strategien zur Reduktion von Datenmengen bei ausreichender Streckenrepräsentation.
-- Umgang mit Messfehlern durch Qualitätsfilter (z. B. ungültige Koordinaten, HDOP-Schwellen, unplausible Geschwindigkeitssprünge) und Segmentierung bei Zeitlücken.
+- Konfigurierbare Aufzeichnungslogik: Punktbudget (Soft-/Hard-Limit), Segmentierung bei Zeitlücken, Validierung ungültiger Eingaben (Koordinaten, Zeit). Die Aufrufhäufigkeit von Positionsupdates steuert der Host.
 - GPX-1.1-konformer Export der Track-Daten als String oder Bytefolge.
-- Erweiterbare Optimierungsverfahren (z. B. n-ter Punkt, Mindestabstand, Geraden-Heuristik, optional Douglas-Peucker) sowie optionaler What3Words-Bezug inklusive Caching.
+- *Optional* vor dem Export: erweiterbare Optimierungsverfahren (z. B. n-ter Punkt, Mindestabstand, Geraden-Heuristik, Douglas-Peucker) sowie optionaler What3Words-Bezug inklusive Caching.
 
-*Außerhalb des Scopes:*
+*Außerhalb des Scopes*
 
+- Track-Optimierung der eingehenden Daten
 - Magnetische Peilung inklusive automatischer Deklinationskorrektur (siehe Glossar; Host-Verantwortung).
 - Kartendarstellung, Kartenmatching, Routing, Geocoding allgemeiner Adressstrings (außer W3W-Option).
 - Hardwareanbindung (GNSS-Treiber, Sensorfusion), der Host liefert Messwerte.

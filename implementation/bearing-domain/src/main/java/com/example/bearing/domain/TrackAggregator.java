@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Track-Aufzeichnung inkl. Sampling und Qualitätsregeln ({@code /LF100/}–{@code /LF180/}).
+ * Roh-Track: jeder validierte {@link GpsFix} wird gespeichert (bis auf Speicher-Grenzen und
+ * Overflow-Policy). Segmentierung bei Zeitlücken ({@code /LF170/}).
  */
 public final class TrackAggregator {
 
@@ -19,7 +20,6 @@ public final class TrackAggregator {
     private final List<GpsPoint> current = new ArrayList<>();
 
     private GpsPoint lastStoredPoint;
-    private Instant lastStoredTime;
     private int storedCount;
     private boolean softWarned;
     private boolean recordingStopped;
@@ -35,55 +35,12 @@ public final class TrackAggregator {
 
         EnumSet<TrackAcceptResult.Flag> flags = EnumSet.noneOf(TrackAcceptResult.Flag.class);
 
-        if (lastStoredPoint != null
-                && lastStoredPoint.time().equals(fix.time())
-                && lastStoredPoint.latitudeDeg() == fix.latitudeDeg()
-                && lastStoredPoint.longitudeDeg() == fix.longitudeDeg()) {
-            flags.add(TrackAcceptResult.Flag.DUPLICATE_DISCARDED);
-            return TrackAcceptResult.of(flags, Optional.empty());
-        }
-
-        if (fix.hdop().isPresent() && fix.hdop().get() > params.hdopThreshold()) {
-            if (params.discardWhenHdopExceeded()) {
-                flags.add(TrackAcceptResult.Flag.HDOP_DISCARDED);
-                return TrackAcceptResult.of(flags, Optional.empty());
-            }
-        }
-
-        if (lastStoredPoint != null) {
-            double dt = Duration.between(lastStoredPoint.time(), fix.time()).toMillis() / 1000.0;
-            if (dt > 0) {
-                double dist =
-                        calc.greatCircleDistanceMeters(
-                                lastStoredPoint.latitudeDeg(),
-                                lastStoredPoint.longitudeDeg(),
-                                fix.latitudeDeg(),
-                                fix.longitudeDeg());
-                double implied = dist / dt;
-                if (implied > params.maxImpliedSpeedMps()) {
-                    if (params.speedJumpPolicy() == SpeedJumpPolicy.DISCARD) {
-                        flags.add(TrackAcceptResult.Flag.SPEED_JUMP_DISCARDED);
-                        return TrackAcceptResult.of(flags, Optional.empty());
-                    }
-                    flags.add(TrackAcceptResult.Flag.SPEED_JUMP_LOGGED);
-                }
-            }
-        }
-
         if (params.hardLimitPoints() > 0 && storedCount >= params.hardLimitPoints()) {
             if (params.overflowMode() == OverflowMode.STOP
                     || params.overflowMode() == OverflowMode.DOWNSAMPLE) {
                 recordingStopped = true;
                 flags.add(TrackAcceptResult.Flag.HARD_LIMIT_REACHED);
                 flags.add(TrackAcceptResult.Flag.RECORDING_STOPPED);
-                return TrackAcceptResult.of(flags, Optional.empty());
-            }
-        }
-
-        if (lastStoredTime != null) {
-            long gapMs = Duration.between(lastStoredTime, fix.time()).toMillis();
-            if (gapMs < params.samplingIntervalMs()) {
-                flags.add(TrackAcceptResult.Flag.SAMPLING_SKIPPED);
                 return TrackAcceptResult.of(flags, Optional.empty());
             }
         }
@@ -104,7 +61,6 @@ public final class TrackAggregator {
         GpsPoint stored = GpsPoint.fromFix(fix);
         current.add(stored);
         lastStoredPoint = stored;
-        lastStoredTime = fix.time();
         storedCount++;
         flags.add(TrackAcceptResult.Flag.STORED);
         return TrackAcceptResult.of(flags, Optional.of(stored));

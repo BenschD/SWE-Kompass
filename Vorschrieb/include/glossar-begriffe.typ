@@ -137,19 +137,12 @@
   "GPX 1.1 Spezifikation",
 )
 
-#begriffskarte(
-  "Sampling (Abtastung)",
-  "Regel, nach der aus einem kontinuierlichen oder dichten Positionsstrom diskrete Speicherereignisse entstehen.", 
-  "" ,
-  "Zeitintervall konfigurierbar gemäß /LF110/; Mindestintervall 0,5 s, Maximum 60 s.",
-  "",
-  "Digitale Signalverarbeitung; projektspezifisch /LF100/–/LF110/.",
-)
+
 
 #begriffskarte(
   "HDOP (Horizontal Dilution of Precision)",
   "dimensionsloses Maß für die geometrische Güte der Satellitenkonstellation; niedriger ist typischerweise besser","" ,
-  "Schwellwert standardmäßig ≤ 5,0 gemäß /LF130/. Werte außerhalb sind konfigurationsabhängig zu verwerfen oder zu markieren",
+  "Optional im Datenmodell und in GPX; keine automatische Verwerfung beim Einlesen (/LF130/ Out-of-Scope).",
   "",
   "Herstellerdokumentation GNSS-Empfänger.",
 )
@@ -176,7 +169,7 @@
   "Trackoptimierung",
   "Austauschbare Algorithmen hinter gemeinsamer Schnittstelle zur Reduktion oder Vereinfachung von Trackpunkten",
   "" ,
-  "Gültig nach Session-Ende oder vor GPX-Serialisierung, /LF270/.",
+  "Nur optional vor GPX-Export über `SessionConfig.addOptimizer` (leere Liste = unveränderter Rohtrack); /LF240/-/LF270/.",
   "",
   "/LF480/",
 )
@@ -187,7 +180,7 @@
   "Builder (Konfigurationsaufbau)",
   "Muster, mit dem man eine Konfiguration Schritt für Schritt baut statt mit einem langen Konstruktor.","" ,
   "Im Projekt über `SessionConfig.builder()`, beim Start werden die relevanten Parameter als `RecordingParameters` eingefroren (/LF410/).",
-  "Beispiel: `SessionConfig.builder().samplingIntervalMs(2000).build()`",
+  "Beispiel: `SessionConfig.builder().segmentGapThreshold(java.time.Duration.ofMinutes(5)).build()`",
   "Design Patterns",
 )
 

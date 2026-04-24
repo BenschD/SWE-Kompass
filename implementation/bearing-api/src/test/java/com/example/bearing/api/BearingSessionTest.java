@@ -81,7 +81,7 @@ class BearingSessionTest {
         SettableClock clock = new SettableClock(t0);
         DefaultBearingSession s =
                 BearingBootstrap.newSession(new SystemClockAdapter(clock), Optional.empty(), new NoopW3wClient());
-        s.start(SessionConfig.builder().samplingIntervalMs(500).build(), new GeoCoordinate(48.78, 9.18));
+        s.start(SessionConfig.builder().build(), new GeoCoordinate(48.78, 9.18));
         clock.set(t0);
         s.onPositionUpdate(new GpsFix(t0, 48.77, 9.17, Optional.empty(), Optional.empty(), Optional.empty()));
         Instant t1 = t0.plusSeconds(2);
@@ -185,7 +185,7 @@ class BearingSessionTest {
         SettableClock clock = new SettableClock(t0);
         DefaultBearingSession s =
                 BearingBootstrap.newSession(new SystemClockAdapter(clock), Optional.empty(), new NoopW3wClient());
-        SessionConfig cfg = SessionConfig.builder().samplingIntervalMs(500).addOptimizer(new NthPointOptimizer(10)).build();
+        SessionConfig cfg = SessionConfig.builder().addOptimizer(new NthPointOptimizer(10)).build();
         s.start(cfg, new GeoCoordinate(48.78, 9.18));
         for (int i = 0; i < 100; i++) {
             Instant ti = t0.plusMillis(500L * i);

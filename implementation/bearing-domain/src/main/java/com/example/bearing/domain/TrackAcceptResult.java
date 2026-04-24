@@ -3,19 +3,14 @@ package com.example.bearing.domain;
 import java.util.EnumSet;
 import java.util.Optional;
 
-/** Ergebnis eines Aufzeichnungsschritts. */
+/** Ergebnis eines Aufzeichnungsschritts (Rohspeicher ohne Einlese-Filter). */
 public final class TrackAcceptResult {
 
     public enum Flag {
         STORED,
         SOFT_LIMIT_WARN,
         HARD_LIMIT_REACHED,
-        DUPLICATE_DISCARDED,
-        HDOP_DISCARDED,
-        SPEED_JUMP_DISCARDED,
-        SPEED_JUMP_LOGGED,
         NEW_SEGMENT,
-        SAMPLING_SKIPPED,
         RECORDING_STOPPED
     }
 

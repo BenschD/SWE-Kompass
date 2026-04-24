@@ -105,18 +105,13 @@ Die folgenden Aktivitätsbeschreibungen ergänzen die UML-Aktivitätsdiagramme (
 
   *Entscheidung:* ungültig? → *Exception werfen* (`/LF090/`, `/LF300/`) → *Endknoten (Fehler)*.
 
-  *Aktion:* *Sampling-Gate* - wenn die Zeit seit dem letzten gespeicherten Punkt *kleiner als* `samplingIntervalMs` ist, dann *Join ohne Speichern* → *Peilung trotzdem aktualisieren?*\
-  - Policy: Snapshot darf auch bei verworfenem Trackpunkt neu berechnet werden, wenn letzter Fix gültig bleibt (konfigurierbar dokumentieren).
-
-  *Entscheidung:* HDOP *größer als* Schwelle? → gemäß Konfiguration verwerfen/markieren (`/LF130/`).
-
-  *Entscheidung:* Geschwindigkeitssprung? → verwerfen/protokollieren (`/LF140/`).
-
-  *Aktion:* *Duplikatfilter* (`/LF160/`).
+  *Hinweis:* Rohspeicher ohne zusätzliche Eingangsreduktion; ausgeschlossene Lastenheft-Teile (`/LF110/`–`/LF160/`) siehe Anhang *Nicht im Lieferumfang*.
 
   *Aktion:* *Segmentierung prüfen* - große Zeitlücke → neues `trkseg` (`/LF170/`).
 
   *Aktion:* *Punktbudget prüfen* - Soft-Limit → WARN-Event; Hard-Limit → kontrollierter Stopp (`/LF180/`).
+
+  *Aktion:* *Fix in Rohspeicher übernehmen*.
 
   *Aktion:* *Haversine + Azimut* berechnen, optional Kursabweichung (`/LF030/`, `/LF040/`, `/LF050/`).
 
@@ -128,7 +123,9 @@ Die folgenden Aktivitätsbeschreibungen ergänzen die UML-Aktivitätsdiagramme (
 #diagramm-box("Aktivität: GPX-Export mit Optimierungspipeline")[
   *Start* → *Rohtrack klonen/immutabel halten*.
 
-  *Fork (sequentiell dokumentiert):* Strategie n-ter Punkt (`/LF240/`) → Strategie Mindestabstand (`/LF250/`) → Geraden-Heuristik (`/LF260/`) → optional Douglas-Peucker (`/LF270/`).
+  *Entscheidung:* sind `TrackOptimizer` in der Session-Konfiguration registriert? → *Fork (sequentiell):* n-ter Punkt (`/LF240/`) → Mindestabstand (`/LF250/`) → Geraden-Heuristik (`/LF260/`) → optional Douglas-Peucker (`/LF270/`).
+
+  *Sonst:* Rohpunkte unverändert übernehmen.
 
   *Merge* → *Metadaten anreichern* (`/LF210/`) → *XML erzeugen + escapen* (`/LF200/`, `/LL130/`) → *String/Bytes* (`/LF230/`).
 
@@ -139,12 +136,12 @@ Die textuellen Aktivitätsbeschreibungen oben werden durch die folgenden UML-Akt
 
 #figure(
   puml-fig("../plantuml/out/SWE_Kompass_Activity_PositionUpdate.svg"),
-  caption: [UML-Aktivitätsdiagramm: Ablauf `onPositionUpdate` inkl. Sampling und Qualitätsprüfungen.],
+  caption: [UML-Aktivitätsdiagramm: Ablauf `onPositionUpdate` (Rohspeicher).],
 )
 
 #figure(
   puml-fig("../plantuml/out/SWE_Kompass_Activity_GpxExport.svg"),
-  caption: [UML-Aktivitätsdiagramm: GPX-Export mit sequentieller Optimierungskette.],
+  caption: [UML-Aktivitätsdiagramm: GPX-Export; Optimierer-Kette nur bei registrierten `TrackOptimizer` in der Session-Konfiguration.],
 )
 
 === Sequenzdiagramme (Algorithmuspfade)
@@ -218,7 +215,7 @@ Die folgende Tabelle ersetzt ein grafisches Klassendiagramm in kompakter, aber i
   [`GeoCoordinate`], [Value Object], [WGS84 lat/lon validiert],
   [`GpsFix`], [Value Object], [Zeit + Position + optional HDOP/Speed],
   [`BearingCalculator`], [Domain Service], [Haversine, Azimut, Ordinal],
-  [`TrackAggregator`], [Domain Service], [Sampling, Filter, Segmente],
+  [`TrackAggregator`], [Domain Service], [Rohspeicher, Segmente, Punktbudget],
   [`GpxSerializer`], [Infrastructure], [GPX 1.1, Escaping],
   [`TrackOptimizer`], [Interface], [Optimierungsstrategie],
   [`W3wClient`], [Interface], [Reverse-Lookup],
@@ -273,11 +270,11 @@ Die persistenten/transienten Daten sind in `/LD100/`-`/LD190/` beschrieben. ER-D
 
 Neben der tabellarischen OOD-Zusammenfassung liegen die *grafischen* Klassendiagramme (OOA und OOD) als PlantUML-Quellen unter `Vorschrieb/plantuml/` und die gerenderten SVG-Dateien unter `Vorschrieb/plantuml/out/`. Die Abbildungen sind in den Abschnitten Objektorientierte Analyse bzw. Technischer Feinentwurf eingebunden.
 
+== Qualitätsanforderungen nach ISO/IEC 25010
+
+Die Gewichtung ist im Lastenheft-Kapitel *Qualitätsanforderungen* tabellarisch dokumentiert. Für die Spezifikation wird ergänzend festgelegt, dass *Sicherheit* und *Wartbarkeit* über Checkstyle/Javadoc abgesichert werden (`/LL100/`), *Performance* über Benchmark-Tests (`/LL030/`, `/LL040/`), *Zuverlässigkeit* über Exception-Hierarchie und Wiederanlauf (`/LF090/`, `/LL160/`). Die folgenden nicht-funktionalen Kennzahlen setzen die priorisierten Qualitätsmerkmale (insbesondere *Effizienz/Zeitverhalten*, *Zuverlässigkeit*, *Sicherheit*) in messbare Grenzen um.
+
 == Nichtfunktionale Spezifikation
-
-=== Qualitätsanforderungen nach ISO/IEC 25010
-
-Die Gewichtung ist im Lastenheft-Kapitel tabellarisch dokumentiert. Für die Spezifikation wird ergänzend festgelegt, dass *Sicherheit* und *Wartbarkeit* über Checkstyle/Javadoc abgesichert werden (`/LL100/`), *Performance* über Benchmark-Tests (`/LL030/`, `/LL040/`), *Zuverlässigkeit* über Exception-Hierarchie und Wiederanlauf (`/LF090/`, `/LL160/`).
 
 === Mengengerüst und Sicherheitsanforderungen
 

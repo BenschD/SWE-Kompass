@@ -2,7 +2,6 @@ package com.example.bearing.api;
 
 import com.example.bearing.domain.OverflowMode;
 import com.example.bearing.domain.RecordingParameters;
-import com.example.bearing.domain.SpeedJumpPolicy;
 import com.example.bearing.domain.optimize.TrackOptimizer;
 import java.nio.file.Path;
 import java.time.Duration;
@@ -12,24 +11,16 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Immutable Session-Konfiguration ({@code /LD110/}, {@code /LF400/}).
+ * Immutable Session-Konfiguration ({@code /LD110/}, {@code /LF400/}). Punktbudget und Segmentierung
+ * gelten für den Roh-Track; {@link #optimizers()} sind ausschließlich für den GPX-Export und optional.
  */
 public final class SessionConfig {
 
-    public static final long DEFAULT_SAMPLING_MS = 2000L;
-    public static final double DEFAULT_HDOP = 5.0;
-
-    private final long samplingIntervalMs;
     private final int softLimitPoints;
     private final int hardLimitPoints;
     private final OverflowMode overflowMode;
-    private final double hdopThreshold;
-    private final boolean discardWhenHdopExceeded;
     private final Duration segmentGapThreshold;
     private final Duration maxFixAge;
-    private final double maxImpliedSpeedMps;
-    private final SpeedJumpPolicy speedJumpPolicy;
-    private final boolean recalculateSnapshotWhenPointDropped;
     private final boolean persistOnAbort;
     private final Optional<Path> allowedBaseDir;
     private final Optional<Path> completePersistPath;
@@ -39,17 +30,11 @@ public final class SessionConfig {
     private final Optional<String> w3wApiKey;
 
     private SessionConfig(Builder b) {
-        this.samplingIntervalMs = b.samplingIntervalMs;
         this.softLimitPoints = b.softLimitPoints;
         this.hardLimitPoints = b.hardLimitPoints;
         this.overflowMode = b.overflowMode;
-        this.hdopThreshold = b.hdopThreshold;
-        this.discardWhenHdopExceeded = b.discardWhenHdopExceeded;
         this.segmentGapThreshold = b.segmentGapThreshold;
         this.maxFixAge = b.maxFixAge;
-        this.maxImpliedSpeedMps = b.maxImpliedSpeedMps;
-        this.speedJumpPolicy = b.speedJumpPolicy;
-        this.recalculateSnapshotWhenPointDropped = b.recalculateSnapshotWhenPointDropped;
         this.persistOnAbort = b.persistOnAbort;
         this.allowedBaseDir = b.allowedBaseDir;
         this.completePersistPath = b.completePersistPath;
@@ -61,22 +46,7 @@ public final class SessionConfig {
 
     /** Erzeugt eingefrorene Aufzeichnungsparameter ({@code /LF410/}). */
     public RecordingParameters toRecordingParameters() {
-        return new RecordingParameters(
-                samplingIntervalMs,
-                softLimitPoints,
-                hardLimitPoints,
-                overflowMode,
-                hdopThreshold,
-                discardWhenHdopExceeded,
-                segmentGapThreshold,
-                maxFixAge,
-                maxImpliedSpeedMps,
-                speedJumpPolicy,
-                recalculateSnapshotWhenPointDropped);
-    }
-
-    public long samplingIntervalMs() {
-        return samplingIntervalMs;
+        return new RecordingParameters(softLimitPoints, hardLimitPoints, overflowMode, segmentGapThreshold);
     }
 
     public int softLimitPoints() {
@@ -91,32 +61,12 @@ public final class SessionConfig {
         return overflowMode;
     }
 
-    public double hdopThreshold() {
-        return hdopThreshold;
-    }
-
-    public boolean discardWhenHdopExceeded() {
-        return discardWhenHdopExceeded;
-    }
-
     public Duration segmentGapThreshold() {
         return segmentGapThreshold;
     }
 
     public Duration maxFixAge() {
         return maxFixAge;
-    }
-
-    public double maxImpliedSpeedMps() {
-        return maxImpliedSpeedMps;
-    }
-
-    public SpeedJumpPolicy speedJumpPolicy() {
-        return speedJumpPolicy;
-    }
-
-    public boolean recalculateSnapshotWhenPointDropped() {
-        return recalculateSnapshotWhenPointDropped;
     }
 
     public boolean persistOnAbort() {
@@ -147,30 +97,21 @@ public final class SessionConfig {
         return w3wApiKey;
     }
 
-    /** Builder ({@code /LF400/}). */
     public static Builder builder() {
         return new Builder();
     }
 
-    /** Standardkonfiguration. */
     public static SessionConfig defaults() {
         return builder().build();
     }
 
-    /** Builder für {@link SessionConfig}. */
     public static final class Builder {
 
-        private long samplingIntervalMs = DEFAULT_SAMPLING_MS;
         private int softLimitPoints;
         private int hardLimitPoints;
         private OverflowMode overflowMode = OverflowMode.STOP;
-        private double hdopThreshold = DEFAULT_HDOP;
-        private boolean discardWhenHdopExceeded = true;
         private Duration segmentGapThreshold = Duration.ofMinutes(5);
         private Duration maxFixAge = Duration.ofHours(24);
-        private double maxImpliedSpeedMps = 300_000.0 / 3600.0;
-        private SpeedJumpPolicy speedJumpPolicy = SpeedJumpPolicy.DISCARD;
-        private boolean recalculateSnapshotWhenPointDropped = true;
         private boolean persistOnAbort;
         private Optional<Path> allowedBaseDir = Optional.empty();
         private Optional<Path> completePersistPath = Optional.empty();
@@ -178,15 +119,6 @@ public final class SessionConfig {
         private boolean listenerSerialized;
         private final List<TrackOptimizer> optimizers = new ArrayList<>();
         private Optional<String> w3wApiKey = Optional.empty();
-
-        /**
-         * @param ms Mindestabstand gespeicherter Punkte ({@code /LF110/}: 500–60000)
-         * @return this
-         */
-        public Builder samplingIntervalMs(long ms) {
-            this.samplingIntervalMs = ms;
-            return this;
-        }
 
         public Builder softLimitPoints(int v) {
             this.softLimitPoints = v;
@@ -203,16 +135,6 @@ public final class SessionConfig {
             return this;
         }
 
-        public Builder hdopThreshold(double v) {
-            this.hdopThreshold = v;
-            return this;
-        }
-
-        public Builder discardWhenHdopExceeded(boolean v) {
-            this.discardWhenHdopExceeded = v;
-            return this;
-        }
-
         public Builder segmentGapThreshold(Duration d) {
             this.segmentGapThreshold = Objects.requireNonNull(d);
             return this;
@@ -220,21 +142,6 @@ public final class SessionConfig {
 
         public Builder maxFixAge(Duration d) {
             this.maxFixAge = Objects.requireNonNull(d);
-            return this;
-        }
-
-        public Builder maxImpliedSpeedMps(double v) {
-            this.maxImpliedSpeedMps = v;
-            return this;
-        }
-
-        public Builder speedJumpPolicy(SpeedJumpPolicy p) {
-            this.speedJumpPolicy = Objects.requireNonNull(p);
-            return this;
-        }
-
-        public Builder recalculateSnapshotWhenPointDropped(boolean v) {
-            this.recalculateSnapshotWhenPointDropped = v;
             return this;
         }
 
@@ -273,18 +180,9 @@ public final class SessionConfig {
             return this;
         }
 
-        /**
-         * @return validierte Konfiguration
-         */
         public SessionConfig build() {
-            if (samplingIntervalMs < 500 || samplingIntervalMs > 60_000) {
-                throw new IllegalArgumentException("samplingIntervalMs must be 500..60000");
-            }
             if (softLimitPoints < 0 || hardLimitPoints < 0) {
                 throw new IllegalArgumentException("limits must be >= 0");
-            }
-            if (hdopThreshold < 0) {
-                throw new IllegalArgumentException("hdopThreshold must be >= 0");
             }
             if (completePersistPath.isPresent() || abortPersistPath.isPresent()) {
                 if (allowedBaseDir.isEmpty()) {

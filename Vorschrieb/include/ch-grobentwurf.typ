@@ -58,7 +58,7 @@ Die Architektur muss folgende Ziele gleichzeitig erfüllen:
   inset: 6pt,
   [*Subsystem*], [*Kernverantwortung*], [*Bereitgestellte Dienste*],
   [API/Application Service], [Orchestrierung der Use Cases, Session-Zustand, Fehlerabbildung], [Session starten/beenden/abbrechen, Snapshot liefern],
-  [Domain Core], [Fachregeln ohne I/O], [Azimut/Distanz, Sampling, Validierung, Segmentierung, Optimierungssteuerung],
+  [Domain Core], [Fachregeln ohne I/O], [Azimut/Distanz, Rohspeicher, Validierung, Segmentierung, Export-Optimierer],
   [Ports (SPI)], [Abstraktion technischer Abhängigkeiten], [Verträge für GPX, Zeit, Dateisystem, Logging, W3W],
   [Infrastruktur/Adapter], [Technische Realisierung], [XML-Serialisierung, Datei-I/O, HTTP-Client, Clock, Logging],
 )
@@ -79,8 +79,8 @@ Die Architektur muss folgende Ziele gleichzeitig erfüllen:
 
   *2. Domain Core*\
   Entitäten/Value Objects: `GeoPoint`, `Target`, `Track`, `TrackSegment`, `GpsPoint`.
-  Services/Policies: `BearingCalculator`, `TrackAggregator`, `SamplingPolicy`, `ValidationPolicy`, `SegmentationPolicy`, `TrackOptimizer`.
-  Fachregeln: Azimut/Distanz, Ordinalrichtung, Datenqualitätsfilter, Segmentierung, Optimierung.
+  Services: `BearingCalculator`, `TrackAggregator`, `TrackOptimizer` (optional beim Export).
+  Fachregeln: Azimut/Distanz, Ordinalrichtung, Eingabevalidierung, Rohspeicher, Segmentierung, Punktbudget.
 
   ↓ Abstraktion externer Abhängigkeiten über Ports
 
@@ -147,7 +147,7 @@ Die Architektur muss folgende Ziele gleichzeitig erfüllen:
 
 #diagramm-box("Laufzeitzusammenarbeit der Subsysteme")[
   *Szenario A: Positionsupdate*\
-  Host ruft `onPositionUpdate` auf -> API validiert Vorbedingungen -> Domain verarbeitet Sampling/Filter/Berechnung -> Snapshot/Event wird bereitgestellt.
+  Host ruft `onPositionUpdate` auf -> API validiert Vorbedingungen -> Domain legt Fix im Rohspeicher ab und berechnet Peilung -> Snapshot/Event wird bereitgestellt.
 
   *Szenario B: Session-Abschluss*\
   Host ruft `complete` auf -> Domain finalisiert Track -> Port fuer GPX wird angesprochen -> Infrastruktur serialisiert -> Ergebnis an Host.
@@ -245,7 +245,7 @@ Die Subsysteme sind als Schichten organisiert: Host -> API -> Domain -> Ports ->
   [Pfadmanipulation beim Export], [Whitelisting/Validierung erlaubter Basisverzeichnisse], [API + FileSinkPort + SafeFileSink],
   [XML Injection], [Konsequentes Escaping bei GPX-Serialisierung], [GpxWriterPort + GpxXmlWriter],
   [Ausfall externer Dienste], [Timeouts, Retry-Policy begrenzt, Fallback ohne W3W], [W3wClientPort + W3wHttpClient],
-  [Unkontrollierter Ressourcenverbrauch], [Punktbudget, Sampling-Intervall, Segmentierung], [Domain Core],
+  [Unkontrollierter Ressourcenverbrauch], [Punktbudget, Segmentierungs-Schwelle], [Domain Core],
   [Unklare Fehlerbehandlung], [Semantische Fehlercodes und definierte Exception-Hierarchie], [API/Application Service],
 )
 
@@ -276,7 +276,7 @@ Die Host-Anwendung interagiert ausschließlich über Java-APIs. Persistenz ist o
   inset: 6pt,
   [*Operation*], [*Typ*], [*Semantik*],
   [`startSession(config, target)`], [Command], [Legt Session an, UUID, Zustand ACTIVE],
-  [`onPositionUpdate(fix)`], [Command], [Validiert und verarbeitet Fix gemäß Sampling/Filter],
+  [`onPositionUpdate(fix)`], [Command], [Validiert Fix und übernimmt ihn in den Rohspeicher],
   [`onCourseUpdate(deg)`], [Command], [Optionaler Kursbezug für Kursabweichung],
   [`currentSnapshot()`], [Query], [Liefert konsistenten `BearingSnapshot`],
   [`complete()`], [Command + Result], [COMPLETED + GPX-Ergebnis],

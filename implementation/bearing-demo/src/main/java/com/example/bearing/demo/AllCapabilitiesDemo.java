@@ -7,13 +7,11 @@ import com.example.bearing.api.BearingListener;
 import com.example.bearing.api.DefaultBearingSession;
 import com.example.bearing.api.GpxResult;
 import com.example.bearing.api.SessionConfig;
-import com.example.bearing.api.TrackAcceptSummary;
 import com.example.bearing.api.ValidationException;
 import com.example.bearing.domain.BearingCalculator;
 import com.example.bearing.domain.BearingSnapshot;
 import com.example.bearing.domain.GeoCoordinate;
 import com.example.bearing.domain.GpsFix;
-import com.example.bearing.domain.TrackAcceptResult;
 import com.example.bearing.domain.optimize.DouglasPeuckerOptimizer;
 import com.example.bearing.domain.optimize.LineCollinearityOptimizer;
 import com.example.bearing.domain.optimize.MinDistanceOptimizer;
@@ -50,7 +48,7 @@ public final class AllCapabilitiesDemo {
         outHeader("SWE-Kompass / Peilungskomponente — Funktionsdemo");
         runDomainBearingCalculator();
         runSessionLifecycleErrors();
-        runHdopDiscardFlag();
+        runRawTrackKeepsAllFixesIncludingHdop();
         runSessionListenerSnapshotComplete();
         runOptimizerPipeline();
         runPersistOnCompleteJimfs();
@@ -156,31 +154,22 @@ public final class AllCapabilitiesDemo {
         out("reset()", "Session wieder IDLE");
     }
 
-    private static void runHdopDiscardFlag() {
-        outHeader("3) Session: HDOP ueber Schwellwert (wird verworfen, Flag im Listener)");
+    private static void runRawTrackKeepsAllFixesIncludingHdop() {
+        outHeader("3) Roh-Track: schlechter HDOP wird nicht beim Einlesen verworfen");
         Instant t0 = Instant.parse("2026-01-02T08:00:00Z");
         SettableClock clock = new SettableClock(t0);
         DefaultBearingSession s =
                 BearingBootstrap.newSession(new SystemClockAdapter(clock), Optional.empty(), new NoopW3wClient());
-        AtomicInteger events = new AtomicInteger();
-        s.addListener(
-                new BearingListener() {
-                    @Override
-                    public void onPositionUpdate(UUID sessionId, TrackAcceptSummary n) {
-                        events.incrementAndGet();
-                        if (n.flags().contains(TrackAcceptResult.Flag.HDOP_DISCARDED)) {
-                            System.out.println("  Listener: HDOP_DISCARDED empfangen.");
-                        }
-                    }
-                });
-        s.start(SessionConfig.builder().samplingIntervalMs(500).build(), new GeoCoordinate(48.78, 9.18));
+        s.start(SessionConfig.builder().build(), new GeoCoordinate(48.78, 9.18));
         clock.set(t0);
         s.onPositionUpdate(
                 new GpsFix(t0, 48.77, 9.17, Optional.empty(), Optional.empty(), Optional.empty()));
         clock.set(t0.plusSeconds(2));
         s.onPositionUpdate(
                 new GpsFix(t0.plusSeconds(2), 48.771, 9.171, Optional.empty(), Optional.of(50.0), Optional.empty()));
-        out("Positions-Events (inkl. verworfene)", events.get());
+        GpxResult r = s.complete();
+        out("Statistik gespeicherte Punkte", r.statistics().storedPointCount());
+        out("GPX trkpt (ohne Export-Filter)", countTrkptTags(r.asUtf8String()));
         s.reset();
     }
 
@@ -204,7 +193,7 @@ public final class AllCapabilitiesDemo {
                         completed.incrementAndGet();
                     }
                 });
-        s.start(SessionConfig.builder().samplingIntervalMs(500).build(), new GeoCoordinate(48.78, 9.18));
+        s.start(SessionConfig.builder().build(), new GeoCoordinate(48.78, 9.18));
         int trackPoints = 26;
         feedCurvedTrack(s, clock, t0, trackPoints, 2L, 48.77, 9.17);
         out("Demo-Track Rohpunkte (geplant)", trackPoints);
@@ -227,7 +216,6 @@ public final class AllCapabilitiesDemo {
                 BearingBootstrap.newSession(new SystemClockAdapter(clock), Optional.empty(), new NoopW3wClient());
         SessionConfig cfg =
                 SessionConfig.builder()
-                        .samplingIntervalMs(500)
                         .addOptimizer(new NthPointOptimizer(5))
                         .addOptimizer(new MinDistanceOptimizer(4.0))
                         .addOptimizer(new DouglasPeuckerOptimizer(25.0))
@@ -255,7 +243,6 @@ public final class AllCapabilitiesDemo {
             Path rel = fs.getPath("export", "fertig.gpx");
             SessionConfig cfg =
                     SessionConfig.builder()
-                            .samplingIntervalMs(500)
                             .allowedBaseDir(base)
                             .completePersistPath(rel)
                             .build();
@@ -284,7 +271,6 @@ public final class AllCapabilitiesDemo {
             Path rel = fs.getPath("abbruch.gpx");
             SessionConfig cfg =
                     SessionConfig.builder()
-                            .samplingIntervalMs(500)
                             .allowedBaseDir(base)
                             .persistOnAbort(true)
                             .abortPersistPath(rel)
@@ -313,7 +299,6 @@ public final class AllCapabilitiesDemo {
                     BearingBootstrap.newSession(new SystemClockAdapter(clock), Optional.of(base), new NoopW3wClient());
             SessionConfig cfg =
                     SessionConfig.builder()
-                            .samplingIntervalMs(500)
                             .allowedBaseDir(base)
                             .completePersistPath(fs.getPath("..", "..", "etc", "passwd"))
                             .build();

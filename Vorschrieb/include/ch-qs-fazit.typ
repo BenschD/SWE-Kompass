@@ -25,8 +25,6 @@ Die Qualitätssicherung folgt einem *V-Modell-light*: Zu jedem signifikanten `/L
   [*TC-ID*], [*Vorgehen*], [*Erwartung*], [*`/LF`*],
   [TC-010], [Doppel-`startSession` ohne `complete`], [Exception, Zustand konsistent], [/LF020/],
   [TC-020], [Lat = 91° übergeben], [`IllegalArgumentException`], [/LF300/],
-  [TC-030], [HDOP = 9, Schwellwert 5], [Punkt wird verworfen/markiert], [/LF130/],
-  [TC-040], [Zeitdelta kleiner Samplingintervall], [kein zusätzlicher Speicherpunkt], [/LF110/],
   [TC-050], [Soft-Limit erreicht], [WARN-Event], [/LF120/],
   [TC-060], [Hard-Limit erreicht], [LIMIT-Event, kontrollierter Stopp], [/LF180/],
   [TC-070], [Abort ohne persist], [GPX-String ≠ leer, keine Datei], [/LF070/, /LF230/],
@@ -52,7 +50,7 @@ Die Qualitätssicherung folgt einem *V-Modell-light*: Zu jedem signifikanten `/L
   [*`/LF`*], [*Modul*], [*Test-ID*], [*Methode*],
   [/LF010/], [`bearing-core`], [TC-200], [Start Happy Path],
   [/LF050/], [`bearing-core`], [TC-210], [Snapshot gegen Referenz-Haversine],
-  [/LF100/], [`gps-tracker`], [TC-040, TC-030], [Sampling/Filter],
+  [/LF100/], [`bearing-domain`], [TC-050, TC-060], [Rohspeicher, Soft-/Hard-Limit],
   [/LF200/], [`gpx-exporter`], [TC-100], [XML assertions],
   [/LF320/], [`gpx-exporter`], [TC-090], [Path normalization],
 )

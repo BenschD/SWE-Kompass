@@ -8,11 +8,6 @@ if (fix gueltig?\nWGS84, Zeit plausibel) then (nein)
   stop
 else (ja)
 endif
-if (Sampling:\nDelta t < Intervall?) then (ja)
-  :kein neuer Trackpunkt;
-else (nein)
-  :Trackpunkt pruefen\n(HDOP, Sprung, Duplikat);
-endif
 if (Segment-Luecke?) then (ja)
   :neues trkseg vormerken;
 endif
@@ -20,6 +15,7 @@ if (Punktbudget?) then (Hard-Limit)
   :kontrollierter Stopp /\nEvent;
 else (ok)
 endif
+:validierten Fix im\nRohspeicher ablegen;
 :BearingCalculator:\nAzimut, Distanz, Ordinal;
 :Listener benachrichtigen;
 stop
