@@ -224,7 +224,7 @@ Neben der Implementierung als Maven-Projekt legt die Arbeit besonderen Wert auf 
 
 = Grobentwurf
 
-#import "include/ch-grobentwurf.typ": ch-grobentwurf-kapitel
+#import "include/ch-grobentwurf_new.typ": ch-grobentwurf-kapitel
 #ch-grobentwurf-kapitel
 
 // ─────────────────────────────────────────────────────────────────────────────
