@@ -79,6 +79,8 @@ Subsystem. Technische Abhängigkeiten werden konsequent davon getrennt, damit
 ist sichergestellt, dass eine Änderung in einem Subsystem, z. B. ein anderer
 GPX-Writer, keine Fachlogik berührt.
 
+
+//ändern
 #table(
   columns: (2.7cm, 1fr, 1fr),
   stroke: tbl-stroke, inset: tbl-inset,
@@ -89,10 +91,12 @@ GPX-Writer, keine Fachlogik berührt.
   [Infrastruktur / Adapter], [Konkrete Realisierung der Ports],                              [XML-Serialisierung, Datei-I/O, HTTP-Client, Systemuhr, Logging],
 )
 
+
+#pagebreak()
 === Schichtenmodell
 
 Die vier Subsysteme sind als streng gerichtete Schichten angeordnet. Jede
-Schicht kommuniziert ausschließlich mit der direkt darunterliegenden; ein
+Schicht kommuniziert ausschließlich mit der direkt darunterliegenden. Ein
 Überspringen von Schichten ist verboten. Dadurch entstehen keine zyklischen
 Abhängigkeiten, und jede Schicht ist einzeln testbar und austauschbar.
 
@@ -100,7 +104,7 @@ Abhängigkeiten, und jede Schicht ist einzeln testbar und austauschbar.
   *Host-System* (außerhalb der Komponente)\
   Beliebige Java-Anwendung (Desktop, Web, Embedded). Greift ausschließlich
   über die öffentliche API-Fassade zu. Keine direkten Infrastrukturzugriffe.
-
+  //greift es auschließlich über die öffentliche API-Fassade zu ? 
   ↓ nur über öffentliche API-Aufrufe
 
   *API / Application Service*\
@@ -117,7 +121,7 @@ Abhängigkeiten, und jede Schicht ist einzeln testbar und austauschbar.
 
   ↓ nur über Port-Interfaces (SPI)
 
-  *Port-Schicht (SPI)*\
+  *Port-Schicht*\
   Technologieunabhängige Verträge. Die Domain formuliert, was sie braucht
   (z. B. "schreibe GPX"), aber nicht wie. Dies ermöglicht Mocking im Test
   ohne reale Abhängigkeiten.
@@ -129,6 +133,7 @@ Abhängigkeiten, und jede Schicht ist einzeln testbar und austauschbar.
   Dateisystem-Zugriff, Systemuhr, SLF4J-Logging.
 ]
 
+#pagebreak()
 === Kommunikationsregeln
 
 #table(
@@ -145,6 +150,7 @@ Abhängigkeiten, und jede Schicht ist einzeln testbar und austauschbar.
   [Infrastruktur],  [Domain],        [Nein],      [Keine Rückkopplung; verhindert zyklische Abhängigkeiten],
 )
 
+#pagebreak()
 === Paket- und Modulschnitt
 
 Jedes Subsystem wird als eigenständiges Maven-Modul realisiert. Dadurch
@@ -164,20 +170,10 @@ was als Abhängigkeit deklariert ist.
 )
 
 // UML-Diagramme
-
+// Rausnehmen? 
 #figure(
   puml-fig("../plantuml/out/SWE_Kompass_Component_Layers.svg"),
   caption: [UML-Komponentendiagramm: Schichten und Port-Adapter-Kopplung.],
-)
-
-#figure(
-  puml-fig("../plantuml/out/SWE_Kompass_Package_Architecture.svg"),
-  caption: [UML-Paketdiagramm: logische Paketabhängigkeiten und Schnittstellenrichtung.],
-)
-
-#figure(
-  puml-fig("../plantuml/out/SWE_Kompass_Composite_BearingSession.svg"),
-  caption: [UML-Kompositionsstrukturdiagramm: interne Struktur der zentralen Session-Komponente.],
 )
 
 #pagebreak()
@@ -214,21 +210,6 @@ bereits bei der Eingangsvalidierung und erzeugt eine `ValidationException`.
 Es wird kein Domänenzustand verändert, kein GPX-Port aufgerufen und kein
 Logging von Trackinformationen ausgelöst. Der Fehler wird dem Listener
 gemeldet.
-
-#figure(
-  puml-fig("../plantuml/out/SWE_Kompass_Activity_PositionUpdate.svg"),
-  caption: [UML-Aktivitätsdiagramm: Verarbeitung eines Positionsupdates inkl. Fehlerast.],
-)
-
-#figure(
-  puml-fig("../plantuml/out/SWE_Kompass_Sequence_Complete.svg"),
-  caption: [UML-Sequenzdiagramm: regulärer Session-Abschluss mit GPX-Aufbereitung.],
-)
-
-#figure(
-  puml-fig("../plantuml/out/SWE_Kompass_Sequence_ValidationError.svg"),
-  caption: [UML-Sequenzdiagramm: Fehlerpfad bei ungültiger Koordinate.],
-)
 
 #pagebreak()
 
