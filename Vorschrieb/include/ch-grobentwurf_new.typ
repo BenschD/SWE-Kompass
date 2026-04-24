@@ -284,55 +284,57 @@ Die Tabelle ordnet den geforderten Qualitätskriterien die entsprechenden Entwur
 
 #pagebreak()
 // ──────────────────────────────────────────────────────────────────────────
-== Methodische Dekomposition
+== Subsystem-Dekomposition
 // ──────────────────────────────────────────────────────────────────────────
+Um das Peilungssystem von einem monolithischen Ansatz in eine modulare, wartbare Architektur zu überführen, folgt der Entwurf einem zweistufigen Prozess: der Identifikation funktionaler Einheiten und deren anschließender struktureller Anordnung.
 
-Die Vorlesung fordert drei Schritte. Sie werden hier auf die
-Peilungskomponente angewandt.
+=== Erster Schritt: Subsystem-Identifikation
 
-=== Schritt 1: Subsystem-Identifikation
+Der erste Schritt konzentriert sich darauf, die fachlichen Operationen sinnvoll zu Diensten zu bündeln und diese den jeweiligen Subsystemen zuzuordnen. Dabei bilden Typen mit verwandter Verantwortung die logischen Grenzen der Subsystem-Schnittstellen.
 
-Operationen werden nach ihrem fachlichen Zweck zu Diensten gruppiert; Dienste
-mit gemeinsamer Verantwortung bilden ein Subsystem.
-
-#table(
-  columns: (2.8cm, 3.1cm, 1fr),
-  stroke: tbl-stroke, inset: tbl-inset,
-  [*Operation*],         [*Dienst*],                             [*Ziel-Subsystem*],
-  [Session starten],     [Session-Anlage, Zustandsinitialisierung],[API / Application Service],
-  [Positionsupdate],     [Validierung, Track-Aktualisierung],    [Domain Core],
-  [Kursupdate],          [Kursabweichungsberechnung],            [Domain Core],
-  [Session abschließen], [Track-Finalisierung, Export-Trigger],  [API + Domain + Ports],
-  [GPX exportieren],     [Serialisierung, optionale Persistenz], [Ports + Infrastruktur],
-  [W3W auflösen],        [Reverse-Lookup, Caching],              [Ports + Infrastruktur],
-)
-
-=== Schritt 2: Dienstspezifikation
-
-Jeder Dienst wird mit seinem Vertrag beschrieben — was muss beim Aufruf
-gelten (Vorbedingung), was gilt danach (Nachbedingung), welche Fehlerfälle
-sind definiert. Konkrete Parameternamen und Rückgabetypen auf Klassenebene
-werden im Feinentwurf festgelegt.
+Die folgende Übersicht gruppiert die Operationen und definiert die Verträge der daraus resultierenden Dienste. Diese Verträge legen fest, welches Verhalten nach außen garantiert wird und wie die Komponente auf ungültige Zustände reagiert, während technische Implementierungsdetails dem Feinentwurf vorbehalten bleiben.
 
 #table(
-  columns: (2.8cm, 1fr, 1fr),
-  stroke: tbl-stroke, inset: tbl-inset,
-  [*Dienst*],            [*Vertrag (Kurzbeschreibung)*],                              [*Fehlerfälle*],
-  [Session starten],     [Legt genau eine aktive Session an; liefert Session-ID zurück],  [Bereits aktive Session; ungültiges Ziel],
-  [Positionsupdate],     [Validiert Fix, legt im Rohspeicher ab; aktualisiert Track],[Ungültige Koordinaten; keine aktive Session],
-  [Kursupdate],          [Optionaler Kursbezug für Abweichungsberechnung],             [Ungültiger Kurswert; keine aktive Session],
-  [Session abschließen], [Finalisiert Session; liefert GPX-Ergebnis],                  [Keine aktive Session; Serialisierungsfehler],
-  [Session abbrechen],   [Bricht ab; liefert bis dahin erfasste GPX-Daten],            [Keine aktive Session; Serialisierungsfehler],
-  [Snapshot abrufen],    [Liefert konsistente Momentaufnahme des laufenden Tracks],     [Keine aktive Session],
+columns: (2.5cm, 1.8fr, 1fr),
+stroke: tbl-stroke,
+inset: tbl-inset,
+[Dienst], [Verhalten], [Fehlerfälle],
+
+[Session-Management],
+[Steuert den Lebenszyklus einer Peilung innerhalb des Service Layers und liefert eine Referenz-ID zurück.],
+[Die Peilung ist bereits aktiv, Zielkoordinaten sind ungültig],
+
+[Tracking-Logik],
+[Wendet im Business Rules Layer Validierungsvorschriften auf GPS-Daten an und berechnet Fortschritte.],
+[Ungültige Koordinaten],
+
+[Kurs-Analyse],
+[Berechnet Abweichungen basierend auf fachlichen Vorgaben im Business Rules Layer.],
+[Kurswert liegt außerhalb des Wertebereichs, Fehlende Datenbasis],
+
+[Export- & Abbruch-Dienst],
+[Koordiniert über den Service Layer die Finalisierung und startet die Darstellung des GPS-Tracks im GPX-Format an.],
+[Peilung fehlt, Fehler bei der Datenaufbereitung],
+
+[Daten-Zugriff (DAO)],
+[Kapselt im Data Access Layer die Persistenz von Tracks und W3W-Daten (Caching).],
+[Schreib- oder Lesefehler, W3W API nicht erreichbar],
+
+[API-Präsentation],
+[Stellt Schnittstellen im Presentation Layer für den Host bereit.],
+[Ungültiger API-Aufruf],
 )
+#pagebreak()
 
-=== Schritt 3: Subsystem-Anordnung
+=== Zweiter Schritt: Subsystem-Anordnung
 
-Die Subsysteme werden als Schichten angeordnet: Host → API → Domain → Ports
-→ Adapter. Es existieren keine zyklischen Abhängigkeiten. Optionale Dienste
-(W3W, Dateipersistenz) sind als Adapter realisiert und beeinflussen die
-Kernlogik nicht. Schichten kommunizieren ausschließlich über definierte
-Interfaces, nie über konkrete Klassen der Nachbarschicht.
+Die Anordnung der Subsysteme folgt einer streng hierarchischen Struktur, um die Komplexität zu beherrschen und die Austauschbarkeit einzelner Ebenen zu gewährleisten.
+
+*Strukturierung:* Das System ist vertikal in Schichten gegliedert:\ - Presentation Layer\ - Service Layer\ - Business Rules Layer\ - Data Access Layer\ - Database\ Jede Schicht hat eine klar definierte Aufgabe und bildet eine logische Partition des Gesamtsystems.
+
+*Interaktionsmodell:* Die Kommunikation erfolgt strikt einseitig von oben nach unten. Ein Subsystem nutzt ausschließlich die Dienste der unmittelbar darunterliegenden Schicht. Ein direkter Zugriff von der Präsentationsebene auf den Datenzugriff wird zur Vermeidung von Kopplung unterbunden.
+
+*Software-Architektur:* Durch die Auslagerung der Logik in den Business Rules Layer bleibt die Fachlogik unabhängig von der Art der Präsentation (Host). Der Data Access Layer dient als Abstraktion zur physischen Datenbank, wodurch Änderungen am Speicherschema keine Auswirkungen auf die Geschäftsregeln haben.
 
 #pagebreak()
 
