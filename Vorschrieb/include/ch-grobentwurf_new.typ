@@ -47,7 +47,7 @@ diskutierbar und prüfbar bleibt.
 
 Die Systemgrenze umschließt ausschließlich die Java-Peilungskomponente ohne
 jegliche Benutzeroberfläche. Sensordaten (GNSS, Kompass) werden nicht direkt
-gelesen; der Host ist verantwortlich für Sensorfusion und Gerätezugriff und
+gelesen. Der User ist verantwortlich für Sensorfusion und Gerätezugriff und
 übergibt fertige Messwerte über die öffentliche API.
 
 #table(
