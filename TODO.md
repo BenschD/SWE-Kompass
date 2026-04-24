@@ -1,3 +1,11 @@
+Alle Funktionale Anforderungen -> Traceability.md umsetzen als tests
+
+
+
+
+
+
+
 Fragen zu Anforderungen SWE:
 -LF080
 -LF090
