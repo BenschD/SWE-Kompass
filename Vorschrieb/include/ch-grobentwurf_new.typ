@@ -253,19 +253,33 @@ ausreichend.
 == Entwurfsprinzipien
 // ──────────────────────────────────────────────────────────────────────────
 
-Die folgende Tabelle belegt, wie die Architektur die in der Vorlesung
-geforderten Qualitätskriterien erfüllt. Jedes Prinzip ist einer konkreten
-Entwurfsentscheidung zugeordnet, damit der Nachweis prüfbar bleibt.
+Die Tabelle ordnet den geforderten Qualitätskriterien die entsprechenden Entwurfsentscheidungen der Architektur zu. Diese direkte Verknüpfung dient als prüfbarer Nachweis für die Erfüllung der Vorgaben.
 
 #table(
-  columns: (3.0cm, 1fr, 1fr),
-  stroke: tbl-stroke, inset: tbl-inset,
-  [*Prinzip*],             [*Architekturentscheidung*],                                          [*Messbarer Nutzen*],
-  [Hohe Kohäsion],         [Subsysteme entlang fachlicher Verantwortung; kein Technik-Mischmasch],[Änderungen an GPX-Format berühren nur `bearing-adapter-gpx`],
-  [Schwache Kopplung],     [Abhängigkeit nur über Port-Interfaces, nie auf konkrete Adapter],     [Adapter austauschbar ohne Domain-Änderung; Mocking für Tests trivial],
-  [Information Hiding],    [Domain-Interna hinter API-Fassade; Value Objects ohne Setter],        [Host kann keine interne Darstellung ausnutzen oder versehentlich korrumpieren],
-  [Separation of Concerns],[Fachlogik strikt getrennt von XML/HTTP/Datei-I/O],                    [Domain-Tests ohne Infrastruktur; Infrastruktur-Tests ohne Domänenwissen],
-  [Wiederverwendung],      [Policies und Optimizer als austauschbare Strategien definiert],        [Neues Optimierungsverfahren erfordert nur eine neue Port-Implementierung],
+  columns: (3.2cm, 1fr, 1fr),
+  stroke: tbl-stroke, 
+  inset: tbl-inset,
+  [*Prinzip*], [*Entwurfsentscheidung*], [*Messbarer Nutzen*],
+  
+  [Hohe Kohäsion], 
+  [Module sind strikt nach fachlicher Verantwortung getrennt, statt technische Schichten zu vermischen.], 
+  [Anpassungen am GPX-Format bleiben lokal auf den `bearing-adapter-gpx` begrenzt.],
+
+  [Schwache Kopplung], 
+  [Komponenten kommunizieren ausschließlich über APIs statt über konkrete Implementierungen.], 
+  [Unterkomponenten lassen sich flexibler austauschen, was wiederum das Mocking für Unit-Tests vereinfacht.],
+
+  [Information Hiding], 
+  [Domänen-Logik wird hinter einer Fassade gekapselt. Daten fließen als unveränderliche Value Objects.], 
+  [Die interne Struktur ist geschützt, spricht externe Aufrufer können den Systemzustand nicht schädigen.],
+
+  [Separation of Concerns], 
+  [Saubere Trennung zwischen Kernlogik und Infrastruktur (wie Dateizugriff oder Netzwerk-I/O).], 
+  [Fachlogik lässt sich ohne Infrastruktur-Overhead testen und umgekehrt.],
+
+  [Wiederverwendbarkeit], 
+  [Einsatz des Strategy-Patterns für Policies und Optimizer, um Logik austauschbar zu machen.], 
+  [Neue Algorithmen lassen sich ohne Eingriffe in den bestehenden Kontrollfluss integrieren.],
 )
 
 #pagebreak()
