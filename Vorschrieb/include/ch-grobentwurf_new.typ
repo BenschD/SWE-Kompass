@@ -54,10 +54,10 @@ gelesen. Der User ist verantwortlich für Sensorfusion und Gerätezugriff und
   columns: (2.8cm, 2.9cm, 1fr),
   stroke: tbl-stroke, inset: tbl-inset,
   [*Externe Schnittstelle*], [*Richtung*], [*Zweck*],
-  [Host-Anwendung],   [eingehend],          [Steuerung des Session-Lebenszyklus, Übergabe von Positions- und Kursdaten],
+  [User-Anwendung],   [eingehend],          [Steuerung des Session-Lebenszyklus, Übergabe von Positions- und Kursdaten],
   [Listener / Result],[ausgehend],          [Snapshots, Statuswechsel, Fehlerereignisse, GPX-Rückgabe an den Host],
   [Dateisystem],      [ausgehend, optional],[GPX-Persistenz nur bei expliziter Konfiguration durch den Host],
-  [W3W-HTTP],         [ausgehend, optional],[Reverse-Lookup mit lokalem Cache; ohne Netzwerk vollständig deaktivierbar],
+  [W3W-HTTP],         [ausgehend, optional],[Reverse-Lookup mit lokalem Cache, ohne Netzwerk vollständig deaktivierbar],
 )
 
 #figure(
@@ -74,10 +74,10 @@ gelesen. Der User ist verantwortlich für Sensorfusion und Gerätezugriff und
 === Subsystem-Spezifikation
 
 Das System wird in vier Subsysteme zerlegt. Die Zerlegung folgt dem Prinzip
-der *hohen Kohäsion*: Alles, was fachlich zusammengehört, landet im selben
-Subsystem; technische Abhängigkeiten werden konsequent davon getrennt. Damit
-ist sichergestellt, dass eine Änderung in einem Subsystem — z. B. ein anderer
-GPX-Writer — keine Fachlogik berührt.
+der hohen Kohäsion: Alles, was fachlich zusammengehört, landet im selben
+Subsystem. Technische Abhängigkeiten werden konsequent davon getrennt, damit
+ist sichergestellt, dass eine Änderung in einem Subsystem, z. B. ein anderer
+GPX-Writer, keine Fachlogik berührt.
 
 #table(
   columns: (2.7cm, 1fr, 1fr),
