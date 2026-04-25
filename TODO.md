@@ -29,3 +29,7 @@ Fragen zu Anforderungen SWE:
 -LL150 -> Nach der Tesing VL nochmal anpassen
 
 --> Warum stehen die Produktdaten zwischen den Funkt. und Nichtfunkt. Anforderungen?
+
+GLossar durchgehen
+
+2.4 Dynamische Sicht Überprüfen, passt das so? 
