@@ -127,9 +127,9 @@ Klassisches Douglas–Peucker arbeitet in der Ebene. Für lange Tracks auf der E
   stroke: 0.45pt + rgb("#9a9a9a"),
   inset: 5pt,
   [*`/LF`*], [*OOA-Konzept*], [*OOD-Klasse*], [*Test-Cluster*],
-  [/LF060/], [`Export`], [`GpxSerializer`], [TC-GPX-01..03],
+  [/LF060/], [`Export`], [`GpxExportMapper` + `GpxXmlWriter`], [TC-GPX-01..03],
   [/LF100/], [`Standortfolge`], [`TrackAggregator`], [TC-TRACK-01..05],
-  [/LF280/], [externe Referenz], [`W3wAdapter`], [TC-W3W-01..03],
+  [/LF280/], [externe Referenz], [`W3wClientPort` / `W3wHttpClient`], [TC-W3W-01..03],
 )
 
 #pagebreak()

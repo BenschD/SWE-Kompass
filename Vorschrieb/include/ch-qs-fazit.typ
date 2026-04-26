@@ -3,13 +3,13 @@
 #let ch-qs-fazit-kapitel = [
 #set par(justify: true)
 
-Die Qualitätssicherung folgt einem *V-Modell-light*: Zu jedem signifikanten `/LF` existiert mindestens ein dokumentierter Testfall. Nicht-funktionale Anforderungen werden dort, wo messbar, per Mikrobenchmark oder Architekturtest abgesichert.
+Die Qualitätssicherung folgt einem *V-Modell-light*: Für die zentral implementierten `/LF`-Anforderungen existieren dokumentierte Testfälle; nicht abgedeckte Anforderungen sind in der Traceability als Review-/Restpunkt gekennzeichnet. Nicht-funktionale Anforderungen werden dort, wo messbar, per Mikrobenchmark oder Architekturtest abgesichert.
 
 == Teststrategie
 
 *Ebenen:*
 
-+ *Unit-Tests:* isolierte Klassen mit Mocks für `Clock`, `W3wClient`, Dateisystem (Jimfs oder temporäre Verzeichnisse).
++ *Unit-Tests:* isolierte Klassen mit Mocks/Fakes für `ClockPort`, `W3wClientPort`, Dateisystem (Jimfs oder temporäre Verzeichnisse).
 + *Komponententests:* Interaktion `BearingSession` mit echtem `TrackAggregator`, aber ohne Netzwerk.
 + *Contract-Tests:* GPX-XML gegen XSD (optional im CI-Schritt).
 + *Performance-Mikrotests:* JMH oder einfache `@Timeout`-Tests mit oberen Schranken – dokumentarischer Charakter.
@@ -23,20 +23,16 @@ Die Qualitätssicherung folgt einem *V-Modell-light*: Zu jedem signifikanten `/L
   stroke: 0.45pt + rgb("#9a9a9a"),
   inset: 5pt,
   [*TC-ID*], [*Vorgehen*], [*Erwartung*], [*`/LF`*],
-  [TC-010], [Doppel-`startSession` ohne `complete`], [Exception, Zustand konsistent], [/LF020/],
-  [TC-020], [Lat = 91° übergeben], [`IllegalArgumentException`], [/LF300/],
-  [TC-050], [Soft-Limit erreicht], [WARN-Event], [/LF120/],
-  [TC-060], [Hard-Limit erreicht], [LIMIT-Event, kontrollierter Stopp], [/LF180/],
-  [TC-070], [Abort ohne persist], [GPX-String ≠ leer, keine Datei], [/LF070/, /LF230/],
-  [TC-080], [Abort mit persist], [Datei existiert, atomar], [/LF220/],
-  [TC-090], [Pfad `../../etc/passwd`], [`SecurityException`], [/LF320/],
-  [TC-100], [GPX Namespace prüfen], [Deklaration `http://www.topografix.com/GPX/1/1`], [/LF200/],
-  [TC-110], [n-Optimierer n=10, 100 Punkte], [Start/Ende erhalten, Länge reduziert], [/LF240/],
-  [TC-120], [Geraden-Heuristik synthetisch], [3 kollineare Punkte → 2], [/LF260/],
-  [TC-130], [Douglas–Peucker ε groß], [starke Reduktion ohne Exception], [/LF270/],
-  [TC-140], [W3W Fehler API], [Fallback, kein Crash], [/LF280/],
-  [TC-150], [W3W Cache TTL], [kein erneuter Netzcall innerhalb TTL], [/LF290/],
-  [TC-160], [Clock mock Springe], [deterministische Zeitstempel], [/LF340/],
+  [TC-010], [Doppel-`start` ohne `complete`], [`IllegalStateException`, Zustand konsistent], [/LF020/],
+  [TC-020], [Lat = 91° übergeben], [`ValidationException`], [/LF300/],
+  [TC-030], [Happy Path `start` → Updates → `complete`], [GPX-Namespace vorhanden, Statistik gefüllt], [/LF010/, /LF030/, /LF060/, /LF200/],
+  [TC-040], [Listener registrieren + Positionsupdate], [Start-/Update-Callback wird ausgelöst], [/LF080/],
+  [TC-050], [`complete` + `reset` + erneutes `start`], [Wiederanlauf in ACTIVE], [/LL160/],
+  [TC-090], [Pfad `../../etc/passwd` bei Persistenz], [`SecurityException`], [/LF320/],
+  [TC-100], [GPX-Namespace direkt am Writer prüfen], [Deklaration `http://www.topografix.com/GPX/1/1`], [/LF200/],
+  [TC-110], [n-Optimierer `n=10`, 100 Punkte], [Optimierername enthalten, Punktanzahl reduziert], [/LF240/],
+  [TC-120], [SafeFileSink in Jimfs schreibt relativ zu Base], [Dateiinhalt entspricht Nutzlast], [/LF220/],
+  [TC-130], [Haversine-Referenzpunkte], [Distanz/Ordinal plausibel], [/LL020/],
 )
 
 #pagebreak()
@@ -48,11 +44,12 @@ Die Qualitätssicherung folgt einem *V-Modell-light*: Zu jedem signifikanten `/L
   stroke: 0.45pt + rgb("#9a9a9a"),
   inset: 5pt,
   [*`/LF`*], [*Modul*], [*Test-ID*], [*Methode*],
-  [/LF010/], [`bearing-core`], [TC-200], [Start Happy Path],
-  [/LF050/], [`bearing-core`], [TC-210], [Snapshot gegen Referenz-Haversine],
-  [/LF100/], [`bearing-domain`], [TC-050, TC-060], [Rohspeicher, Soft-/Hard-Limit],
-  [/LF200/], [`gpx-exporter`], [TC-100], [XML assertions],
-  [/LF320/], [`gpx-exporter`], [TC-090], [Path normalization],
+  [/LF010/], [`bearing-api`], [TC-030], [`happyPathCompleteProducesGpx`],
+  [/LF020/], [`bearing-api`], [TC-010], [`tc010_doubleStartThrows`],
+  [/LF080/], [`bearing-api`], [TC-040], [`listenerInvoked`],
+  [/LF200/], [`bearing-adapter-gpx`], [TC-100], [`containsGpx11Namespace`],
+  [/LF220/], [`bearing-adapter-system`], [TC-120], [`writesInsideBase`],
+  [/LF320/], [`bearing-api`], [TC-090], [`tc090_pathTraversalSecurity`],
 )
 
 #pagebreak()
@@ -76,10 +73,10 @@ Die Qualitätssicherung folgt einem *V-Modell-light*: Zu jedem signifikanten `/L
 
 == Modultests – Zuordnung
 
-Jedes Maven-Modul besitzt einen `src/test/java`-Baum. Mindestanforderung: *pro öffentlicher Klasse der Domäne* mindestens eine Testklasse oder gruppierte Testsuite. Ausnahmen nur für reine Daten-Records mit generierten Tests (equals/hashCode).
+Nicht jedes Maven-Modul besitzt aktuell einen `src/test/java`-Baum. Tests liegen derzeit schwerpunktmäßig in `bearing-api` und `bearing-domain`; adapter-spezifische Checks sind punktuell in API-nahen Tests enthalten.
 
 #diagramm-box("Abdeckungsziele (JaCoCo)")[
-  Kernmodule `bearing-core`, `gps-tracker`, `gpx-exporter`: Zeilenabdeckung ≥ 85 % (`/LL150/`).\
+  Kernmodule `bearing-api`, `bearing-domain`, `bearing-adapter-gpx`: Zeilenabdeckung ≥ 85 % (`/LL150/`).\
   Kritische Klassen `BearingSession`, `BearingCalculator`: ≥ 90 %.
 ]
 

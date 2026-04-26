@@ -72,13 +72,13 @@ Die Architektur muss folgende Ziele gleichzeitig erfüllen:
   ↓ Nur API-Aufrufe; keine direkten Infrastrukturzugriffe
 
   *1. API / Application Service*\
-  `BearingSessionFactory`, `BearingSession`, `SessionConfig`, `BearingSnapshot`.
+  `BearingBootstrap`, `BearingSession`, `SessionConfig`, `BearingSnapshot`.
   Verantwortet Vorbedingungen, Session-Zustandsautomat (`IDLE`, `ACTIVE`, `COMPLETED`, `ABORTED`), Fehler-Mapping und Orchestrierung der Fachfälle.
 
   ↓ Nutzt ausschließlich Domänenlogik und definierte Ports
 
   *2. Domain Core*\
-  Entitäten/Value Objects: `GeoPoint`, `Target`, `Track`, `TrackSegment`, `GpsPoint`.
+  Entitäten/Value Objects: `GeoCoordinate`, `GpsFix`, `Track`, `TrackSegment`, `GpsPoint`.
   Services: `BearingCalculator`, `TrackAggregator`, `TrackOptimizer` (optional beim Export).
   Fachregeln: Azimut/Distanz, Ordinalrichtung, Eingabevalidierung, Rohspeicher, Segmentierung, Punktbudget.
 
@@ -91,7 +91,7 @@ Die Architektur muss folgende Ziele gleichzeitig erfüllen:
   ↓ Konkrete Implementierungen der Ports
 
   *4. Infrastruktur*\
-  `GpxXmlWriter` (GPX 1.1), `W3wHttpClient`, `SafeFileSink`, `SystemClock`, `Slf4jLogger`.
+  `GpxXmlWriter` (GPX 1.1), `W3wHttpClient`, `SafeFileSink`, `SystemClockAdapter`, `Slf4jLoggerAdapter`.
   Zuständig für XML, HTTP, Dateisystem und Bibliotheksintegration.
 ]
 
@@ -209,11 +209,11 @@ Die Architektur muss folgende Ziele gleichzeitig erfüllen:
   stroke: 0.45pt + rgb("#9a9a9a"),
   inset: 6pt,
   [*Operation*], [*Dienst*], [*Ziel-Subsystem*],
-  [`startSession`], [Sessionanlage + Zustandsinitialisierung], [API/Application Service],
+  [`start`], [Sessionanlage + Zustandsinitialisierung], [API/Application Service],
   [`onPositionUpdate`], [Validierung + Track/Fachupdate], [Domain Core],
   [`complete`/`abort`], [Finalisierung + Exporttrigger], [API + Domain + Ports],
-  [`exportGpx`], [Serialisierung + optionale Persistenz], [Ports + Infrastruktur],
-  [`resolveW3w`], [Reverse-Lookup + Caching], [Ports + Infrastruktur],
+  [`complete`/`abort`], [Serialisierung + optionale Persistenz], [API + Domain + Ports + Infrastruktur],
+  [`resolveWhat3Words`], [Reverse-Lookup + Caching], [Ports + Infrastruktur],
 )
 
 === Schritt 2: Dienstspezifikation (typisierte Operationen)
@@ -223,12 +223,12 @@ Die Architektur muss folgende Ziele gleichzeitig erfüllen:
   stroke: 0.45pt + rgb("#9a9a9a"),
   inset: 6pt,
   [*Signatur*], [*Vertrag (Kurzform)*], [*Fehlerfälle*],
-  [`UUID startSession(SessionConfig config, GeoCoordinate target)`], [Erzeugt ACTIVE-Session; genau eine aktive Session pro Instanz], [`IllegalStateException`, `ValidationException`],
+  [`void start(SessionConfig config, GeoCoordinate target)`], [Erzeugt ACTIVE-Session; genau eine aktive Session pro Instanz], [`IllegalStateException`, `NullPointerException`],
   [`void onPositionUpdate(GpsFix fix)`], [Verarbeitet gültige Fixes gemäß Policy; aktualisiert Fachzustand], [`ValidationException`, `IllegalStateException`],
-  [`void onCourseUpdate(double courseDeg)`], [Optionaler Kursbezug für Abweichung], [`ValidationException`, `IllegalStateException`],
+  [`void onCourseUpdate(double courseDeg)`], [Optionaler Kursbezug für Abweichung], [`IllegalArgumentException`, `IllegalStateException`],
   [`BearingSnapshot currentSnapshot()`], [Liefert konsistente Momentaufnahme], [`IllegalStateException`],
-  [`GpxResult complete()`], [Finalisiert Session und liefert GPX-Daten], [`IllegalStateException`, `ExportException`],
-  [`GpxResult abort()`], [Bricht Session ab und liefert bis dahin erfasste GPX-Daten], [`IllegalStateException`, `ExportException`],
+  [`GpxResult complete()`], [Finalisiert Session und liefert GPX-Daten], [`IllegalStateException`, `SecurityException`],
+  [`GpxResult abort()`], [Bricht Session ab und liefert bis dahin erfasste GPX-Daten], [`IllegalStateException`, `SecurityException`],
 )
 
 === Schritt 3: Subsystem-Anordnung
@@ -263,7 +263,7 @@ Die Subsysteme sind als Schichten organisiert: Host -> API -> Domain -> Ports ->
   [Strategy], [`TrackOptimizer`], [Austauschbare Vereinfachung],
   [Observer/Listener], [`BearingListener`], [UI-agnostische Ereignisse],
   [Adapter], [Port-Implementierungen], [Entkopplung externer Technologien],
-  [Null Object (optional)], [No-Op-Logger in Tests], [Reduktion von `null`-Zweigen],
+  [Null Object (optional)], [`NoopW3wClient` als Fallback], [Reduktion optionaler Netzabhängigkeiten],
 )
 
 == Schnittstellenübersicht (extern sichtbar)
@@ -275,7 +275,7 @@ Die Host-Anwendung interagiert ausschließlich über Java-APIs. Persistenz ist o
   stroke: 0.45pt + rgb("#9a9a9a"),
   inset: 6pt,
   [*Operation*], [*Typ*], [*Semantik*],
-  [`startSession(config, target)`], [Command], [Legt Session an, UUID, Zustand ACTIVE],
+  [`start(config, target)`], [Command], [Legt Session an, UUID, Zustand ACTIVE],
   [`onPositionUpdate(fix)`], [Command], [Validiert Fix und übernimmt ihn in den Rohspeicher],
   [`onCourseUpdate(deg)`], [Command], [Optionaler Kursbezug für Kursabweichung],
   [`currentSnapshot()`], [Query], [Liefert konsistenten `BearingSnapshot`],

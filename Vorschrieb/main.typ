@@ -491,7 +491,7 @@ Die Anforderungen /LF110/, /LF130/, /LF140/ und /LF160/ sind *nicht* Teil des Li
   "-",
   "/LL010/",
   "Host-App",
-  "Die Peilungs-Komponente muss Breiten- und Längengrade auf den bei WGS84-Zulässigkeitsbereich prüfen (Breitengrad: -90° bis +90°, Längengrad: -180° bis +180°). Ungültige Werte werden ignoriert und nich im GPX-Format zurückgegeben.",
+  "Die Peilungs-Komponente muss Breiten- und Längengrade auf den bei WGS84-Zulässigkeitsbereich prüfen (Breitengrad: -90° bis +90°, Längengrad: -180° bis +180°). Ungültige Werte führen zu einer `ValidationException` (`ErrorCode.COORD_RANGE`) und werden nicht im GPX-Format gespeichert.",
 )
 
 #lf-card(
@@ -500,7 +500,7 @@ Die Anforderungen /LF110/, /LF130/, /LF140/ und /LF160/ sind *nicht* Teil des Li
   "Klärungsgespräch",
   "/LF100/",
   "Host-App",
-  "Die komponente muss Zeitstempel ablehnen, die in der Zukunft liegen oder älter als ein anpassbarer Schwellwert sind (Default: 24 Stunden). GPS-Punkte mit einem ungültige Zeitstempel werden ignoriert und nich im GPX-Format zurückgegeben.",
+  "Die Komponente muss Zeitstempel ablehnen, die in der Zukunft liegen oder älter als ein anpassbarer Schwellwert sind (Default: 24 Stunden). GPS-Punkte mit ungültigem Zeitstempel führen zu einer `ValidationException` (`ErrorCode.TIMESTAMP_INVALID`) und werden nicht im GPX-Format gespeichert.",
 )
 
 #lf-card(
@@ -651,90 +651,114 @@ Die folgenden Produktdaten beschreiben die persistenten bzw. transportierten Dat
 
 #ld-card(
   "/LD100/",
-  "Peilungs-Session",
+  "Peilungs-Session (`DefaultBearingSession`)",
   "/LF010/, /LF070/",
   [
     #table(
       columns: (1fr, 1fr),
       stroke: 0.3pt + gray,
       inset: 5pt,
-      [sessionId], [UUID (36 Zeichen)],
-      [status], [Enum: ACTIVE, COMPLETED, ABORTED],
-      [target], [GeoCoordinate (Zielposition)],
-      [startedAt], [Instant (UTC)],
-      [endedAt], [Optional\<Instant\>],
-      [config], [SessionConfig (immutable)],
+      [sessionId], [UUID],
+      [lifecycle], [Enum: IDLE, ACTIVE, COMPLETED, ABORTED],
+      [target], [GeoCoordinate],
+      [frozenConfig], [SessionConfig],
+      [aggregator], [TrackAggregator],
+      [courseDeg], [Optional\<Double\>],
+      [startedAt], [Instant],
+      [lastFix], [Optional\<GpsFix\>],
+      [listenerSerialized], [boolean],
     )
+    #v(0.35em)
+    #text(size: 9.5pt, style: "italic")[
+      `endedAt` ist kein gespeichertes Session-Feld; der Endzeitpunkt wird in `complete()`/`abort()` nur lokal aus der Clock ermittelt und in `SessionStatistics` verwendet.
+    ]
   ],
 )
 
 #ld-card(
   "/LD110/",
-  "Konfiguration (SessionConfig)",
-  "/LF400/",
+  "Konfiguration (`SessionConfig`)",
+  "/LF400/, /LF410/",
   [
     #table(
       columns: (1fr, 1fr),
       stroke: 0.3pt + gray,
       inset: 5pt,
-      [softLimitPoints], [int (Optional, 0 = deaktiviert)],
-      [hardLimitPoints], [int (Optional, 0 = deaktiviert)],
+      [softLimitPoints], [int (>= 0; 0 = deaktiviert)],
+      [hardLimitPoints], [int (>= 0; 0 = deaktiviert)],
+      [overflowMode], [OverflowMode (Standard: STOP)],
       [segmentGapThreshold], [Duration (Standard: 5 min)],
-      [maxFixAge], [Duration (Validierung, Standard: 24 h)],
+      [maxFixAge], [Duration (Standard: 24 h)],
       [persistOnAbort], [boolean (Standard: false)],
+      [allowedBaseDir], [Optional\<Path\>],
+      [completePersistPath], [Optional\<Path\>],
+      [abortPersistPath], [Optional\<Path\>],
+      [listenerSerialized], [boolean],
+      [optimizers], [List\<TrackOptimizer\>],
       [w3wApiKey], [Optional\<String\>],
     )
+    #v(0.35em)
+    #text(size: 9.5pt, style: "italic")[
+      Build-Regeln in `SessionConfig.Builder`: Persistenzpfade erfordern `allowedBaseDir`; Limits < 0 sind unzulässig.
+    ]
   ],
 )
 
-
 #ld-card(
   "/LD120/",
-  "GPS-Track",
-  "/LF100/",
+  "GPS-Track (`Track` + `TrackSegment`)",
+  "/LF100/, /LF170/",
   [
     #table(
       columns: (1fr, 1fr),
       stroke: 0.3pt + gray,
       inset: 5pt,
-      [segments], [List\<TrackSegment\>],
-      [totalPoints], [int (abgeleitete Kennzahl)],
-      [timeRange], [Optional\<Duration\>],
+      [Track.segments], [List\<TrackSegment\> (immutable copy)],
+      [Track.totalPoints()], [int (abgeleitet aus Segmentpunkten)],
+      [TrackSegment.points], [List\<GpsPoint\>],
     )
+    #v(0.35em)
+    #text(size: 9.5pt, style: "italic")[
+      Ein eigenes Feld `timeRange` existiert nicht auf `Track`; Zeitgrenzen werden bei Bedarf aus Punkten berechnet (z. B. `GpxExportMapper.metadataFor`).
+    ]
   ],
 )
 
 #ld-card(
   "/LD130/",
-  "GPS-Punkt (GpsPoint)",
+  "GPS-Punkt (`GpsPoint`, Eingabe: `GpsFix`)",
   "/LF100/, /LF150/",
   [
     #table(
       columns: (1fr, 1fr),
       stroke: 0.3pt + gray,
       inset: 5pt,
-      [lat], [double (−90° bis +90°)],
-      [lon], [double (−180° bis +180°)],
-      [time], [Instant (UTC, Pflichtfeld)],
-      [ele], [Optional\<Double\> (Höhe in m)],
+      [time], [Instant (Pflicht)],
+      [latitudeDeg], [double (-90 bis +90)],
+      [longitudeDeg], [double (-180 bis +180)],
+      [elevationM], [Optional\<Double\>],
       [hdop], [Optional\<Double\>],
-      [speed], [Optional\<Double\> (m/s)],
+      [speedMps], [Optional\<Double\>],
     )
+    #v(0.35em)
+    #text(size: 9.5pt, style: "italic")[
+      `GpsFix` und `GpsPoint` haben dieselbe Datenstruktur; `GpsPoint.fromFix(fix)` überführt Eingaben in die Track-Repräsentation.
+    ]
   ],
 )
 
 #ld-card(
   "/LD140/",
-  "Peilungs-Snapshot (BearingSnapshot)",
+  "Peilungs-Snapshot (`BearingSnapshot`)",
   "/LF050/",
   [
     #table(
       columns: (1fr, 1fr),
       stroke: 0.3pt + gray,
       inset: 5pt,
-      [azimuthDeg], [double (0° bis 360°)],
-      [distanceM], [double (Meter)],
-      [compassOrdinal], [Enum: N, NE, E, SE, S, SW, W, NW],
+      [azimuthDeg], [double],
+      [distanceM], [double],
+      [compassOrdinal], [CompassOrdinal (N, NE, E, SE, S, SW, W, NW)],
       [bearingErrorDeg], [Optional\<Double\>],
     )
   ],
@@ -742,88 +766,106 @@ Die folgenden Produktdaten beschreiben die persistenten bzw. transportierten Dat
 
 #ld-card(
   "/LD150/",
-  "GPX-Dokument",
+  "GPX-Dokument (`GpxDocument`, SPI-Modell)",
   "/LF200/",
   [
     #table(
       columns: (1fr, 1fr),
       stroke: 0.3pt + gray,
       inset: 5pt,
-      [xmlNamespace], [GPX 1.1 URI (Pflicht)],
+      [GPX_11_NAMESPACE], [Konstante `String`: `http://www.topografix.com/GPX/1/1`],
       [metadata], [GpxMetadata],
-      [trk], [Liste von trkpt-Elementen],
-      [encoding], [UTF-8 (fest)],
+      [segments], [List\<GpxTrackSegment\>],
+      [GpxTrackSegment.points], [List\<GpxTrackPoint\>],
+      [GpxTrackPoint], [lat, lon, time, elevationM, hdop, speedMps],
     )
+    #v(0.35em)
+    #text(size: 9.5pt, style: "italic")[
+      UTF-8 ist kein Feld von `GpxDocument`; die Kodierung entsteht bei der Serialisierung (`GpxXmlWriter`) und im Rückgabeobjekt (`GpxResult`).
+    ]
   ],
 )
 
 #ld-card(
   "/LD160/",
-  "GPX-Metadaten (GpxMetadata)",
+  "GPX-Metadaten (`GpxMetadata`)",
   "/LF210/",
   [
     #table(
       columns: (1fr, 1fr),
       stroke: 0.3pt + gray,
       inset: 5pt,
-      [name], [Optional\<String\> (200 Zeichen)],
-      [desc], [Optional\<String\>],
+      [name], [Optional\<String\>],
+      [description], [Optional\<String\>],
       [author], [Optional\<String\>],
-      [timeBounds], [Optional (start/end Instant)],
+      [timeStart], [Optional\<Instant\>],
+      [timeEnd], [Optional\<Instant\>],
     )
   ],
 )
 
 #ld-card(
   "/LD170/",
-  "Optimierungsergebnis",
-  "/LF240/–/LF270/",
+  "Export-Ergebnis (`GpxResult` + `SessionStatistics`)",
+  "/LF230/, /LF240/–/LF270/, /LF500/",
   [
     #table(
       columns: (1fr, 1fr),
       stroke: 0.3pt + gray,
       inset: 5pt,
-      [originalCount], [int],
-      [optimizedCount], [int],
-      [appliedStrategies], [List\<String\>],
-      [epsilonMeters], [Optional\<Double\>],
+      [GpxResult.utf8Bytes], [byte[] (defensiv geklont)],
+      [GpxResult.statistics], [SessionStatistics],
+      [GpxResult.appliedOptimizers], [List\<String\>],
+      [SessionStatistics.totalDistanceM], [double],
+      [SessionStatistics.totalDuration], [Duration],
+      [SessionStatistics.storedPointCount], [int],
     )
+    #v(0.35em)
+    #text(size: 9.5pt, style: "italic")[
+      Es gibt keine eigene Klasse mit `originalCount`/`optimizedCount`/`epsilonMeters`; diese Werte werden in der Implementierung nicht als separates Produktdatenobjekt persistiert.
+    ]
   ],
 )
 
 #ld-card(
   "/LD180/",
-  "W3W-Cache-Eintrag",
+  "W3W-Cache (`W3wHttpClient`, intern)",
   "/LF290/",
   [
     #table(
       columns: (1fr, 1fr),
       stroke: 0.3pt + gray,
       inset: 5pt,
-      [lat], [double],
-      [lon], [double],
-      [words], [String (drei Wörter)],
-      [resolvedAt], [Instant],
-      [ttl], [Duration],
+      [cache], [Map\<String, CacheEntry\> (LRU via `LinkedHashMap`)],
+      [cacheKey], [gerundete Koordinate als String (`roundKey`)],
+      [CacheEntry.words], [String],
+      [CacheEntry.resolvedAt], [Instant],
+      [ttl], [Duration (Client-Parameter, nicht Eintragsfeld)],
+      [maxEntries], [int (Client-Parameter)],
+      [timeout], [Duration (Client-Parameter)],
     )
   ],
 )
 
 #ld-card(
   "/LD190/",
-  "Fehlerprotokoll-Eintrag",
-  "/LF330/",
+  "Protokollierungsdaten (`LoggerPort` / `Slf4jLoggerAdapter`)",
+  "/LF330/, /LF420/",
   [
     #table(
       columns: (1fr, 1fr),
       stroke: 0.3pt + gray,
       inset: 5pt,
-      [timestamp], [Instant],
-      [errorCode], [String (maschinenlesbar)],
-      [context], [String (menschenlesbar)],
-      [sessionId], [Optional\<UUID\>],
-      [stacktrace], [Optional\<String\>],
+      [phase], [String],
+      [sessionId], [UUID],
+      [message], [String],
+      [errorCode], [String (für warn/error)],
+      [cause], [Optional\<Throwable\> (überladene warn/error-Methoden)],
     )
+    #v(0.35em)
+    #text(size: 9.5pt, style: "italic")[
+      Es existiert kein persistiertes Log-Entity-Objekt mit festen Feldern wie `timestamp` oder `stacktrace` als String; die Ausgabe erfolgt direkt über SLF4J.
+    ]
   ],
 )
 
@@ -841,7 +883,7 @@ Die Qualitätskriterien wurden in Anlehnung an die ISO/IEC 9126 ausgewählt und 
 #{
   show figure: set block(breakable: true)
   figure(
-    caption: [Gewichtung der Qualitätsmerkmale nach ISO/IEC 25010 (Relevanzstufen je Unterkriterium).],
+    caption: [Gewichtung der Qualitätsmerkmale nach ISO/IEC 9126 (Relevanzstufen je Unterkriterium).],
     kind: table,
     table(
   columns: (2.5fr, 0.9fr, 0.9fr, 0.9fr, 1.1fr),
@@ -1017,7 +1059,7 @@ Die folgenden Anforderungen konkretisieren die priorisierten Qualitätsmerkmale 
   "Testabdeckung",
   "Vorlesung SWE",
   "/LF340/",
-  "Die Kernmodule (bearing-core, gps-tracker, gpx-exporter) müssen gemäß Spezifikation eine Zeilenabdeckung von mindestens 85 % erreichen. Für kritische Domänenklassen (Session-Lebenszyklus, Peilungsberechnung) gilt ein Mindestwert von 90 %.",
+  "Die Kernmodule (`bearing-api`, `bearing-domain`, `bearing-adapter-gpx`) müssen gemäß Spezifikation eine Zeilenabdeckung von mindestens 85 % erreichen. Für kritische Domänenklassen (Session-Lebenszyklus, Peilungsberechnung) gilt ein Mindestwert von 90 %.",
 )
 
 #ll-card(

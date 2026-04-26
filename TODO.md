@@ -1,6 +1,9 @@
 Alle Funktionale Anforderungen -> Traceability.md umsetzen als tests
-Bei der Qualitätstabelle die eine iso entfernen
-Produktdaten sind verrückt falsch müssen komplett neu gemacht werden
+
+uml diagramme an die produktdaten apassen
+produktdaten in er diagramme reichen klassendiagramme
+
+
 
 
 

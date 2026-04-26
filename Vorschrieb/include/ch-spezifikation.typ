@@ -91,7 +91,7 @@ Das System „Java-Peilungskomponente“ ist eine Bibliothek. Akteure sind die *
 *Hauptablauf:*
 
 + `abort()` wird aufgerufen.
-+ System setzt ABORTED, `endedAt`.
++ System setzt ABORTED; der Endzeitpunkt wird zur Laufzeit für `SessionStatistics` aus der injizierten Clock ermittelt.
 + System materialisiert GPX-Datenstruktur im Speicher.
 + Wenn `persistOnAbort = true`, atomares Schreiben (`/LF220/`), sonst nur Rückgabeobjekt (`/LF230/`).
 + Listener `onSessionAborted` mit Statistik (`/LF500/`).
@@ -150,20 +150,22 @@ Die textuellen Sequenzen werden durch die nachfolgenden UML-Sequenzdiagramme (Pl
 
 #diagramm-box("Sequenz: `complete()` bis GPX-String")[
   `Host` → `BearingSession`: `complete()`\
-  `BearingSession` → `TrackRepository`: `immutableView()`\
+  `BearingSession` → `TrackAggregator`: `finalizeOpenSegment()`\
+  `BearingSession` → `TrackAggregator`: `immutableTrack()`\
   `BearingSession` → `OptimizationPipeline`: `apply(config.strategies)`\
   `OptimizationPipeline` → `TrackOptimizer`: `optimize(points)`\
-  `BearingSession` → `GpxSerializer`: `toDocument(track, metadata)`\
-  `GpxSerializer` → `XmlEscaper`: `escape(textFields)`\
-  `GpxSerializer` → `Host`: `GpxResult(bytes, stats)`\
+  `BearingSession` → `GpxExportMapper`: `metadataFor(track, name)`\
+  `BearingSession` → `GpxExportMapper`: `toDocument(track, metadata)`\
+  `BearingSession` → `GpxWriterPort`: `serialize(document)`\
+  `GpxWriterPort` → `Host`: `GpxResult(bytes, stats)`\
   *Hinweis:* Reihenfolge der Optimierer ist konfigurationsabhängig; Sequenzdiagramm im Anhang kann verfeinert werden.
 ]
 
 #diagramm-box("Sequenz: Fehlerpfad ungültige Koordinate")[
   `Host` → `BearingSession`: `onPositionUpdate(fix)`\
-  `BearingSession` → `Validator`: `validate(fix)`\
-  `Validator` → `BearingSession`: `throws ValidationException(errorCode=COORD_RANGE)`\
-  `BearingSession` → `Logger`: `warn(sessionId, code)`\
+  `BearingSession` → `DefaultBearingSession.validate`: `validate(fix)`\
+  `DefaultBearingSession.validate` → `BearingSession`: `throws ValidationException(errorCode=COORD_RANGE)`\
+  `BearingSession` → `LoggerPort`: `warn(sessionId, code)`\
   `BearingSession` → `Host`: *propagate*
 ]
 
@@ -210,16 +212,17 @@ Die folgende Tabelle ersetzt ein grafisches Klassendiagramm in kompakter, aber i
   stroke: 0.45pt + rgb("#9a9a9a"),
   inset: 5pt,
   [*Klasse / Interface*], [*Stereotyp*], [*Kernverantwortung*],
-  [`BearingSession`], [Entity/Controller], [Zustandsautomat ACTIVE/COMPLETED/ABORTED],
+  [`BearingSession`], [Interface], [Lebenszyklus-API einer Session (`IDLE`/`ACTIVE`/`COMPLETED`/`ABORTED` in `DefaultBearingSession`)],
   [`SessionConfig`], [Value Object], [immutable Konfiguration],
   [`GeoCoordinate`], [Value Object], [WGS84 lat/lon validiert],
   [`GpsFix`], [Value Object], [Zeit + Position + optional HDOP/Speed],
   [`BearingCalculator`], [Domain Service], [Haversine, Azimut, Ordinal],
   [`TrackAggregator`], [Domain Service], [Rohspeicher, Segmente, Punktbudget],
-  [`GpxSerializer`], [Infrastructure], [GPX 1.1, Escaping],
+  [`GpxExportMapper`], [Infrastructure], [Domänen-Track nach SPI-GPX mappen (inkl. Metadaten)],
+  [`GpxWriterPort`], [Port], [SPI zum Serialisieren des GPX-Dokuments (Standard: `GpxXmlWriter`)],
   [`TrackOptimizer`], [Interface], [Optimierungsstrategie],
-  [`W3wClient`], [Interface], [Reverse-Lookup],
-  [`ClockProvider`], [Interface], [Testbarkeit],
+  [`W3wClientPort`], [Port], [Reverse-Lookup (Standard: `NoopW3wClient` oder `W3wHttpClient`)],
+  [`ClockPort`], [Port], [Zeitabstraktion für deterministische Tests],
 )
 
 #figure(
@@ -264,7 +267,7 @@ Die vollständige Menge ist tabellarisch im Lastenheft. Hier werden exemplarisch
 
 == Datenmodellierung und technischer Feinentwurf
 
-Die persistenten/transienten Daten sind in `/LD100/`-`/LD190/` beschrieben. ER-Diagramm: verzichtet auf relationale Tabellen, da keine DB-Pflicht besteht; stattdessen *Kompositionsgraph*: `Session` enthält `Track`, `Track` enthält `TrackSegment`, Segment enthält `GpsPoint`.
+Die persistenten/transienten Daten sind in `/LD100/`-`/LD190/` beschrieben. ER-Diagramm: verzichtet auf relationale Tabellen, da keine DB-Pflicht besteht; stattdessen ein Kompositionsgraph entlang der Implementierung: `DefaultBearingSession` hält `TrackAggregator`; daraus wird ein `Track` mit `TrackSegment` und `GpsPoint` für Export/Statistik abgeleitet.
 
 === Klassendiagramm (struktureller Feinentwurf)
 

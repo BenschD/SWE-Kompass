@@ -115,9 +115,8 @@ Abhängigkeiten, und jede Schicht ist einzeln testbar und austauschbar.
   ↓ nur über öffentliche API-Aufrufe
 
   *API / Application Service*\
-  Steuert den Session-Lebenszyklus, prüft Vorbedingungen, bildet Fehler auf
-  semantische Codes ab und orchestriert die Fachfälle. Kennt die Domain,
-  kennt keine Adapter.
+  Steuert den Session-Lebenszyklus, prüft Vorbedingungen und orchestriert die Fachfälle.
+  Nutzt Ports über `DefaultBearingSession` und kennt keine konkreten Infrastruktur-Details.
 
   ↓ nur über Domain-Schnittstellen
 
@@ -175,12 +174,12 @@ was als Abhängigkeit deklariert ist.
     columns: (2.2cm, 6cm, auto),
     stroke: tbl-stroke, inset: tbl-inset,
     [*Modul*],                  [*Paketbasis*],                            [*Verantwortung*],
-    [`bearing-api`],            [`com.example.-bearing.api`],               [Öffentliche Fassade, DTOs, Fehlercodes, Session-Konfiguration],
-    [`bearing-domain`],         [`com.example.-bearing.domain`],            [Fachlogik, Policies, Zustandsmodell, Value Objects],
-    [`bearing-spi`],            [`com.example.-bearing.spi`],               [Technologieunabhängige Port-Interfaces],
-    [`bearing-adapter-gpx`],    [`com.example.-bearing.adapter.gpx`],       [GPX-1.1-Writer],
-    [`bearing-adapter-w3w`],    [`com.example.-bearing.adapter.w3w`],       [Optionaler W3W-HTTP-Client mit Cache],
-    [`bearing-adapter-system`], [`com.example.-bearing.adapter.system`],    [Dateisystem, Systemuhr, Logging],
+    [`bearing-api`],            [`com.example.bearing.api`],               [Öffentliche Fassade, DTOs, Fehlercodes, Session-Konfiguration],
+    [`bearing-domain`],         [`com.example.bearing.domain`],            [Fachlogik, Policies, Zustandsmodell, Value Objects],
+    [`bearing-spi`],            [`com.example.bearing.spi`],               [Technologieunabhängige Port-Interfaces],
+    [`bearing-adapter-gpx`],    [`com.example.bearing.adapter.gpx`],       [GPX-1.1-Writer],
+    [`bearing-adapter-w3w`],    [`com.example.bearing.adapter.w3w`],       [Optionaler W3W-HTTP-Client mit Cache],
+    [`bearing-adapter-system`], [`com.example.bearing.adapter.system`],    [Dateisystem, Systemuhr, Logging],
   ))
 )
 
@@ -201,8 +200,8 @@ Die dynamische Sicht beschreibt die drei wesentlichen Laufzeitszenarien der Komp
 
 === Szenario A: Regulärer Positionsupdate
 
-Der Host übergibt einen GPS-Fix an die API. Diese validiert diese und aktualisiert den Track-Zustand und ein neuer Snapshot bereitgestellt. Ein
-Qualitätsproblem wird ignoriert und der Track-Zustand bleibt konsistent.
+Der Host übergibt einen GPS-Fix an die API. Diese validiert den Fix und aktualisiert den Track-Zustand.
+Ist der Fix ungültig, wird eine `ValidationException` geworfen; der Track-Zustand bleibt konsistent.
 
 === Szenario B: Regulärer Session-Abschluss
 
@@ -215,11 +214,10 @@ dies konfiguriert hat.
 
 === Szenario C: Fehlerpfad: ungültige Koordinate
 
-Der Host übergibt einen Fix mit NaN-Koordinaten. Die API erkennt den Fehler
+Der Host übergibt einen Fix mit ungültigen Koordinaten. Die API erkennt den Fehler
 bereits bei der Eingangsvalidierung und erzeugt eine `ValidationException`.
-Es wird kein Domänenzustand verändert, kein GPX-Port aufgerufen und kein
-Logging von Trackinformationen ausgelöst. Der Fehler wird dem Listener
-gemeldet.
+Es wird kein Domänenzustand verändert und kein GPX-Port aufgerufen.
+Der Fehler wird als Exception an den Host propagiert.
 
 #pagebreak()
 
@@ -307,27 +305,27 @@ inset: tbl-inset,
 [Dienst], [Verhalten], [Fehlerfälle],
 
 [Session-Management],
-[Steuert den Lebenszyklus einer Peilung innerhalb des Service Layers und liefert eine Referenz-ID zurück.],
+[Steuert den Lebenszyklus einer Peilung im API-Layer (`start`, `complete`, `abort`, `reset`).],
 [Die Peilung ist bereits aktiv, Zielkoordinaten sind ungültig],
 
 [Tracking-Logik],
-[Wendet im Business Rules Layer Validierungsvorschriften auf GPS-Daten an und berechnet Fortschritte.],
-[Ungültige Koordinaten],
+[Wendet im Domain-Layer Validierungsvorschriften auf GPS-Daten an und berechnet Fortschritte.],
+[Ungültige Koordinaten, Zeitstempel außerhalb `maxFixAge`],
 
 [Kurs-Analyse],
-[Berechnet Abweichungen basierend auf fachlichen Vorgaben im Business Rules Layer.],
-[Kurswert liegt außerhalb des Wertebereichs, Fehlende Datenbasis],
+[Berechnet Abweichungen basierend auf fachlichen Vorgaben im Domain-Layer.],
+[Kurswert liegt außerhalb des Wertebereichs, fehlende Datenbasis],
 
 [Export- & Abbruch-Dienst],
-[Koordiniert über den Service Layer die Finalisierung und startet die Darstellung des GPS-Tracks im GPX-Format an.],
-[Peilung fehlt, Fehler bei der Datenaufbereitung],
+[Koordiniert über API+Domain die Finalisierung und startet die GPX-Serialisierung über Ports.],
+[Peilung nicht aktiv, SecurityException bei unzulässigem Pfad],
 
-[Daten-Zugriff (DAO)],
-[Kapselt im Data Access Layer die Persistenz von Tracks und W3W-Daten (Caching).],
+[Port-/Adapter-Zugriff],
+[Kapselt Persistenz von GPX-Daten und optionales W3W-Caching über SPI-Ports und Adapter.],
 [Schreib- oder Lesefehler, W3W API nicht erreichbar],
 
-[API-Präsentation],
-[Stellt Schnittstellen im Presentation Layer für den Host bereit.],
+[Host-API],
+[Stellt öffentliche Java-Schnittstellen für den Host bereit.],
 [Ungültiger API-Aufruf],
 )))
 #pagebreak()
@@ -336,11 +334,11 @@ inset: tbl-inset,
 
 Die Anordnung der Subsysteme folgt einer streng hierarchischen Struktur, um die Komplexität zu beherrschen und die Austauschbarkeit einzelner Ebenen zu gewährleisten.
 
-*Strukturierung:* Das System ist vertikal in Schichten gegliedert:\ - Presentation Layer\ - Service Layer\ - Business Rules Layer\ - Data Access Layer\ - Database\ Jede Schicht hat eine klar definierte Aufgabe und bildet eine logische Partition des Gesamtsystems.
+*Strukturierung:* Das System ist vertikal in Schichten gegliedert:\ - Host\ - API\ - Domain\ - Ports (SPI)\ - Adapter/Infrastruktur\ Jede Schicht hat eine klar definierte Aufgabe und bildet eine logische Partition des Gesamtsystems.
 
 *Interaktionsmodell:* Die Kommunikation erfolgt strikt einseitig von oben nach unten. Ein Subsystem nutzt ausschließlich die Dienste der unmittelbar darunterliegenden Schicht. Ein direkter Zugriff von der Präsentationsebene auf den Datenzugriff wird zur Vermeidung von Kopplung unterbunden.
 
-*Software-Architektur:* Durch die Auslagerung der Logik in den Business Rules Layer bleibt die Fachlogik unabhängig von der Art der Präsentation (Host). Der Data Access Layer dient als Abstraktion zur physischen Datenbank, wodurch Änderungen am Speicherschema keine Auswirkungen auf die Geschäftsregeln haben.
+*Software-Architektur:* Durch die Auslagerung der Logik in den Domain-Layer bleibt die Fachlogik unabhängig vom Host. Die Port-Schicht abstrahiert technische Details (Dateisystem, HTTP, Uhr, Logging), sodass Änderungen an Adaptern keine Auswirkungen auf die Geschäftsregeln haben.
 
 #pagebreak()
 
@@ -368,11 +366,11 @@ Klassifizierung auf die relevanten Risiken der Peilungskomponente an.
   columns: (2.8cm, 1.8cm, 1fr, 1fr),
   stroke: tbl-stroke, inset: tbl-inset,
   [*Risiko*],                   [*Klasse*],        [*Architekturmaßnahme*],                                    [*Ort im Entwurf*],
-  [Pfadmanipulation beim GPX-Export],[Vermeidung], [Whitelisting erlaubter Basisverzeichnisse und der Host konfiguriert Pfad explizit],[Data Access Layer],
-  [XML-Injection in GPX],       [Vermeidung],      [Konsequentes Escaping aller Nutzerdaten bei der Serialisierung],[Data Access Layer],
-  [Ausfall des W3W-Dienstes],   [Minderung],       [Timeout-Limit, begrenzte Retry-Anzahl, Fallback ohne W3W-Daten],[Service Layer und Data Access Layer],
-  [Unkontrollierter Speicherverbrauch],[Vermeidung],[Punktbudget und Segmentierungs-Schwelle im Domain Core],[Business Rules Layer],
-  [Unklare Fehlerbehandlung],   [Erkennung],       [Semantische Exception-Hierarchie; jeder Fehler hat eindeutigen Code],[Service Layer],
+  [Pfadmanipulation beim GPX-Export],[Vermeidung], [Whitelisting erlaubter Basisverzeichnisse und explizite Host-Konfiguration],[API + Adapter (`SafeFileSink`)],
+  [XML-Injection in GPX],       [Vermeidung],      [Konsequentes Escaping aller Nutzerdaten bei der Serialisierung],[Adapter (`GpxXmlWriter`)],
+  [Ausfall des W3W-Dienstes],   [Minderung],       [Timeout-Limit und Fallback ohne W3W-Daten],[Adapter (`W3wHttpClient`)],
+  [Unkontrollierter Speicherverbrauch],[Vermeidung],[Punktbudget und Segmentierungs-Schwelle im Domain Core],[Domain-Layer],
+  [Unklare Fehlerbehandlung],   [Erkennung],       [Semantische Exception-Hierarchie; jeder Fehler hat eindeutigen Code],[API-Layer],
 )))
 #pagebreak()
 ]
