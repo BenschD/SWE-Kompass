@@ -253,125 +253,126 @@ ausreichend.
 == Entwurfsprinzipien
 // ──────────────────────────────────────────────────────────────────────────
 
-Die folgende Tabelle belegt, wie die Architektur die in der Vorlesung
-geforderten Qualitätskriterien erfüllt. Jedes Prinzip ist einer konkreten
-Entwurfsentscheidung zugeordnet, damit der Nachweis prüfbar bleibt.
+Die Tabelle ordnet den geforderten Qualitätskriterien die entsprechenden Entwurfsentscheidungen der Architektur zu. Diese direkte Verknüpfung dient als prüfbarer Nachweis für die Erfüllung der Vorgaben.
 
-#table(
-  columns: (3.0cm, 1fr, 1fr),
-  stroke: tbl-stroke, inset: tbl-inset,
-  [*Prinzip*],             [*Architekturentscheidung*],                                          [*Messbarer Nutzen*],
-  [Hohe Kohäsion],         [Subsysteme entlang fachlicher Verantwortung; kein Technik-Mischmasch],[Änderungen an GPX-Format berühren nur `bearing-adapter-gpx`],
-  [Schwache Kopplung],     [Abhängigkeit nur über Port-Interfaces, nie auf konkrete Adapter],     [Adapter austauschbar ohne Domain-Änderung; Mocking für Tests trivial],
-  [Information Hiding],    [Domain-Interna hinter API-Fassade; Value Objects ohne Setter],        [Host kann keine interne Darstellung ausnutzen oder versehentlich korrumpieren],
-  [Separation of Concerns],[Fachlogik strikt getrennt von XML/HTTP/Datei-I/O],                    [Domain-Tests ohne Infrastruktur; Infrastruktur-Tests ohne Domänenwissen],
-  [Wiederverwendung],      [Policies und Optimizer als austauschbare Strategien definiert],        [Neues Optimierungsverfahren erfordert nur eine neue Port-Implementierung],
-)
+#figure(
+  caption: [Entwurfsprinzip: Ordnung der Architekturentscheidungen nach Prinzipien der Software-Architektur.],
+  kind: table,
+  align(left, table(
+  columns: (3.2cm, 1fr, 1fr),
+  stroke: tbl-stroke, 
+  inset: tbl-inset,
+  [*Prinzip*], [*Entwurfsentscheidung*], [*Messbarer Nutzen*],
+  
+  [Hohe Kohäsion], 
+  [Module sind strikt nach fachlicher Verantwortung getrennt, statt technische Schichten zu vermischen.], 
+  [Anpassungen am GPX-Format bleiben lokal auf den `bearing-adapter-gpx` begrenzt.],
 
-#pagebreak()
-// ──────────────────────────────────────────────────────────────────────────
-== Methodische Dekomposition
-// ──────────────────────────────────────────────────────────────────────────
+  [Schwache Kopplung], 
+  [Komponenten kommunizieren ausschließlich über APIs statt über konkrete Implementierungen.], 
+  [Unterkomponenten lassen sich flexibler austauschen, was wiederum das Mocking für Unit-Tests vereinfacht.],
 
-Die Vorlesung fordert drei Schritte. Sie werden hier auf die
-Peilungskomponente angewandt.
+  [Information Hiding], 
+  [Domänen-Logik wird hinter einer Fassade gekapselt. Daten fließen als unveränderliche Value Objects.], 
+  [Die interne Struktur ist geschützt, spricht externe Aufrufer können den Systemzustand nicht schädigen.],
 
-=== Schritt 1: Subsystem-Identifikation
+  [Separation of Concerns], 
+  [Saubere Trennung zwischen Kernlogik und Infrastruktur (wie Dateizugriff oder Netzwerk-I/O).], 
+  [Fachlogik lässt sich ohne Infrastruktur-Overhead testen und umgekehrt.],
 
-Operationen werden nach ihrem fachlichen Zweck zu Diensten gruppiert; Dienste
-mit gemeinsamer Verantwortung bilden ein Subsystem.
-
-#table(
-  columns: (2.8cm, 3.1cm, 1fr),
-  stroke: tbl-stroke, inset: tbl-inset,
-  [*Operation*],         [*Dienst*],                             [*Ziel-Subsystem*],
-  [Session starten],     [Session-Anlage, Zustandsinitialisierung],[API / Application Service],
-  [Positionsupdate],     [Validierung, Track-Aktualisierung],    [Domain Core],
-  [Kursupdate],          [Kursabweichungsberechnung],            [Domain Core],
-  [Session abschließen], [Track-Finalisierung, Export-Trigger],  [API + Domain + Ports],
-  [GPX exportieren],     [Serialisierung, optionale Persistenz], [Ports + Infrastruktur],
-  [W3W auflösen],        [Reverse-Lookup, Caching],              [Ports + Infrastruktur],
-)
-
-=== Schritt 2: Dienstspezifikation
-
-Jeder Dienst wird mit seinem Vertrag beschrieben — was muss beim Aufruf
-gelten (Vorbedingung), was gilt danach (Nachbedingung), welche Fehlerfälle
-sind definiert. Konkrete Parameternamen und Rückgabetypen auf Klassenebene
-werden im Feinentwurf festgelegt.
-
-#table(
-  columns: (2.8cm, 1fr, 1fr),
-  stroke: tbl-stroke, inset: tbl-inset,
-  [*Dienst*],            [*Vertrag (Kurzbeschreibung)*],                              [*Fehlerfälle*],
-  [Session starten],     [Legt genau eine aktive Session an; liefert Session-ID zurück],  [Bereits aktive Session; ungültiges Ziel],
-  [Positionsupdate],     [Validiert Fix, legt im Rohspeicher ab; aktualisiert Track],[Ungültige Koordinaten; keine aktive Session],
-  [Kursupdate],          [Optionaler Kursbezug für Abweichungsberechnung],             [Ungültiger Kurswert; keine aktive Session],
-  [Session abschließen], [Finalisiert Session; liefert GPX-Ergebnis],                  [Keine aktive Session; Serialisierungsfehler],
-  [Session abbrechen],   [Bricht ab; liefert bis dahin erfasste GPX-Daten],            [Keine aktive Session; Serialisierungsfehler],
-  [Snapshot abrufen],    [Liefert konsistente Momentaufnahme des laufenden Tracks],     [Keine aktive Session],
-)
-
-=== Schritt 3: Subsystem-Anordnung
-
-Die Subsysteme werden als Schichten angeordnet: Host → API → Domain → Ports
-→ Adapter. Es existieren keine zyklischen Abhängigkeiten. Optionale Dienste
-(W3W, Dateipersistenz) sind als Adapter realisiert und beeinflussen die
-Kernlogik nicht. Schichten kommunizieren ausschließlich über definierte
-Interfaces, nie über konkrete Klassen der Nachbarschicht.
+  [Wiederverwendbarkeit], 
+  [Einsatz des Strategy-Patterns für Policies und Optimizer, um Logik austauschbar zu machen.], 
+  [Neue Algorithmen lassen sich ohne Eingriffe in den bestehenden Kontrollfluss integrieren.],
+)))
 
 #pagebreak()
-
 // ──────────────────────────────────────────────────────────────────────────
+== Subsystem-Dekomposition
+// ──────────────────────────────────────────────────────────────────────────
+Um das Peilungssystem von einem monolithischen Ansatz in eine modulare, wartbare Architektur zu überführen, folgt der Entwurf einem zweistufigen Prozess: der Identifikation funktionaler Einheiten und deren anschließender struktureller Anordnung.
+
+=== Erster Schritt: Subsystem-Identifikation
+
+Der erste Schritt konzentriert sich darauf, die fachlichen Operationen sinnvoll zu Diensten zu bündeln und diese den jeweiligen Subsystemen zuzuordnen. Dabei bilden Typen mit verwandter Verantwortung die logischen Grenzen der Subsystem-Schnittstellen.
+
+Die folgende Übersicht gruppiert die Operationen und definiert die Verträge der daraus resultierenden Dienste. Diese Verträge legen fest, welches Verhalten nach außen garantiert wird und wie die Komponente auf ungültige Zustände reagiert, während technische Implementierungsdetails dem Feinentwurf vorbehalten bleiben.
+
+#figure(
+  caption: [Subsystem-Identifikation: Zuordnung von Operationen zu Diensten und Definition von Verträgen mit Fehlerfällen.],
+  kind: table,
+  align(left, table(
+columns: (2.5cm, 1.8fr, 1fr),
+stroke: tbl-stroke,
+inset: tbl-inset,
+[Dienst], [Verhalten], [Fehlerfälle],
+
+[Session-Management],
+[Steuert den Lebenszyklus einer Peilung innerhalb des Service Layers und liefert eine Referenz-ID zurück.],
+[Die Peilung ist bereits aktiv, Zielkoordinaten sind ungültig],
+
+[Tracking-Logik],
+[Wendet im Business Rules Layer Validierungsvorschriften auf GPS-Daten an und berechnet Fortschritte.],
+[Ungültige Koordinaten],
+
+[Kurs-Analyse],
+[Berechnet Abweichungen basierend auf fachlichen Vorgaben im Business Rules Layer.],
+[Kurswert liegt außerhalb des Wertebereichs, Fehlende Datenbasis],
+
+[Export- & Abbruch-Dienst],
+[Koordiniert über den Service Layer die Finalisierung und startet die Darstellung des GPS-Tracks im GPX-Format an.],
+[Peilung fehlt, Fehler bei der Datenaufbereitung],
+
+[Daten-Zugriff (DAO)],
+[Kapselt im Data Access Layer die Persistenz von Tracks und W3W-Daten (Caching).],
+[Schreib- oder Lesefehler, W3W API nicht erreichbar],
+
+[API-Präsentation],
+[Stellt Schnittstellen im Presentation Layer für den Host bereit.],
+[Ungültiger API-Aufruf],
+)))
+#pagebreak()
+
+=== Zweiter Schritt: Subsystem-Anordnung
+
+Die Anordnung der Subsysteme folgt einer streng hierarchischen Struktur, um die Komplexität zu beherrschen und die Austauschbarkeit einzelner Ebenen zu gewährleisten.
+
+*Strukturierung:* Das System ist vertikal in Schichten gegliedert:\ - Presentation Layer\ - Service Layer\ - Business Rules Layer\ - Data Access Layer\ - Database\ Jede Schicht hat eine klar definierte Aufgabe und bildet eine logische Partition des Gesamtsystems.
+
+*Interaktionsmodell:* Die Kommunikation erfolgt strikt einseitig von oben nach unten. Ein Subsystem nutzt ausschließlich die Dienste der unmittelbar darunterliegenden Schicht. Ein direkter Zugriff von der Präsentationsebene auf den Datenzugriff wird zur Vermeidung von Kopplung unterbunden.
+
+*Software-Architektur:* Durch die Auslagerung der Logik in den Business Rules Layer bleibt die Fachlogik unabhängig von der Art der Präsentation (Host). Der Data Access Layer dient als Abstraktion zur physischen Datenbank, wodurch Änderungen am Speicherschema keine Auswirkungen auf die Geschäftsregeln haben.
+
+#pagebreak()
+
+
 == Security Engineering im Grobentwurf
-// ──────────────────────────────────────────────────────────────────────────
+Das Security Engineering der Peilungskomponente stellt sicher, dass das System durch sein Design böswilligen Angriffen auf die Logik und die erfassten Geodaten widersteht. Der Fokus liegt hierbei auf der *Application Security*: Das System wird so konstruiert, dass es inhärent sicher ist, anstatt sich allein auf externe Infrastruktur-Sicherheitsmaßnahmen zu verlassen. Sicherheit wird dabei als fundamentale Voraussetzung für die Zuverlässigkeit und Verfügbarkeit der Peilungsdaten betrachtet.
 
+Die Sicherheitsarchitektur stützt sich auf drei zentrale Dimensionen:
+
+/ Vertraulichkeit: Schutz der sensiblen Bewegungsdaten und Ziele vor unbefugter Offenlegung.
+/ Integrität: Sicherstellung, dass GPS-Tracks und Kursberechnungen nicht unbemerkt manipuliert oder korrumpiert werden können.
+/ Verfügbarkeit: Gewährleistung, dass die Peilungsfunktion und der Datenexport auch unter Last oder bei Ausfällen externer Dienste (wie W3W) erhalten bleiben.
+
+=== Sicherheitsanforderungen
 Sicherheitsanforderungen werden laut Vorlesung in drei Klassen eingeteilt:
 Risikovermeidung (Schwachstelle gar nicht erst einbauen), Risikoerkennung
 (Angriff neutralisieren bevor Schaden entsteht) und Risikominderung
 (Schaden nach Angriff begrenzen). Die folgende Tabelle wendet diese
 Klassifizierung auf die relevanten Risiken der Peilungskomponente an.
 
-#table(
+#figure(
+  caption: [Sicherheitsanforderungen: Identifikation von Risiken und Zuordnung von Maßnahmen zur Vermeidung, Erkennung oder Minderung.],
+  kind: table,
+  align(left, table(
   columns: (2.8cm, 1.8cm, 1fr, 1fr),
   stroke: tbl-stroke, inset: tbl-inset,
   [*Risiko*],                   [*Klasse*],        [*Architekturmaßnahme*],                                    [*Ort im Entwurf*],
-  [Pfadmanipulation beim GPX-Export],[Vermeidung], [Whitelisting erlaubter Basisverzeichnisse; Host konfiguriert Pfad explizit],[API + FileSinkPort + SafeFileSink],
-  [XML-Injection in GPX],       [Vermeidung],      [Konsequentes Escaping aller Nutzerdaten bei der Serialisierung],[GpxWriterPort + GpxXmlWriter],
-  [Ausfall des W3W-Dienstes],   [Minderung],       [Timeout-Limit, begrenzte Retry-Anzahl, Fallback ohne W3W-Daten],[W3wClientPort + W3wHttpClient],
-  [Unkontrollierter Speicherverbrauch],[Vermeidung],[Punktbudget und Segmentierungs-Schwelle im Domain Core],[Domain Core],
-  [Unklare Fehlerbehandlung],   [Erkennung],       [Semantische Exception-Hierarchie; jeder Fehler hat eindeutigen Code],[API / Application Service],
-)
-
-// ──────────────────────────────────────────────────────────────────────────
-== Soll-Ist-Abdeckungsmatrix
-// ──────────────────────────────────────────────────────────────────────────
-
-Die Matrix weist nach, dass alle Inhalte des Foliensatzes 07 adressiert sind.
-
-#table(
-  columns: (3.0cm, 2.5cm, 1.8cm, 1fr),
-  stroke: tbl-stroke, inset: tbl-inset,
-  [*Forderung (Foliensatz)*],     [*Soll*],                           [*Status*],[*Nachweis*],
-  [Subsystem-Spezifikation],      [Zerlegung in handhabbare Einheiten],[Erfüllt], [Abschnitt Statische Sicht — Subsystem-Spezifikation],
-  [Schnittstellen-Spezifikation], [Dienste nach außen präzisieren],   [Erfüllt], [Abschnitt Methodische Dekomposition — Schritt 2],
-  [Systemsicht],                  [Systemgrenze + externe Schnittstellen],[Erfüllt],[Abschnitt Systemsicht + Kontextdiagramm],
-  [Statische Sicht],              [Komponentenstruktur + Abhängigkeiten],[Erfüllt],[Schichtenmodell, Kommunikationsregeln, Paket-/Kompositionssicht],
-  [Dynamische Sicht],             [Laufzeitzusammenwirken],           [Erfüllt], [Szenarien A–C + Aktivitäts-/Sequenzdiagramme],
-  [Physische Sicht],              [Verteilung auf Knoten],            [Erfüllt], [Abschnitt Physische Sicht + Verteilungsdiagramm],
-  [Hohe Kohäsion],                [Starker innerer Zusammenhalt],     [Erfüllt], [Entwurfsprinzipien — Kohäsion-Zeile],
-  [Schwache Kopplung],            [Geringe Kopplung zwischen Modulen],[Erfüllt], [Ports/SPI + Kommunikationsregeln],
-  [Information Hiding / SoC],     [Klare Trennung fachlich/technisch],[Erfüllt], [Domain vs. Infrastruktur + Port-Schicht],
-  [Wiederverwendung],             [Gemeinsamkeiten nutzen],           [Erfüllt], [Strategien und Adapter],
-  [Dekomposition Schritt 1],      [Subsystem-Identifikation],         [Erfüllt], [Methodische Dekomposition — Schritt 1],
-  [Dekomposition Schritt 2],      [Dienstspezifikation],              [Erfüllt], [Methodische Dekomposition — Schritt 2],
-  [Dekomposition Schritt 3],      [Subsystem-Anordnung],              [Erfüllt], [Methodische Dekomposition — Schritt 3],
-  [UML-Komponentendiagramm],      [Bausteine + Abhängigkeiten],       [Erfüllt], [SWE_Kompass_Component_Layers],
-  [UML-Paketdiagramm],            [Hierarchische Organisation],       [Erfüllt], [SWE_Kompass_Package_Architecture],
-  [UML-Kompositionsstruktur],     [Interne Struktur einer Komponente],[Erfüllt], [SWE_Kompass_Composite_BearingSession],
-  [UML-Verteilungsdiagramm],      [Architektur zur Laufzeit],         [Erfüllt], [SWE_Kompass_Deployment_Runtime],
-  [Security Engineering],         [Sicherheitsanforderungen im Entwurf],[Erfüllt],[Abschnitt Security Engineering],
-)
-
+  [Pfadmanipulation beim GPX-Export],[Vermeidung], [Whitelisting erlaubter Basisverzeichnisse und der Host konfiguriert Pfad explizit],[Data Access Layer],
+  [XML-Injection in GPX],       [Vermeidung],      [Konsequentes Escaping aller Nutzerdaten bei der Serialisierung],[Data Access Layer],
+  [Ausfall des W3W-Dienstes],   [Minderung],       [Timeout-Limit, begrenzte Retry-Anzahl, Fallback ohne W3W-Daten],[Service Layer und Data Access Layer],
+  [Unkontrollierter Speicherverbrauch],[Vermeidung],[Punktbudget und Segmentierungs-Schwelle im Domain Core],[Business Rules Layer],
+  [Unklare Fehlerbehandlung],   [Erkennung],       [Semantische Exception-Hierarchie; jeder Fehler hat eindeutigen Code],[Service Layer],
+)))
 #pagebreak()
 ]
