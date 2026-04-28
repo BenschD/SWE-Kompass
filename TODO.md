@@ -1,8 +1,12 @@
 Alle Funktionale Anforderungen -> Traceability.md umsetzen als tests
 
 uml diagramme an die produktdaten apassen
-produktdaten in er diagramme reichen klassendiagramme
+produktdaten in ER diagramme reichen klassendiagramme
 
+
+Ordnerstruktur nach MVC
+
+Grobentwurf nach anforderungsanalyse-> Bohl schicken
 
 
 
