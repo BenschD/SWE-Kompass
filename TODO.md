@@ -8,6 +8,7 @@ Ordnerstruktur nach MVC
 
 Grobentwurf nach anforderungsanalyse-> Bohl schicken
 
+ISO 25201 ersetzen mit der älteren
 
 
 
