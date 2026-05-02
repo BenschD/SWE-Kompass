@@ -2,7 +2,7 @@
 // Makros: Begriffskarten (Definition, Gültigkeit, Bezeichnung, Quellverweis)
 // ─────────────────────────────────────────────────────────────────────────────
 
-#let _b-fill   = rgb("#f4f7fb")
+#let _b-fill = rgb("#f4f7fb")
 #let _b-stroke = rgb("#c8d4e6")
 
 /// Normierte Begriffskarte für Glossar und Haupttext.
@@ -16,6 +16,7 @@
 ) = {
   v(1em)
   set text(size: 11pt)
+
   block(breakable: false, width: 100%)[
     #table(
       columns: (auto, 1fr),
@@ -23,15 +24,21 @@
       fill: (x, _y) => if x == 0 { _b-fill } else { white },
       inset: (x: 10pt, y: 8pt),
       align: (left + top),
-      [*Begriff*],              [*#begriff*],
-      [*Definition*],           [#definition],
-      [*Abgrenzung*],           [#abgrenzung],
-      [*Gültigkeit*],           [#gueltigkeit],
+
+      [*Begriff*], [*#begriff*],
+      [*Definition*], [#definition],
+      [*Abgrenzung*], [#abgrenzung],
+      [*Gültigkeit*], [#gueltigkeit],
       [#box[*Bezeichnung / Symbol*]], [#bezeichnung],
-      [*Quellverweis*],         [#quelle],
+      [*Quellverweis*], [#quelle],
     )
   ]
 }
+
+/// Kompakte Begriffskarte (eine Zeile Quelle) für Tabellenanhang.
+#let begriff-inline(begriff, kurzdef, quelle) = [
+  #strong(begriff): #kurzdef #h(0.5em) _(#quelle)_
+]
 
 /// Rahmen für UML-/Diagramm-Beschreibungen ohne externes Rendering.
 #let diagramm-box(titel, body) = {
