@@ -272,6 +272,7 @@
   "Software Engineering Vorlesung, SOPHIST-Regeln",
 )
 
+// aufteilen 
 #begriffskarte(
   "Lastenheft vs. Pflichtenheft",
   "Lastenheft: fachliche, wirtschaftliche und politische Zielsetzung aus Auftraggebersicht. Pflichtenheft: technische Umsetzungsvorgaben aus Entwicklersicht","" ,
