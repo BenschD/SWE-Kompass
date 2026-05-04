@@ -54,7 +54,7 @@
       columns: (auto, 1fr, auto),
       rows:    (4cm),
       align:   horizon,
-      image("include/images/DHBW_Logo.png", height: 1cm),
+      image("images/DHBW_Logo.png", height: 1cm),
       h(1fr),
       box([
         #set align(right)
@@ -140,7 +140,7 @@ Neben der Implementierung als Maven-Projekt legt die Arbeit besonderen Wert auf 
 
 // ═════════════════════════════════════════════════════════════════════════════
 // KAPITEL 3 – SPEZIFISCHE ANFORDERUNGEN
-// ═════════════════════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════════════════════
 
 = Spezifische Anforderungen
 

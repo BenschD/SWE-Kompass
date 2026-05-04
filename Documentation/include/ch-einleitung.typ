@@ -406,6 +406,15 @@ Das folgende Glossar normiert alle für dieses Dokument relevanten Fachbegriffe.
 )
 
 #begriffskarte(
+  "Lastenheft vs. Pflichtenheft",
+  "Lastenheft: fachliche, wirtschaftliche und politische Zielsetzung aus Auftraggebersicht. Pflichtenheft: technische Umsetzungsvorgaben aus Entwicklersicht.",
+  "",
+  "In dieser Arbeit: Kapitel „Allgemeine Beschreibung\" ≈ Lastenheft-Teile; Kapitel „Spezifische Anforderungen\" ≈ Pflichtenheft.",
+  "IEEE 830-1998",
+  "Software Engineering Vorlesung",
+)
+
+#begriffskarte(
   "Traceability (Rückverfolgbarkeit)",
   "Nachvollziehbare Verbindung zwischen Anforderung, Design, Code und Test.",
   "",
