@@ -3,13 +3,15 @@
 #let ch-einleitung-kapitel = [
 #set par(justify: true)
 
-Dieses Kapitel führt in die Problemstellung, den Zweck und den Einsatzbereich der Java-Peilungskomponente ein. Es legt die terminologische Grundlage über ein normiertes Glossar und schließt mit einem Überblick über den Aufbau dieses Dokuments.
+Dieses Kapitel führt in die Problemstellung, den Zweck und den Einsatzbereich der Java-Peilungskomponente ein. Es beschreibt zunächst, welche Ziele mit der Bibliothek verfolgt werden und anhand welcher Kriterien deren Erfolg messbar ist. Anschließend wird der fachliche Hintergrund erläutert, aus dem heraus die Notwendigkeit einer solchen Komponente entstand. Abschließend grenzt das Kapitel klar ab, welche Funktionalitäten im Rahmen dieser Arbeit realisiert werden und welche bewusst außerhalb des Betrachtungsrahmens liegen. Diese Abgrenzung dient sowohl der Fokussierung der Implementierung als auch der eindeutigen Kommunikation gegenüber zukünftigen Nutzerinnen und Nutzern der Bibliothek.
 
 // ─────────────────────────────────────────────────────────────────────────────
 == Zweck
 // ─────────────────────────────────────────────────────────────────────────────
 
-Ziel dieses Dokuments ist die vollständige, prüfbare Spezifikation einer UI-freien Java-Bibliothek, die Peilungsfunktionalität, GPS-Track-Aufzeichnung und GPX-1.1-Export bereitstellt.
+Ziel dieses Dokuments ist die vollständige, prüfbare Spezifikation einer UI-freien Java-Bibliothek, die Peilungsfunktionalität, GPS-Track-Aufzeichnung und GPX-1.1-Export bereitstellt. Die Spezifikation richtet sich an Entwicklerinnen und Entwickler, die die Bibliothek in eigene Host-Anwendungen integrieren möchten, sowie an Prüfende, die Anforderungserfüllung und Testabdeckung nachvollziehen müssen. Das Dokument ist so gestaltet, dass sämtliche Anforderungen direkt auf konkrete Testfälle rückführbar sind und damit eine lückenlose Nachverfolgbarkeit vom fachlichen Ziel bis zur Verifikation gewährleistet ist.
+
+Die Bibliothek entsteht im Kontext einer Lehrveranstaltung und verfolgt gleichzeitig einen praktisch verwertbaren Anspruch: Sie soll als eigenständige, wiederverwendbare Komponente konzipiert sein, die ohne Anpassung in unterschiedliche Java-basierte Host-Umgebungen eingebettet werden kann, unabhängig davon, ob es sich um eine Kommandozeilenapplikation, einen Hintergrunddienst oder eine serverbasierte Verarbeitungseinheit handelt.
 
 *Konkrete Ziele der Bibliothek:*
 
