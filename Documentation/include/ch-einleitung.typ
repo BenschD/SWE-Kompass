@@ -11,11 +11,11 @@ Dieses Kapitel führt in die Problemstellung, den Zweck und den Einsatzbereich d
 
 Ziel dieses Dokuments ist die vollständige, prüfbare Spezifikation einer UI-freien Java-Bibliothek, die Peilungsfunktionalität, GPS-Track-Aufzeichnung und GPX-1.1-Export bereitstellt.
 
-Die Anforderungen sind SOPHIST-konform und eindeutig prüfbar formuliert. Sie umfassen *funktionale Anforderungen* (`/LF…/`), *nicht-funktionale Anforderungen* (`/LL…/`) und *Produktdaten* (`/LD…/`), ergänzt um Qualitäts- und Sicherheitsaspekte sowie objektorientierte Analyse- und Entwurfsartefakte.
-
 *Konkrete Ziele der Bibliothek:*
 
-- *Anforderungsanalyse und Spezifikation:* SOPHIST-konforme, eindeutig prüfbare Formulierung aller Anforderungen (funktional, nicht-funktional, Datenschnittstellen, Randbedingungen), ergänzt um Qualitäts- und Risikoaspekte sowie objektorientierte Analyse- und Entwurfsartefakte.
+
+//Abändern?
+- *(nachdem 3. fertig ist ändern) Anforderungsanalyse und Spezifikation:* SOPHIST-konforme, eindeutig prüfbare Formulierung aller Anforderungen (funktional, nicht-funktional, Datenschnittstellen, Randbedingungen), ergänzt um Qualitäts- und Risikoaspekte sowie objektorientierte Analyse- und Entwurfsartefakte.
 
 - *Implementierung:* UI-freie Java-Komponente mit klaren Eingabeschnittstellen für Positions- und Kursdaten, konfigurierbarer Aufzeichnung, GPX-1.1-konformem Export und optionaler What3Words-Anbindung.
 
@@ -26,9 +26,9 @@ Die Anforderungen sind SOPHIST-konform und eindeutig prüfbar formuliert. Sie um
 *Erfolgskriterien dieses Projekts:*
 
 - Die Komponente ist ohne UI lauffähig und per `mvn test` vollständig verifizierbar.
-- Alle `/LF…/`-Anforderungen sind durch mindestens einen dokumentierten Testfall abdeckbar.
+- Alle Anforderungen sind durch mindestens einen dokumentierten Testfall abdeckbar.
 - GPX-Ausgaben enthalten den GPX-1.1-Namespace und valide Zeitstempel im UTC-ISO-8601-Format.
-- Keine Klassen aus UI-Frameworks (AWT, Swing, JavaFX) werden referenziert.
+- Keine Klassen aus UI-Frameworks werden referenziert.
 
 #pagebreak()
 
@@ -38,44 +38,31 @@ Die Anforderungen sind SOPHIST-konform und eindeutig prüfbar formuliert. Sie um
 
 === Problemstellung und fachlicher Hintergrund
 
-Im Rahmen der Projektarbeit wird die iOS-Anwendung _Kompass Professional_ als fachliche Referenz analysiert. Der Fokus liegt auf der Peilungsfunktion und nicht auf einer vollständigen Navigationslösung. Unter *Peilung* wird in dieser Arbeit die Berechnung der Richtung und Entfernung von der aktuellen Position zu einem Zielpunkt verstanden; optional kann die Abweichung zum aktuellen Kurs berücksichtigt werden, sofern ein Kurswert vom Host-System bereitgestellt wird.
+Im Rahmen der Projektarbeit wird die IOS-Anwendung _Kompass Professional_ als fachliche Referenz analysiert. Der Fokus liegt auf der Peilungsfunktion und nicht auf einer vollständigen Navigationslösung. Unter Peilung wird in dieser Arbeit die Berechnung der Richtung und Entfernung von der aktuellen Position zu einem Zielpunkt verstanden.
 
-*Hintergrund:* Die iOS-App „Kompass Professional" demonstriert eine Peilungsfunktion: Sie zeigt wohin (Richtung) relativ zur aktuellen Orientierung bzw. Position, ohne Navigation im Sinne einer Turn-by-Turn-Führung. Die App zeichnet dabei einen GPS-Track auf, der als GPX exportierbar ist. Ihre Peilungslogik ist jedoch fest mit der grafischen Oberfläche und der Hardwareanbindung verknüpft.
+*Hintergrund:* Die IOS-App „Kompass Professional" demonstriert eine Peilungsfunktion: Sie zeigt wohin, relativ zur aktuellen Orientierung bzw. Position, ohne Navigation im Sinne einer Turn-by-Turn-Führung. Die App zeichnet dabei einen GPS-Track auf, der als GPX exportierbar ist. Ihre Peilungslogik ist jedoch fest mit der grafischen Oberfläche und der Hardwareanbindung verknüpft.
 
-Die *zentrale Problemstellung* besteht in der konsistenten und reproduzierbaren Berechnung von Zielrichtung (Azimut), Entfernung und diskreter Ordinalrichtung auf Basis von WGS84-Koordinaten unter klar definierten Eingangs- und Schnittstellenbedingungen. Zusätzlich muss die Verarbeitung als kontinuierlicher Session-Prozess mit Start, Laufzeit und Abbruch konzipiert werden, bei dem Track-Daten trotz Unterbrechungen vollständig exportierbar bleiben.
+Die zentrale Problemstellung besteht in der konsistenten und reproduzierbaren Berechnung von Zielrichtung (Azimut), Entfernung und diskreter Ordinalrichtung auf Basis von WGS84-Koordinaten unter klar definierten Eingangs- und Schnittstellenbedingungen. Zusätzlich muss die Verarbeitung als kontinuierlicher Session-Prozess mit Start, Laufzeit und Abbruch konzipiert werden, bei dem Track-Daten trotz Unterbrechungen vollständig exportierbar bleiben.
 
-*Zielbild der Bibliothek:* Die Bibliothek ermittelt durch vom Host gelieferte Positions- und Kursdaten die Peilungsgrößen (insbesondere geografischer Azimut und Entfernung) und zeichnet währenddessen einen GPS-Track auf, der als GPX 1.1 exportierbar ist. Optional kann eine What3Words-Auflösung erfolgen.
+*Zielbild der Bibliothek:* Die Bibliothek ermittelt durch vom Host gelieferte Positions- und Kursdaten die Peilungsgrößen  und zeichnet währenddessen einen GPS-Track auf, der als GPX 1.1 exportierbar ist. Zusätlich ist eine Auflösung als What3Word möglich.
 
 === Im Scope
 
 - Geografische Berechnung von Zielrichtung (Azimut), Entfernung und diskreter Ordinalrichtung auf WGS84-Basis mit optionaler Kursabweichung bei verfügbarem Kurswert.
-- Klar definierte Integrationsschnittstellen, über die der Host Positionsdaten und weitere Rechnungsdaten (z.\ B. Zeitstempel, Geschwindigkeit, Genauigkeit) bereitstellt.
+- Klar definierte Integrationsschnittstellen, über die der Host Positionsdaten und weitere Rechnungsdaten (z.B. Zeitstempel, Geschwindigkeit, Genauigkeit) bereitstellt.
 - Session-Lebenszyklus mit Start, laufender Aufzeichnung und Abbruch. Bei Abbruch werden die bis dahin erfassten Track-Daten weiterhin exportierbar bereitgestellt.
-- Konfigurierbare Aufzeichnungslogik: Punktbudget (Soft-/Hard-Limit), Segmentierung bei Zeitlücken, Validierung ungültiger Eingaben (Koordinaten, Zeit). Die Aufrufhäufigkeit von Positionsupdates steuert der Host.
+- Konfigurierbare Aufzeichnungslogik: Punktbudget (Soft-/Hard-Limit), Segmentierung bei Zeitlücken. Die Aufrufhäufigkeit von Positionsupdates steuert der Host.
 - GPX-1.1-konformer Export der Track-Daten als String oder Bytefolge.
-- *Optional* vor dem Export: erweiterbare Optimierungsverfahren (z.\ B. n-ter Punkt, Mindestabstand, Geraden-Heuristik, Douglas-Peucker) sowie optionaler What3Words-Bezug inklusive Caching.
+- Vor dem Export möglich: Erweiterbare Optimierungsverfahren (z.B. n-ter Punkt, Mindestabstand, Geraden-Heuristik, Douglas-Peucker) sowie optionaler What3Words-Bezug inklusive Caching.
 
 === Außerhalb des Scopes
 
 - Track-Optimierung der eingehenden Rohdaten beim Einlesen.
-- Magnetische Peilung inklusive automatischer Deklinationskorrektur (Host-Verantwortung).
-- Kartendarstellung, Kartenmatching, Routing, Geocoding allgemeiner Adressstrings (außer W3W-Option).
-- Hardwareanbindung (GNSS-Treiber, Sensorfusion); der Host liefert fertige Messwerte.
-- Persistenzvorgaben wie ein festes Dateiziel für den GPX-Export; die Entscheidung über Speicherort und Dateiverwaltung liegt beim Host.
+- Magnetische Peilung inklusive automatischer Deklinationskorrektur.
+- Kartendarstellung, Kartenmatching, Routing, Geocoding allgemeiner Adressstrings.
+- Hardwareanbindung, da der Host fertige Messwerte liefert.
+- Persistenzvorgaben wie ein festes Dateiziel für den GPX-Export, zusätlich liegt die Entscheidung über Speicherort und Dateiverwaltung liegt beim Host.
 - Cloud-Persistenz, Benutzerverwaltung, Rechteverwaltung.
-
-Die folgenden ehemals formulierten funktionalen Anforderungen werden in dieser Bibliotheksversion *nicht* umgesetzt, da die Qualitätsfilterung, Abtastlogik und Dublettenbereinigung der Host-Anwendung obliegen:
-
-#table(
-  columns: (1.6cm, 2.4cm, 1fr),
-  stroke: 0.45pt + rgb("#9a9a9a"),
-  inset: 6pt,
-  [*ID*], [*Kurztitel*], [*Hinweis*],
-  [/LF110/], [Zeitintervall / Abtastung], [Kein konfigurierbares Speicherintervall in der Bibliothek; Host steuert Aufrufhäufigkeit von `onPositionUpdate`.],
-  [/LF130/], [HDOP / Satelliten], [HDOP-Felder werden in GPX durchgereicht, keine automatische Verwerfung beim Einlesen.],
-  [/LF140/], [Geschwindigkeitssprünge], [Keine implizite Geschwindigkeitsprüfung im Rohspeicher.],
-  [/LF160/], [Duplikate], [Identische Messungen werden nicht still entfernt.],
-)
 
 #pagebreak()
 
@@ -586,12 +573,16 @@ Das folgende Glossar normiert alle für dieses Dokument relevanten Fachbegriffe.
 
 Dieses Dokument gliedert sich gemäß IEEE 830 in drei Hauptkapitel:
 
-*Kapitel 1 – Einleitung* (vorliegendes Kapitel) definiert Zweck und Einsatzbereich der Bibliothek, normiert die Terminologie im Glossar und gibt den Überblick über die Dokumentstruktur.
+*Kapitel 1 Einleitung* definiert Zweck und Einsatzbereich der Bibliothek, normiert die Terminologie im Glossar und gibt den Überblick über die Dokumentstruktur.
 
-*Kapitel 2 – Allgemeine Beschreibung* stellt die Einbettung der Bibliothek in ihr System-Umfeld dar (Systemsicht, physische Sicht, externe Kommunikationspartner), benennt die Hauptfunktionen, beschreibt Benutzerprofile und Stakeholder, formuliert systemweite Einschränkungen und listet Annahmen und Abhängigkeiten auf.
+*Kapitel 2 Allgemeine Beschreibung* stellt die Einbettung der Bibliothek in ihr System-Umfeld dar (Systemsicht, physische Sicht, externe Kommunikationspartner), benennt die Hauptfunktionen, formuliert systemweite Einschränkungen und listet Annahmen und Abhängigkeiten auf.
 
-*Kapitel 3 – Spezifische Anforderungen* enthält die normativ bindenden Anforderungsartefakte: funktionale Anforderungen (`/LF…/`), nicht-funktionale Anforderungen (`/LL…/`), externe Schnittstellenbeschreibungen, Performance-Anforderungen sowie das vollständige Qualitätsmodell nach ISO/IEC 25010.
 
+//änderungen
+*(neu formulieren wenn kapittel 3 fertig ist) Kapitel 3 Spezifische Anforderungen* enthält die normativ bindenden Anforderungsartefakte: funktionale Anforderungen (`/LF…/`), nicht-funktionale Anforderungen (`/LL…/`), externe Schnittstellenbeschreibungen, Performance-Anforderungen sowie das vollständige Qualitätsmodell nach ISO/IEC 25010.
+
+
+//optional? maybe entfernen
 Der *Anhang* ergänzt das Dokument um Traceability-Matrizen, Review-Checklisten, Normreferenzen, erweiterte Use-Case-Beschreibungen sowie algorithmische Hinweise.
 
 #pagebreak()

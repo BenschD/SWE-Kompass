@@ -5,7 +5,7 @@
 // Autoren: Moritz Pfitzenmaier, Marius Müllmaier, Daniel Bensch
 // ═════════════════════════════════════════════════════════════════════════════
 
-#let titel             = "Java-Kompass mit GPX-Track und What3Words-Anbindung"
+#let titel             = "Java-Kompass mit GPX-Track"
 #let autoren           = "Moritz Pfitzenmaier, Marius Müllmaier, Daniel Bensch"
 #let autor             = autoren
 #let kurzthema         = "Softwareengineering – Projektdokumentation"
@@ -89,7 +89,7 @@
 
 = Abstract
 
-Die präzise Bestimmung von Richtung und Entfernung zu einem Zielpunkt ist eine alltägliche Aufgabe in der mobilen Navigation. Die iOS-Anwendung _Kompass Professional_ bietet hierfür eine etablierte fachliche Orientierung, doch ihre Peilungslogik ist fest mit der grafischen Oberfläche und der Hardwareanbindung verknüpft. Diese Arbeit löst die Kernfunktionalität aus diesem Gesamtkontext heraus und überführt sie in eine eigenständige, UI-freie Java-Bibliothek.
+Die präzise Bestimmung von Richtung und Entfernung zu einem Zielpunkt ist eine alltägliche Aufgabe in der mobilen Navigation. Die IOS-Anwendung _Kompass Professional_ bietet hierfür eine etablierte fachliche Orientierung, doch ihre Peilungslogik ist fest mit der grafischen Oberfläche und der Hardwareanbindung verknüpft. Diese Arbeit löst die Kernfunktionalität aus diesem Gesamtkontext heraus und überführt sie in eine eigenständige, UI-freie Java-Bibliothek.
 
 Im Mittelpunkt steht die robuste Berechnung von Azimut, Distanz und diskreter Himmelsrichtung auf Basis von WGS84-Koordinaten. Die Bibliothek verarbeitet Positions- und Kursdaten, die ein Host-System liefert. Ein kontrollierbarer Session-Lebenszyklus ermöglicht das Aufzeichnen, Unterbrechen und Fortsetzen von Tracks, wobei die Daten durch konfigurierbare Reduktionsstrategien effizient gehalten werden. Der Export erfolgt standardkonform im GPX-Format Version 1.1. Zusätzlich lässt sich der What3Words-Dienst optional anbinden.
 

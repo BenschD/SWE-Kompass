@@ -30,7 +30,7 @@
         columns: (auto, 1fr, auto),
         rows: (4cm),
         align: horizon,
-        //image("images/DHBW_Logo.png", height: 1.5cm),
+        image("../images/DHBW_Logo.png", height: 1.5cm),
       )],
   )
 
