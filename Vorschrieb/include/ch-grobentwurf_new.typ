@@ -55,10 +55,10 @@ gelesen. Der User ist verantwortlich für Sensorfusion und Gerätezugriff und
     columns: (4.0cm, 2.9cm, 1fr),
     stroke: tbl-stroke, inset: tbl-inset,
     [*Externe Schnittstellen*], [*Richtung*], [*Zweck*],
-    [User-Anwendung],   [eingehend],          [Steuerung des Session-Lebenszyklus; Übergabe von Positions- und Kursdaten],
-    [Listener / Result],[ausgehend],          [Snapshots, Statuswechsel, Fehlerereignisse; GPX-Rückgabe an den Host],
+    [User-Anwendung],   [eingehend],          [Steuerung des Session-Lebenszyklus und Übergabe von Positions- und Kursdaten],
+    [Listener / Result],[ausgehend],          [Snapshots, Statuswechsel, Fehlerereignisse und GPX-Rückgabe an den Host],
     [Dateisystem],      [ausgehend, optional],[GPX-Persistenz nur bei expliziter Konfiguration durch den Host],
-    [W3W-HTTP],         [ausgehend, optional],[Reverse-Lookup mit lokalem Cache; ohne Netzwerk vollständig deaktivierbar],
+    [W3W-HTTP],         [ausgehend, optional],[Reverse-Lookup mit lokalem Cache, ohne Netzwerk vollständig deaktivierbar],
   ))
 )
 
@@ -76,7 +76,7 @@ gelesen. Der User ist verantwortlich für Sensorfusion und Gerätezugriff und
 === Subsystem-Spezifikation
 
 Das System wird in vier Subsysteme zerlegt. Die Zerlegung folgt dem Prinzip
-der hohen Kohäsion: Alles, was fachlich zusammengehört, landet im selben
+der hohen Kohäsion. Spricht, alles was fachlich zusammengehört, landet im selben
 Subsystem. Technische Abhängigkeiten werden konsequent davon getrennt, damit
 ist sichergestellt, dass eine Änderung in einem Subsystem, z. B. ein anderer
 GPX-Writer, keine Fachlogik berührt.
@@ -89,10 +89,10 @@ GPX-Writer, keine Fachlogik berührt.
     columns: (3.9cm, 5.5cm, 1fr),
     stroke: tbl-stroke, inset: tbl-inset,
     [*Subsystem*],             [*Kernverantwortung*],                                              [*Bereitgestellte Dienste*],
-    [API / Application Service],[Use-Case-Orchestrierung; Session-Verwaltung; Fehlerbehandlung],   [Session starten, beenden und abbrechen; konsistenten Zustandsschnappschuss liefern],
-    [Domain Core],             [Fachlogik ohne I/O-Abhängigkeiten],                               [Azimut, Distanz, Ordinalrichtung; Rohspeicher, Validierung, Segmentierung, Export-Optimierer],
+    [API / Application Service],[Use-Case-Orchestrierung, Session-Verwaltung und Fehlerbehandlung],   [Session starten, beenden und abbrechen und konsistenten Zustandsschnappschuss liefern],
+    [Domain Core],             [Fachlogik ohne I/O-Abhängigkeiten],                               [Azimut, Distanz, Ordinalrichtung, Rohspeicher, Validierung, Segmentierung, Export-Optimierer],
     [Ports],                   [Abstraktion technischer Abhängigkeiten],                          [Stabile Schnittstellen für GPX, Zeitgeber, Dateisystem, Logging und W3W],
-    [Infrastruktur / Adapter], [Konkrete Implementierung der Ports],                              [XML-Serialisierung, Datei-I/O, HTTP-Client, Systemuhr, Logging-Backend],
+    [Infrastruktur/cAdapter], [Konkrete Implementierung der Ports],[XML-Serialisierung, Datei-I/O, HTTP-Client, Systemuhr, Logging-Backend],
   ))
 )
 
@@ -132,6 +132,7 @@ Abhängigkeiten, und jede Schicht ist einzeln testbar und austauschbar.
 
   ↓ implementiert durch
 
+
   *Infrastruktur / Adapter*\
   Realisiert die Ports: GPX-Serialisierung nach XML, HTTP-Client für W3W,
   Dateisystem-Zugriff, Systemuhr, SLF4J-Logging.
@@ -147,14 +148,14 @@ Abhängigkeiten, und jede Schicht ist einzeln testbar und austauschbar.
     columns: (2.1cm, 2.1cm, 2.3cm, 1fr),
     stroke: tbl-stroke, inset: tbl-inset,
     [*Von*],          [*Nach*],        [*Erlaubt?*],[*Begründung*],
-    [Host],           [API],           [Ja],        [Die API-Fassade ist der einzige definierte Einstiegspunkt; der Host darf ausschließlich über sie kommunizieren],
-    [Host],           [Domain],        [Nein],      [Der direkte Zugriff würde die Fachlogik gegenüber dem Aufrufer exponieren und die Kapselungswirkung der API-Fassade vollständig aushebeln],
-    [Host],           [Infrastruktur], [Nein],      [Technische Implementierungsdetails gehören nicht zur öffentlichen Bibliotheksschnittstelle und dürfen dem Host nicht bekannt sein],
-    [API],            [Domain],        [Ja],        [Die API-Schicht orchestriert Use Cases, indem sie reine Fachlogik aufruft, ohne dabei I/O-Abhängigkeiten in den Domain Core einzuschleppen],
-    [API],            [Infrastruktur], [Nein],      [Die API kommuniziert ausschließlich über die definierten Ports; ein Direktzugriff würde die Austauschbarkeit der Adapter zerstören],
-    [Domain],         [Ports],         [Ja],        [Externe Seiteneffekte werden ausschließlich über abstrakte Port-Schnittstellen ausgelöst],
-    [Domain],         [Infrastruktur], [Nein],      [Ein direkter Infrastrukturzugriff würde I/O-Abhängigkeiten in die Fachlogik einführen und deren isolierte Testbarkeit zerstören],
-    [Infrastruktur],  [Domain],        [Nein],      [Eine Rückkopplung von der Infrastruktur in den Domain Core würde zyklische Abhängigkeiten erzeugen und das Schichtenmodell strukturell verletzen],
+    [Host],           [API],           [Ja],        [Die API-Fassade ist der einzige definierte Einstiegspunkt. Der Host darf ausschließlich über sie kommunizieren.],
+    [Host],           [Domain],        [Nein],      [Der direkte Zugriff würde die Fachlogik gegenüber dem Aufrufer exponieren und die Kapselungswirkung der API-Fassade vollständig aushebeln.],
+    [Host],           [Infrastruktur], [Nein],      [Technische Implementierungsdetails gehören nicht zur öffentlichen Bibliotheksschnittstelle und dürfen dem Host nicht bekannt sein.],
+    [API],            [Domain],        [Ja],        [Die API-Schicht orchestriert Use Cases, indem sie reine Fachlogik aufruft, ohne dabei I/O-Abhängigkeiten in den Domain Core einzuschleppen.],
+    [API],            [Infrastruktur], [Nein],      [Die API kommuniziert ausschließlich über die definierten Port. Ein Direktzugriff würde die Austauschbarkeit der Adapter zerstören.],
+    [Domain],         [Ports],         [Ja],        [Externe Seiteneffekte werden ausschließlich über abstrakte Port-Schnittstellen ausgelöst.],
+    [Domain],         [Infrastruktur], [Nein],      [Ein direkter Infrastrukturzugriff würde I/O-Abhängigkeiten in die Fachlogik einführen und deren isolierte Testbarkeit zerstören.],
+    [Infrastruktur],  [Domain],        [Nein],      [Eine Rückkopplung von der Infrastruktur in den Domain Core würde zyklische Abhängigkeiten erzeugen und das Schichtenmodell strukturell verletzen.],
   ))
 )
 
