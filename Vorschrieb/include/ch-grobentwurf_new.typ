@@ -17,7 +17,7 @@ aussehen.
 == Einordnung und Ziel
 // ──────────────────────────────────────────────────────────────────────────
 
-Der Grobentwurf beantwortet nach Vorlesung drei grundlegende Fragen: 
+Der Grobentwurf befasst sich mit den drei grundlegende Fragen: 
 - Wie wird das System in überschaubare Einheiten gegliedert? 
 - Welche Lösungsstruktur wird gewählt? 
 - Wie werden diese Einheiten hierarchisch angeordnet? 
@@ -25,9 +25,9 @@ Für die Java-Peilungskomponente ergeben sich daraus vier konkrete Anforderungen
 
 *Parallele Entwicklung: * Subsysteme müssen so klar abgegrenzt sein, dass
 unterschiedliche Teams unabhängig daran arbeiten können, ohne voneinander
-Implementierungsdetails kennen zu müssen.
+abhängig zu sein.
 
-*Testbarkeit: * Fachlogik und technische Adapter dürfen nicht verwoben sein,
+*Testbarkeit: * Fachlogik und technische Komponenten klar voneinander abgegrenzt sein,
 damit Unit-Tests ohne externe Abhängigkeiten ausführbar
 sind.
 
@@ -35,9 +35,7 @@ sind.
 oder alternative Exportformate sollen integrierbar sein, ohne bestehende
 Subsysteme zu ändern.
 
-*Nachvollziehbarkeit: * Jede Entwurfsentscheidung wird mit einem
-Architekturprinzip aus der Vorlesung begründet, sodass die Architektur
-diskutierbar und prüfbar bleibt.
+*Nachvollziehbarkeit: * Jede Entwurfsentscheidung wird mit einem standartisierten Prinzip der Software-Architektur begründet. Dadurch wird die Architektur nicht nur dokumentiert, sondern auch diskutierbar und prüfbar. Jede Entscheidung muss klar nachvollziehbar sein, damit die Architektur als kohärentes Ganzes verstanden und bewertet werden kann.
 
 // ──────────────────────────────────────────────────────────────────────────
 == Systemsicht
