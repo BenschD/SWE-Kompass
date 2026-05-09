@@ -228,48 +228,24 @@ Als optionaler sekundärer Akteur fungiert der *What3Words-Dienst* (W3W): Er bea
 == Einschränkungen
 // ─────────────────────────────────────────────────────────────────────────────
 
-Dieser Abschnitt dokumentiert die systemweiten Einschränkungen und Randbedingungen, die den Lösungsraum für Entwurf und Implementierung begrenzen.
 
-=== Technische Randbedingungen
+=== Im Scope
+- Geografische Berechnung von Zielrichtung (Azimut), Entfernung und diskreten Himmelsrichtungen (Ordinalrichtungen) auf WGS84-Basis - inklusive optionaler Kursabweichung bei verfügbarem Kurswert.
+- Klar definierte Integrationsschnittstellen, über die der Host Positionsdaten und zugehörige Metadaten (z. B. Zeitstempel, Geschwindigkeit, Genauigkeit) bereitstellt.
+- Verwaltung des Session-Lebenszyklus (Start, laufende Aufzeichnung, Abbruch). Bei einem Abbruch bleiben die bis dahin erfassten Track-Daten für den Export erhalten.
+- Konfigurierbare Aufzeichnungslogik: Punktbudget (Soft-/Hard-Limits), Segmentierung bei Zeitlücken sowie die Validierung auf ungültige Eingaben (Koordinaten, Zeit). Die Frequenz der Positionsupdates wird dabei extern durch den Host gesteuert.
+- GPX-1.1-konformer Export der Track-Daten, wahlweise als String oder Bytefolge.
+- Auswählbare Optimierungsverfahren vor dem Export (n-ter Punkt, Mindestabstand, Geraden-Heuristik, Douglas-Peucker) sowie ein optionaler What3Words-Bezug inklusive lokalem Caching.
+- [Abgleichen mit den Tests die umgesetzt werden] Qualitätssicherung durch automatisierte Unit-Tests der Kernfunktionalitäten (insbesondere der geografischen Berechnungen, der Optimierungsalgorithmen sowie der GPX-Serialisierung).
 
-- *Laufzeitumgebung:* Java 17 LTS oder höher. Keine Verwendung von `sun.*`-APIs oder als deprecated markierten APIs (/LF440/).
-- *Build-System:* Apache Maven; vollständige Kompilierung und Testausführung per `mvn test` ohne manuelle Zwischenschritte. Alle Abhängigkeiten über Maven Central auflösbar (/LF450/).
-- *Keine UI-Abhängigkeiten:* Keinerlei Klassen aus AWT, Swing, JavaFX oder Android-UI-Frameworks (/LF430/).
-- *Plattformunabhängigkeit:* Keine plattformspezifischen Pfade, Zeilentrennzeichen oder `sun.*`-APIs. Kompilierbar und ausführbar auf Windows, macOS und Linux (/LL110/).
-- *Abhängigkeitslizenzierung:* Im Standard-Build nur permissiv lizenzierte Bibliotheken (Apache 2.0, MIT, BSD). Die W3W-Client-Abhängigkeit ist optional und nur im Maven-Profil `w3w` aktiviert (/LL200/).
 
-=== Fachliche Einschränkungen
-
-- Die Bibliothek führt *keine automatische Datenreduktion* beim Einlesen durch. Track-Optimierung erfolgt ausschließlich optional vor dem GPX-Export.
-- *Magnetische Deklination* ist explizit ausgeschlossen (Host-Verantwortung).
-- Die Bibliothek besitzt *keinen Sensorstack*: Der Host liefert fertige GNSS-Messwerte.
-- *Persistenzvorgaben* obliegen dem Host: Die Bibliothek schreibt keine feste Datei, sondern liefert GPX als String oder `byte[]`.
-- Standardmäßig steuert *ein einziger Host-Thread* die Peilung. Abweichungen müssen in der Javadoc gekennzeichnet werden (/LF350/).
-
-=== Sicherheitstechnische Einschränkungen
-
-- *Path-Traversal-Angriffe* müssen aktiv verhindert werden; ein unzulässiger Pfad führt zu einer `SecurityException` (/LF320/).
-- *XML-Injection* ist durch konsequentes Escaping aller Nutzerdaten zu verhindern (/LL130/).
-- Die Komponente darf *keine dynamische Code-Ausführung* aus GPX-Eingaben ermöglichen (XXE-Schutz).
-
-=== Security Engineering: Sicherheitsanforderungsklassen
-
-Sicherheitsanforderungen werden in drei Klassen eingeteilt: Risikovermeidung (Schwachstelle gar nicht erst einbauen), Risikoerkennung (Angriff neutralisieren, bevor Schaden entsteht) und Risikominderung (Schaden nach Angriff begrenzen).
-
-#figure(
-  caption: [Sicherheitsanforderungen: Risiken und Maßnahmen.],
-  kind: table,
-  align(left, table(
-    columns: (2.8cm, 1.8cm, 1fr, 1fr),
-    stroke: tbl-stroke, inset: tbl-inset,
-    [*Risiko*],                          [*Klasse*],   [*Architekturmaßnahme*],                                              [*Ort im Entwurf*],
-    [Pfadmanipulation beim GPX-Export],  [Vermeidung], [Whitelisting erlaubter Basisverzeichnisse; Host konfiguriert Pfad explizit.], [Data Access Layer],
-    [XML-Injection in GPX],              [Vermeidung], [Konsequentes Escaping aller Nutzerdaten bei der Serialisierung.],      [Data Access Layer],
-    [Ausfall des W3W-Dienstes],          [Minderung],  [Timeout-Limit, begrenzte Retry-Anzahl, Fallback ohne W3W-Daten.],     [Service Layer + Data Access Layer],
-    [Unkontrollierter Speicherverbrauch],[Vermeidung], [Punktbudget und Segmentierungs-Schwelle im Domain Core.],             [Business Rules Layer],
-    [Unklare Fehlerbehandlung],          [Erkennung],  [Semantische Exception-Hierarchie; jeder Fehler hat eindeutigen Code.],[Service Layer],
-  ))
-)
+=== Außerhalb des Scopes
+- Echtzeit-Optimierung der eingehenden Track-Daten während der laufenden Aufzeichnung.
+- Magnetische Peilung sowie die automatische Korrektur der magnetischen Deklination.
+- Kartendarstellung, Map-Matching, Routing und das Geocoding allgemeiner Adressdaten (mit Ausnahme der genannten What3Words-Integration).
+- Direkte Hardwareanbindung (z. B. GNSS-Treiber, Sensorfusion); die Bereitstellung der rohen Messwerte obliegt ausschließlich dem Host.
+- Spezifische Persistenzvorgaben (wie z. B. ein fest definiertes Dateiziel für den GPX-Export). Die Entscheidung über Speicherort und Dateiverwaltung liegt beim Host.
+- Cloud-Persistenz, Benutzer- sowie Rechteverwaltung.
 
 #pagebreak()
 
@@ -277,41 +253,47 @@ Sicherheitsanforderungen werden in drei Klassen eingeteilt: Risikovermeidung (Sc
 == Annahmen und Abhängigkeiten
 // ─────────────────────────────────────────────────────────────────────────────
 
-=== Annahmen über das Host-System
+Dieses Kapitel beschreibt die Annahmen und externen Abhängigkeiten, auf denen die definierten Anforderungen basieren. Änderungen an diesen Faktoren können Auswirkungen auf Anforderungen, Schnittstellen und das Systemverhalten haben.
 
-- Der Host beschafft GNSS-Fixes und reicht sie als fertige Messwerte weiter; die Bibliothek besitzt keinen Sensorstack.
-- Die Aufrufhäufigkeit von `onPositionUpdate` liegt ausschließlich beim Host. Der Host soll vermeiden, unnötig dichte Fix-Ströme zu erzeugen, da die Bibliothek beim Einlesen nicht stillschweigend reduziert (/LL180/).
-- Falls What3Words genutzt wird, stellt der Host einen gültigen API-Key bereit; fehlende Credentials werden von der Bibliothek durch einen Fallback abgefangen.
-- Der Host verwaltet den Dateipfad für den GPX-Export und ist für die Verzeichnisstruktur verantwortlich.
+=== Annahmen
 
-=== Technische Abhängigkeiten
-
+#show figure: set block(breakable: true)
 #figure(
-  caption: [Externe Abhängigkeiten der Bibliothek im Maven-Build.],
+  caption: [Übersicht der getroffenen Systemannahmen],
   kind: table,
   align(left, table(
-    columns: (3cm, 1fr, 2.5cm),
+    columns: (1.15cm, 4.2cm, 1fr, 1fr),
     stroke: tbl-stroke, inset: tbl-inset,
-    [*Abhängigkeit*],      [*Zweck*],                                                         [*Scope*],
-    [JUnit 5],             [Unit- und Komponententests.],                                     [test],
-    [SLF4J API],           [Logging-Abstraktion ohne konkretes Backend zu binden.],           [compile],
-    [JaCoCo Maven Plugin], [Messung der Testabdeckung.],                                      [build],
-    [Checkstyle Plugin],   [Statische Code-Analyse; Javadoc-Vollständigkeit erzwingen.],      [build],
-    [W3W-Client],          [HTTP-Reverse-Lookup (nur aktiv im Maven-Profil `w3w`).],          [optional],
-    [Jimfs (Test)],        [In-Memory-Dateisystem für dateisystemabhängige Tests.],            [test],
+    [*ID*], [*Annahme*], [*Einfluss auf Anforderungen und Verhalten*], [*Folge bei Verletzung*],
+    [A1], [Der Host liefert fertige Positions- und Kursdaten über die öffentliche API; die Bibliothek liest keine Sensoren und führt keine Sensorfusion aus.], [Systemgrenze und Funktionsumfang (Peilung und Track aus bereitgestellten Messwerten) bleiben definiert.], [Ohne valide Host-Daten sind Peilung und Aufzeichnung nicht sinnvoll nutzbar; dies liegt außerhalb der Verantwortung der Bibliothek.],
+    [A2], [Nur der Host steuert den Aufruf,die Bibliothek verdünnt den Datenstrom nicht eigenständig.], [Roh-Trackfüllung, Punktbudget und Segmentierung folgen der vom Host gewählten Updatefrequenz.], [Andere Taktungsmodelle würden dokumentierte Erwartungen verletzen und Anpassungen am SRS nahelegen.],
+    [A3], [Geografische Berechnungen und Eingaben beziehen sich auf WGS84-konforme Koordinaten, wie in der Spezifikation vorausgesetzt.], [Azimut, Distanz und Exportformate bleiben konsistent zur fachlichen Definition.], [Abweichende Bezugssysteme erfordern eine Überarbeitung der Anforderungen und Algorithmen.],
+    [A4], [Die Host-JVM unterstützt mindestens Java~11.], [Bytecode, APIs und Tooling der Bibliothek sind darauf ausgelegt.], [Ältere JVMs werden nicht unterstützt; ein Wechsel der Mindestversion wäre eine SRS-Änderung.],
+    [A5], [Integratoren und Tests können eine `Clock` injizieren, um zeitabhängiges Verhalten deterministisch abzusichern.], [Reproduzierbare Tests und nachvollziehbare Session-Zeitlogik.], [Ohne geeignete Zeitquelle können zeitbasierte Regeln in Tests schwer stabil gehalten werden.],
   ))
 )
 
-=== Abhängigkeit von externen Diensten
+=== Abhängigkeiten
 
-Die Bibliothek ist im Kern offline-fähig. Die What3Words-HTTP-API ist die einzige optionale externe Abhängigkeit zur Laufzeit. Ist kein Netzwerkzugang vorhanden oder kein API-Key konfiguriert, greift der definierte Fallback ohne Exception.
-
-=== Umgebungsvoraussetzungen
-
-- JDK 17 oder höher muss auf dem Entwicklungsrechner und im CI-System installiert sein.
-- Maven 3.8 oder höher.
-- Für den GPX-Export in Dateiform: Schreibrechte im konfigurierten Basisverzeichnis.
-- Für den W3W-Lookup: Netzwerkzugang zu `https://api.what3words.com`.
+#figure(
+  caption: [Übersicht der Systemabhängigkeiten und externen Voraussetzungen],
+  kind: table,
+  align(left, table(
+    columns: (2.6cm, 3.4cm, 1fr),
+    stroke: tbl-stroke, inset: tbl-inset,
+    [*Kategorie*], [*Abhängigkeit*], [*Details und Konsequenz*],
+    [Host], [Konfiguration (W3W)], [API-Schlüssel und Adapter-Konfiguration bei Nutzung von What3Words. Ohne Schlüssel oder Netz gelten dokumentierte Fallbacks; volle W3W-Funktionalität entfällt.],
+    [Host], [Dateisystem (GPX)], [Zielpfade, ggf. `SafeFileSink` und Schreibrechte. Bei Verletzung schlägt GPX-Persistenz fehl oder wird abgelehnt; Fehler über definierte Mechanismen sichtbar.],
+    [Host], [Logging], [SLF4J-API der Bibliothek; konkretes Backend bindet der Host. Ohne Binding keine oder unerwartete Logausgabe; Fachlogik unberührt.],
+    [Host], [Netzwerk], [HTTPS zur W3W-API nur bei aktivierter Nutzung; Erreichbarkeit und TLS-Vertrauen im Host-Umfeld. Eingeschränkter oder ausgefallener Reverse-Lookup und Cache-Update.],
+    [Laufzeit], [Java SE], [Version 11 oder höher; Ausführungsumgebung im Host-Prozess.],
+    [Build], [Apache Maven], [Projekt unter `implementation/`; Abhängigkeiten über Maven Central. Kompilieren, Testen, Packen; Änderungen am Build können das SRS ergänzen lassen.],
+    [Laufzeit], [`slf4j-api`], [2.0.12 (Parent-POM). Fassade für Logging; Versionwechsel kann Integrationshinweise betreffen.],
+    [Test], [JUnit~5, AssertJ, Mockito, Jimfs], [Versionen 5.10.2, 3.25.3, 5.11.0, 1.3.0. Nur für automatisierte Tests; nicht Teil der Host-Laufzeit.],
+    [Extern], [What3Words-API], [Optional über HTTPS. Profil `w3w` steuert optionale Integrationstests im Build. Verfügbarkeit und API-Änderungen liegen außerhalb der Bibliothek.],
+    [Architektur], [Eingebetteter Betrieb], [Kein eigener Serverprozess der Bibliothek; keine Abhängigkeit von einem separaten, von der Komponente bereitgestellten Dienst.],
+  ))
+)
 
 #pagebreak()
 ]
