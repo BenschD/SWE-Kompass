@@ -10,7 +10,7 @@
   verweise: [/LF400/, /LF080/, IEEE 830, Projektauftrag SWE],
   einbindungen: [---],
   datenzugriffe: [/LD100/, /LD110/],
-  beschreibung: [Der Host-App startet eine neue Peilungs-Session. Das System prüft Zielkoordinate und Konfiguration, vergibt eine UUID, friert die Konfiguration ein und wechselt in den Zustand ACTIVE. Alle registrierten Listener werden benachrichtigt.],
+  beschreibung: [Die Host-App startet eine neue Peilungs-Session. Das System prüft Zielkoordinate und Konfiguration, vergibt eine UUID, friert die Konfiguration ein und wechselt in den Zustand ACTIVE. Alle registrierten Listener werden benachrichtigt.],
   ausloeser: [Der Nutzer der Host-App startet eine neue Navigations- oder Peilungssitzung. Die Host-App ruft daraufhin `startSession(target, config)` auf.],
   vorbedingung: [
     1. Die Bibliothek befindet sich im Zustand `IDLE`.\
@@ -39,7 +39,7 @@
   alternativablauf: [
     *2a – Aktive Session:* `BearingStateException(ALREADY_ACTIVE)`; kein Zustandswechsel.\
     *3a – Config ungültig:* `ValidationException(INVALID_CONFIG)`.\
-    *4a – Koordinate ungültig:* `ValidationException(COORD_RANGE)`.\
+    *3b – Koordinate ungültig:* `ValidationException(COORD_RANGE)`.\
     *6a – Listener wirft:* WARN-Log; restliche Listener weiter benachrichtigt.
   ],
   sonstiges: lf-sonstiges(
@@ -53,12 +53,16 @@
   "/LF010/",
   (
     [Host übergibt target + config],
+  ),
+  decision: [Bereits ACTIVE?],
+  error-label: [ja],
+  branch-fail: [`ALREADY_ACTIVE`],
+  steps-after: (
     [Validierung Config + Koordinate],
     [UUID erzeugen, ACTIVE setzen],
     [Listener benachrichtigen],
     [sessionId zurückgeben],
   ),
-  decision: [Session bereits ACTIVE?],
 )
 
 #pagebreak()
@@ -95,7 +99,7 @@
   ],
   alternativablauf: [
     *2a – Koordinaten ungültig:* Exception; kein Punkt gespeichert.\
-    *3a – Zeitstempel ungültig:* Exception; kein Punkt gespeichert.\
+    *2b – Zeitstempel ungültig:* Exception; kein Punkt gespeichert.\
     *3b – Erster Fix:* eröffnet Segment 1 automatisch.\
     *5a – Hard-Limit STOP:* `onHardLimitReached`; Session bleibt ACTIVE.\
     *6a – Listener wirft:* Exception gefangen; restliche Listener weiter.
@@ -165,11 +169,14 @@
   "/LF050/",
   (
     [`getSnapshot()` aufrufen],
-    [Fix im Rohspeicher?],
+  ),
+  decision: [Fix vorhanden?],
+  error-label: [nein],
+  branch-fail: [Optional.empty()],
+  steps-after: (
     [Snapshot ableiten],
     [`Optional<BearingSnapshot>` zurück],
   ),
-  decision: [Fix vorhanden?],
 )
 
 #lf-card(
@@ -214,13 +221,16 @@
 
 #lf-flowchart(
   "/LF060/",
-  (
+  (),
+  decision: [Session ACTIVE?],
+  error-label: [nein],
+  branch-fail: [`SESSION_ENDED`],
+  steps-after: (
     [`complete()` aufrufen],
     [Zustand COMPLETED setzen],
     [GPX exportieren (/LF200/)],
     [Listener + GpxResult],
   ),
-  decision: [Session ACTIVE?],
 )
 
 #pagebreak()
@@ -266,14 +276,17 @@
 
 #lf-flowchart(
   "/LF070/",
-  (
+  (),
+  decision: [Session ACTIVE?],
+  error-label: [nein],
+  branch-fail: [`SESSION_ENDED`],
+  steps-after: (
     [`abort()` aufrufen],
     [Zustand ABORTED setzen],
     [GPX erzeugen (/LF200/)],
     [Optional Datei schreiben],
     [GpxResult zurückgeben],
   ),
-  decision: [Session ACTIVE?],
 )
 
 #pagebreak()
@@ -515,11 +528,13 @@
   "/LF080/",
   (
     [Listener aufrufen],
-    [Exception?],
-    [WARN-Log],
-    [Nächster Listener],
   ),
   decision: [Exception geworfen?],
+  error-label: [ja],
+  branch-fail: [WARN-Log],
+  steps-after: (
+    [Nächster Listener],
+  ),
 )
 
 #pagebreak()
@@ -559,11 +574,14 @@
   "/LL160/",
   (
     [`reset()` aufrufen],
-    [Zustand COMPLETED/ABORTED?],
+  ),
+  decision: [COMPLETED/ABORTED?],
+  error-label: [nein],
+  branch-fail: [`STILL_ACTIVE`],
+  steps-after: (
     [Interne Felder löschen],
     [Zustand IDLE setzen],
   ),
-  decision: [Zustand erlaubt Reset?],
 )
 
 #pagebreak()
