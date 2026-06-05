@@ -6,19 +6,21 @@ Prof. Dr. Bohl | DHBW Stuttgart | Softwareentwicklung Semester 4 | 2026-04-18
 
 ## Implementierung (Code)
 
-Die Maven-Multi-Module-Bibliothek gemäß Vorschrieb liegt unter **[implementation/](implementation/)** (`com.example.bearing.*`). Kurzstart: **`mvn test` im Repo-Root** (Aggregator-POM) oder im Ordner `implementation/` — beides baut dieselben Module. Konsolen-Demo aller Funktionen: [implementation/README.md](implementation/README.md) (Abschnitt „Alles auf einmal“). Traceability: [implementation/TRACEABILITY.md](implementation/TRACEABILITY.md). Vorlage für Umgebungsvariablen: [`.env.example`](.env.example) (lokal als `.env` kopieren, nicht committen).
+Die Maven-Multi-Module-Bibliothek gemäß Vorschrieb liegt unter **[implementation/](implementation/)** (`com.example.bearing.`*). Kurzstart: `**mvn test` im Repo-Root** (Aggregator-POM) oder im Ordner `implementation/` — beides baut dieselben Module. Konsolen-Demo aller Funktionen: [implementation/README.md](implementation/README.md) (Abschnitt „Alles auf einmal“). Traceability: [implementation/TRACEABILITY.md](implementation/TRACEABILITY.md). Vorlage für Umgebungsvariablen: `[.env.example](.env.example)` (lokal als `.env` kopieren, nicht committen).
 
 ---
 
 ## 🎯 PROJEKTÜBERSICHT
 
 Vollständige **Java-Komponente** für Erfassung und Verarbeitung von:
+
 - 🧭 **Peilungsdaten** (Bearing/Compass-Richtungen)
 - 📍 **GPS-Tracking** (Koordinaten, Höhe, Zeit)
 - 📄 **GPX-Export** (GPX 1.1 Standard)
 - 🌐 **What3Words Integration** (optional, REST-API)
 
 **Kernmerkmale:**
+
 - ✅ Keine UI - Library für externe Java-Apps
 - ✅ 100% testbar ohne GUI
 - ✅ Professionelle Architektur (SOLID, Design Patterns)
@@ -30,39 +32,45 @@ Vollständige **Java-Komponente** für Erfassung und Verarbeitung von:
 
 ### Funktionale Anforderungen (F001-F007)
 
-| ID | Beschreibung | Status |
-|----|-------------|--------|
-| F001 | Peilung initialisieren (Position, Azimuth) | ✅ |
-| F002 | Peilung aktualisieren (kontinuierlich) | ✅ |
-| F003 | GPS-Track aufzeichnen (In-Memory) | ✅ |
-| F004 | Track optimieren (Punkt/Distanz/Gerade-Modus) | ✅ |
-| F005 | Peilung beenden (COMPLETED/ABORTED) | ✅ |
-| F006 | GPX-Export (String & Datei, GPX 1.1) | ✅ |
-| F007 | What3Words Integration (optional REST) | ✅ |
+
+| ID   | Beschreibung                                  | Status |
+| ---- | --------------------------------------------- | ------ |
+| F001 | Peilung initialisieren (Position, Azimuth)    | ✅      |
+| F002 | Peilung aktualisieren (kontinuierlich)        | ✅      |
+| F003 | GPS-Track aufzeichnen (In-Memory)             | ✅      |
+| F004 | Track optimieren (Punkt/Distanz/Gerade-Modus) | ✅      |
+| F005 | Peilung beenden (COMPLETED/ABORTED)           | ✅      |
+| F006 | GPX-Export (String & Datei, GPX 1.1)          | ✅      |
+| F007 | What3Words Integration (optional REST)        | ✅      |
+
 
 ### Nicht-funktionale Anforderungen (NF001-NF004)
 
-| ID | Anforderung | Ziel | Status |
-|----|-------------|------|--------|
-| NF001 | Performance | < 100ms Update, < 5s Optimierung | ✅ |
-| NF002 | Code-Coverage | >= 85% (Ziel: 90%+) | ✅ |
-| NF003 | Kompatibilität | Java 11+, Plattformunabhängig | ✅ |
-| NF004 | Wartbarkeit | SOLID, Patterns, JavaDoc | ✅ |
+
+| ID    | Anforderung    | Ziel                             | Status |
+| ----- | -------------- | -------------------------------- | ------ |
+| NF001 | Performance    | < 100ms Update, < 5s Optimierung | ✅      |
+| NF002 | Code-Coverage  | >= 85% (Ziel: 90%+)              | ✅      |
+| NF003 | Kompatibilität | Java 11+, Plattformunabhängig    | ✅      |
+| NF004 | Wartbarkeit    | SOLID, Patterns, JavaDoc         | ✅      |
+
 
 ---
 
 ## 📚 SWE-THEMENGEBIETE (VOLLSTÄNDIG ABGEDECKT)
 
-| Thema | Semester | Abdeckung |
-|-------|----------|-----------|
-| **Anforderungsanalyse** | 3 | ✅ SOFIST-Regeln, objekt-orientiert, Aktivitätsdiagramm |
-| **Spezifikation** | 3 | ✅ IEEE 830, UML (6 Diagramme) |
-| **Prozessmodelle** | 3 | ✅ Iterativ-inkrementell |
-| **Grobentwurf & Architektur** | 4 | ✅ Schichtenmodell (6 Schichten) |
-| **Architekturmuster** | 4 | ✅ Layered, DI, Repository Pattern |
-| **Entwurfsmuster** | 4 | ✅ 8 Patterns (Facade, Factory, Strategy, etc.) |
-| **Testverfahren** | 4 | ✅ Unit, Integration, Performance, Mock, Fixtures |
-| **Code-Qualität** | 4 | ✅ SOLID-Prinzipien, Clean Code, JavaDoc |
+
+| Thema                         | Semester | Abdeckung                                              |
+| ----------------------------- | -------- | ------------------------------------------------------ |
+| **Anforderungsanalyse**       | 3        | ✅ SOFIST-Regeln, objekt-orientiert, Aktivitätsdiagramm |
+| **Spezifikation**             | 3        | ✅ IEEE 830, UML (6 Diagramme)                          |
+| **Prozessmodelle**            | 3        | ✅ Iterativ-inkrementell                                |
+| **Grobentwurf & Architektur** | 4        | ✅ Schichtenmodell (6 Schichten)                        |
+| **Architekturmuster**         | 4        | ✅ Layered, DI, Repository Pattern                      |
+| **Entwurfsmuster**            | 4        | ✅ 8 Patterns (Facade, Factory, Strategy, etc.)         |
+| **Testverfahren**             | 4        | ✅ Unit, Integration, Performance, Mock, Fixtures       |
+| **Code-Qualität**             | 4        | ✅ SOLID-Prinzipien, Clean Code, JavaDoc                |
+
 
 ---
 
@@ -145,45 +153,56 @@ SWE-Kompass/
 
 ## 🎯 DESIGN PATTERNS (8 PATTERNS)
 
-| Pattern | Anwendung | Vorteil |
-|---------|-----------|---------|
-| **Facade** | BearingComponent | Vereinfachte externe API |
-| **Factory** | DependencyInjectionFactory | Flexible Objekt-Erstellung |
-| **Strategy** | TrackOptimization Modi | Austauschbare Algorithmen |
-| **Repository** | BearingSessionRepository | Daten-Abstraktionen |
-| **Adapter** | W3WClient Interface | API-Integration |
-| **Value Object** | Position, GPSPoint | Immutable, semantische Werte |
-| **Entity** | BearingSession, GPSTrack | Mutable Aggregates |
-| **Dependency Injection** | Config & Services | Lose Kopplung |
+
+| Pattern                  | Anwendung                  | Vorteil                      |
+| ------------------------ | -------------------------- | ---------------------------- |
+| **Facade**               | BearingComponent           | Vereinfachte externe API     |
+| **Factory**              | DependencyInjectionFactory | Flexible Objekt-Erstellung   |
+| **Strategy**             | TrackOptimization Modi     | Austauschbare Algorithmen    |
+| **Repository**           | BearingSessionRepository   | Daten-Abstraktionen          |
+| **Adapter**              | W3WClient Interface        | API-Integration              |
+| **Value Object**         | Position, GPSPoint         | Immutable, semantische Werte |
+| **Entity**               | BearingSession, GPSTrack   | Mutable Aggregates           |
+| **Dependency Injection** | Config & Services          | Lose Kopplung                |
+
 
 ---
 
 ## 🔬 ALGORITHMEN
 
 ### 1️⃣ HAVERSINE-FORMEL (Großkreis-Distanz)
+
 Für genaue Distanzberechnung zwischen GPS-Punkten
+
 ```
 d = R * 2 * asin(√(sin²(Δlat/2) + cos(lat1)*cos(lat2)*sin²(Δlon/2)))
 R = 6371000 m (Erdradius)
 ```
 
 ### 2️⃣ PUNKT-BASIERTE OPTIMIERUNG
+
 Behalte jeden N-ten Punkt (z.B. N=10)
+
 - Beispiel: 100 Punkte → ~10 Punkte
 - Vorhersehbar, einfach
 
 ### 3️⃣ DISTANZ-BASIERTE OPTIMIERUNG
+
 Behalte Punkte mit Mindestabstand X Meter (z.B. X=50m)
+
 - Beispiel: 100 Punkte → ~5 Punkte
 - Geografisch sinnvoll
 
 ### 4️⃣ GERADE-OPTIMIERUNG (Line Simplification)
+
 Erkenne kollineare Punkte, reduziere auf Start + Ende
+
 - Beispiel: 100 Punkte in einer Linie → **2 Punkte** (98% Reduktion!)
 - Toleranz: 5 Meter Abweichung
 - Maximum-Effizienz für lange, gerade Strecken
 
 ### 5️⃣ AZIMUTH-ZU-KOMPASS-KONVERTIERUNG
+
 - 0° → "N", 45° → "NE", 90° → "E", 180° → "S", 270° → "W", etc.
 
 ---
@@ -191,12 +210,14 @@ Erkenne kollineare Punkte, reduziere auf Start + Ende
 ## 🧪 TESTBARKEIT (100% OHNE GUI)
 
 ### Test-Frameworks
+
 - **JUnit 5**: Unit-Tests mit Parametrisierung
 - **AssertJ**: Lesbare Assertions
 - **JMH**: Performance Benchmarks
 - **Mockito (optional)**: Mock-Objects
 
 ### Test-Struktur
+
 ```
 src/test/java/com/swe/kompass/
 ├── api/BearingComponentTest
@@ -218,6 +239,7 @@ src/test/java/com/swe/kompass/
 ```
 
 ### Test-Szenarien Abgedeckt
+
 - ✅ Normale Peilung (initiate → update → complete)
 - ✅ Abbruch mit Daten-Rückgabe (abortBearing)
 - ✅ GPX-Export (String & Datei)
@@ -228,8 +250,10 @@ src/test/java/com/swe/kompass/
 - ✅ Integration (komplette Workflows)
 
 ### Code-Coverage
+
 **Ziel: >= 85% (ideal: 90%+)**  
 Messung mit JaCoCo:
+
 ```bash
 mvn test jacoco:report
 # Report: target/site/jacoco/index.html
@@ -240,6 +264,7 @@ mvn test jacoco:report
 ## 🚀 SCHNELLSTART
 
 ### Voraussetzungen
+
 - **Java 11+** (or higher)
 - **Maven 3.6+**
 - **Git** (für Versionskontrolle)
@@ -313,6 +338,7 @@ System.out.println("Ort: " + location.getWords()); // z.B. "mango.löffel.rot"
 ## 📊 SZENARIO-BEISPIELE
 
 ### Szenario 1: Komplette normale Peilung
+
 ```
 1. initiateBearing()
    ↓
@@ -336,6 +362,7 @@ System.out.println("Ort: " + location.getWords()); // z.B. "mango.löffel.rot"
 ```
 
 ### Szenario 2: Abbruch mit optionaler Daten-Rückgabe
+
 ```
 1. initiateBearing()
 2. updateBearing() × 2 (2 Punkte erfasst)
@@ -349,6 +376,7 @@ System.out.println("Ort: " + location.getWords()); // z.B. "mango.löffel.rot"
 ```
 
 ### Szenario 3: Track-Optimierung (3-stufig)
+
 ```
 Original Track:
 ├─> 100 Punkte in einer Geraden
@@ -367,47 +395,45 @@ Schritt 3 - Gerade-Optimierung:
 
 ## 📝 DOKUMENTATION
 
-| Datei | Beschreibung |
-|-------|-------------|
-| **1_ANFORDERUNGSANALYSE.md** | SOFIST-Regeln, Anforderungen, Aktivitätsdiagramm |
-| **2_SPEZIFIKATION_IEEE830.md** | Vollständige IEEE 830 Spezifikation, API, Algorithmen |
-| **UML_01_Klassendiagramm.puml** | Klassen, Interfaces, Beziehungen |
-| **UML_02_Sequenzdiagramm_NormaleBeilung.puml** | Ablauf normaler Peilung |
-| **UML_03_Sequenzdiagramm_Abbruch.puml** | Abbruch-Szenario |
-| **UML_04_Aktivitaetsdiagramm.puml** | Prozess-Aktivitäten |
-| **UML_05_Zustandsdiagramm.puml** | Session-Zustände |
-| **UML_06_Komponentendiagramm.puml** | Komponenten & Abhängigkeiten |
-| **pom.xml** | Maven Build-Konfiguration |
+
+| Datei                                          | Beschreibung                                          |
+| ---------------------------------------------- | ----------------------------------------------------- |
+| **1_ANFORDERUNGSANALYSE.md**                   | SOFIST-Regeln, Anforderungen, Aktivitätsdiagramm      |
+| **2_SPEZIFIKATION_IEEE830.md**                 | Vollständige IEEE 830 Spezifikation, API, Algorithmen |
+| **UML_01_Klassendiagramm.puml**                | Klassen, Interfaces, Beziehungen                      |
+| **UML_02_Sequenzdiagramm_NormaleBeilung.puml** | Ablauf normaler Peilung                               |
+| **UML_03_Sequenzdiagramm_Abbruch.puml**        | Abbruch-Szenario                                      |
+| **UML_04_Aktivitaetsdiagramm.puml**            | Prozess-Aktivitäten                                   |
+| **UML_05_Zustandsdiagramm.puml**               | Session-Zustände                                      |
+| **UML_06_Komponentendiagramm.puml**            | Komponenten & Abhängigkeiten                          |
+| **pom.xml**                                    | Maven Build-Konfiguration                             |
+
 
 ---
 
 ## ✨ BESONDERHEITEN
 
 1. **🎯 GERADE-OPTIMIERUNG**
-   - Intelligente Erkennung kollinearer Punkte
-   - Reduktion auf Start + Ende
-   - Beispiel: 100 Punkte in einer Linie → **2 Punkte**
-
+  - Intelligente Erkennung kollinearer Punkte
+  - Reduktion auf Start + Ende
+  - Beispiel: 100 Punkte in einer Linie → **2 Punkte**
 2. **🔄 FLEXIBLE OPTIMIERUNGS-MODI**
-   - Punkt-basiert: Einfach, vorhersehbar
-   - Distanz-basiert: Geografisch sinnvoll
-   - Gerade-Optimierung: Maximum-Effizienz
-
+  - Punkt-basiert: Einfach, vorhersehbar
+  - Distanz-basiert: Geografisch sinnvoll
+  - Gerade-Optimierung: Maximum-Effizienz
 3. **🛑 INTELLIGENTES ABBRUCHVERHALTEN**
-   - Keine automatische Speicherung bei Abbruch
-   - Daten bleiben in-Memory verfügbar
-   - App entscheidet über Speicherung ("Speichern ja/nein?")
-
+  - Keine automatische Speicherung bei Abbruch
+  - Daten bleiben in-Memory verfügbar
+  - App entscheidet über Speicherung ("Speichern ja/nein?")
 4. **🌐 W3W INTEGRATION**
-   - Optional, nicht erforderlich
-   - REST-API mit LRU-Cache
-   - Graceful Degradation bei API-Fehler
-
+  - Optional, nicht erforderlich
+  - REST-API mit LRU-Cache
+  - Graceful Degradation bei API-Fehler
 5. **🏗️ PROFESSIONELLE ARCHITEKTUR**
-   - 6 Schichten (Layered)
-   - 8 Design Patterns
-   - SOLID-Prinzipien
-   - Clean Code Standards
+  - 6 Schichten (Layered)
+  - 8 Design Patterns
+  - SOLID-Prinzipien
+  - Clean Code Standards
 
 ---
 
@@ -429,14 +455,16 @@ Diese Komponente demonstriert **umfassendes Verständnis** aller SWE-Themengebie
 
 ## 📞 KONTAKT
 
-| Info | Details |
-|------|---------|
-| **Projekt** | SWE-Kompass |
-| **Version** | 1.0.0 |
-| **Zielgruppe** | Prof. Dr. Bohl |
-| **Universität** | DHBW Stuttgart |
-| **Kurs** | Softwareentwicklung Semester 4 |
-| **Datum** | 2026-04-18 |
+
+| Info            | Details                        |
+| --------------- | ------------------------------ |
+| **Projekt**     | SWE-Kompass                    |
+| **Version**     | 1.0.0                          |
+| **Zielgruppe**  | Prof. Dr. Bohl                 |
+| **Universität** | DHBW Stuttgart                 |
+| **Kurs**        | Softwareentwicklung Semester 4 |
+| **Datum**       | 2026-04-18                     |
+
 
 ---
 

@@ -1,23 +1,25 @@
 # Java-Peilungskomponente (Implementierung)
 
-Maven-Multi-Modul-Projekt gemäß Vorschrieb unter [`../Vorschrieb/`](../Vorschrieb/).
+Maven-Multi-Modul-Projekt gemäß Vorschrieb unter `[../Vorschrieb/](../Vorschrieb/)`.
 
 ## Module
 
-| Modul | Inhalt |
-|-------|--------|
-| `bearing-spi` | Ports (`ClockPort`, `LoggerPort`, `GpxWriterPort`, …) und GPX-Transportmodell |
-| `bearing-domain` | Fachlogik: Track, Rechner, Optimierer, Pipeline |
-| `bearing-adapter-gpx` | GPX-1.1-XML-Writer |
-| `bearing-adapter-system` | `SystemClockAdapter`, `Slf4jLoggerAdapter`, `SafeFileSink`, `NoopW3wClient` |
-| `bearing-adapter-w3w` | `W3wHttpClient` (JDK-HTTP, Cache) |
-| `bearing-api` | `DefaultBearingSession`, `SessionConfig`, `BearingBootstrap` |
+
+| Modul                    | Inhalt                                                                        |
+| ------------------------ | ----------------------------------------------------------------------------- |
+| `bearing-spi`            | Ports (`ClockPort`, `LoggerPort`, `GpxWriterPort`, …) und GPX-Transportmodell |
+| `bearing-domain`         | Fachlogik: Track, Rechner, Optimierer, Pipeline                               |
+| `bearing-adapter-gpx`    | GPX-1.1-XML-Writer                                                            |
+| `bearing-adapter-system` | `SystemClockAdapter`, `Slf4jLoggerAdapter`, `SafeFileSink`, `NoopW3wClient`   |
+| `bearing-adapter-w3w`    | `W3wHttpClient` (JDK-HTTP, Cache)                                             |
+| `bearing-api`            | `DefaultBearingSession`, `SessionConfig`, `BearingBootstrap`                  |
+
 
 ## Build
 
 Maven liegt bei dir unter `C:\tools\apache-maven-3.9.15` (oder ähnlich). **PATH** sollte `…\bin` enthalten, damit `mvn` überall funktioniert. Nach der Installation ggf. **Terminal/Cursor neu starten**, damit die Umgebungsvariable geladen wird.
 
-Umgebungsvariablen (Vorlage zum Kopieren): [`.env.example`](../.env.example) → lokale Datei `.env` im Repo-Root anlegen (nicht versioniert). Optional: `MVN_CMD` für die Demo-Skripte, `W3W_API_KEY` für echte W3W-Calls in eurer Anwendung.
+Umgebungsvariablen (Vorlage zum Kopieren): `[.env.example](../.env.example)` → lokale Datei `.env` im Repo-Root anlegen (nicht versioniert). Optional: `MVN_CMD` für die Demo-Skripte, `W3W_API_KEY` für echte W3W-Calls in eurer Anwendung.
 
 ```powershell
 # Entweder Repo-Root (Aggregator-POM ../pom.xml) oder dieses Verzeichnis:
@@ -32,7 +34,7 @@ Coverage-Report (JaCoCo): `mvn verify` → `bearing-api/target/site/jacoco/index
 
 ### Alles auf einmal (Konsolen-Demo / Skript)
 
-Modul **`bearing-demo`** enthält `AllCapabilitiesDemo`: Domain-Rechner, Session (Start, Fehler, Rohtrack inkl. HDOP-Feldern, Listener, Snapshot, `complete`/`abort`), **alle vier Track-Optimierer** in einer Pipeline, **SafeFileSink** (Jimfs), Path-Traversal-Schutz, W3W-Noop, ungültiger Kurs.
+Modul `**bearing-demo**` enthält `AllCapabilitiesDemo`: Domain-Rechner, Session (Start, Fehler, Rohtrack inkl. HDOP-Feldern, Listener, Snapshot, `complete`/`abort`), **alle vier Track-Optimierer** in einer Pipeline, **SafeFileSink** (Jimfs), Path-Traversal-Schutz, W3W-Noop, ungültiger Kurs.
 
 ```powershell
 # Aus implementation/:
