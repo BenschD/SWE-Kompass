@@ -580,12 +580,9 @@ Dieses Dokument gliedert sich gemäß IEEE 830 in drei Hauptkapitel:
 *Kapitel 2 Allgemeine Beschreibung* stellt die Einbettung der Bibliothek in ihr System-Umfeld dar (Systemsicht, physische Sicht, externe Kommunikationspartner), benennt die Hauptfunktionen, formuliert systemweite Einschränkungen und listet Annahmen und Abhängigkeiten auf.
 
 
-//änderungen
-*(neu formulieren wenn kapittel 3 fertig ist) Kapitel 3 Spezifische Anforderungen* enthält die normativ bindenden Anforderungsartefakte: funktionale Anforderungen (`/LF…/`), nicht-funktionale Anforderungen (`/LL…/`), externe Schnittstellenbeschreibungen, Performance-Anforderungen sowie das vollständige Qualitätsmodell nach ISO/IEC 25010.
+*Kapitel 3 Spezifische Anforderungen* enthält die normativ bindenden Anforderungsartefakte: funktionale Spezifikationen (`/LF…/`) mit Aktivitätsdiagrammen (Kap. 3.1), nicht-funktionale Anforderungen (`/LL…/`), externe Schnittstellen, Performance-Anforderungen sowie das Qualitätsmodell nach ISO/IEC 25010.
 
-
-//optional? maybe entfernen
-Der *Anhang* ergänzt das Dokument um Traceability-Matrizen, Review-Checklisten, Normreferenzen, erweiterte Use-Case-Beschreibungen sowie algorithmische Hinweise.
+Der *Anhang* ergänzt das Dokument um Traceability-Matrizen, Review-Checklisten, Normreferenzen, erweiterte Akzeptanzkriterien sowie algorithmische Hinweise.
 
 #pagebreak()
 ]

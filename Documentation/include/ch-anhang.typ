@@ -5,23 +5,23 @@
 #set par(justify: true)
 
 // ─────────────────────────────────────────────────────────────────────────────
-== Vollständige Use-Case-Liste mit Akzeptanzkriterien
+== Erweiterte Akzeptanzkriterien (Kap. 3.1)
 // ─────────────────────────────────────────────────────────────────────────────
 
-Die tabellarische Kurzfassung in Kapitel 3 wird hier um narrative Akzeptanzkriterien für die erweiterten Use Cases ergänzt.
+Die normativen Spezifikationen stehen in *Kapitel 3.1*. Dieser Abschnitt ergänzt die Varianten /LF280/, /LF230/, /LF080/ und /LL160/ um prüfbare Akzeptanzkriterien.
 
 #figure(
-  caption: [Erweiterte Use-Case-Liste mit Akzeptanzkriterien.],
+  caption: [Erweiterte Akzeptanzkriterien zu ausgewählten `/LF…/`- und `/LL…/`-Spezifikationen.],
   kind: table,
   align(left, table(
-    columns: (1.5cm, 2.4cm, 1fr),
+    columns: (2cm, 2.4cm, 1fr),
     stroke: tbl-stroke, inset: 5pt,
-    [*UC*], [*Trigger*], [*Akzeptanzkriterien*],
-    [UC-08], [W3W-Key fehlt],         [Fallback-String zurückgegeben, kein Netzwerkaufruf ausgelöst.],
-    [UC-09], [Netzwerk-Timeout W3W],  [WARN-Log mit `sessionId`, Fallback-Wert, kein Crash.],
-    [UC-10], [GPX nur als Bytes],     [`byte[]` UTF-8 ohne BOM; Länge > 0 nach abgeschlossener Session.],
-    [UC-11], [Listener wirft],        [Exception wird intern gefangen; Session bleibt in konsistentem Zustand.],
-    [UC-12], [Reset nach Fehler],     [Zustand IDLE erreichbar nach ABORTED oder COMPLETED (/LL160/).],
+    [*`/LF` / `/LL`*], [*Trigger*], [*Akzeptanzkriterien*],
+    [/LF280/], [W3W-Key fehlt],         [Fallback-String zurückgegeben, kein Netzwerkaufruf ausgelöst.],
+    [/LF280/], [Netzwerk-Timeout W3W],  [WARN-Log mit `sessionId`, Fallback-Wert, kein Crash.],
+    [/LF230/], [GPX nur als Bytes],     [`byte[]` UTF-8 ohne BOM; Länge > 0 nach abgeschlossener Session.],
+    [/LF080/], [Listener wirft],        [Exception wird intern gefangen; Session bleibt in konsistentem Zustand.],
+    [/LL160/], [Reset nach Ende],       [Zustand IDLE erreichbar nach ABORTED oder COMPLETED.],
   ))
 )
 
@@ -103,6 +103,7 @@ Die folgende Matrix stellt die vollständige Rückverfolgbarkeit von Anforderung
     [/LF170/], [`Track`],              [`TrackAggregator`],                 [TC-TRACK-04],
     [/LF180/], [`Track`],              [`TrackAggregator`],                 [TC-060],
     [/LF200/], [`Export`],             [`GpxSerializer`],                   [TC-100],
+    [/LF230/], [`Export`],             [`GpxResult`],                       [TC-100, TC-GPX-01..03],
     [/LF220/], [`Export`],             [`SafeFileSink`],                    [TC-080],
     [/LF240/], [`Trackoptimierung`],   [`NthPointOptimizer`],               [TC-110],
     [/LF260/], [`Trackoptimierung`],   [`CollinearityOptimizer`],           [TC-120],
@@ -112,6 +113,7 @@ Die folgende Matrix stellt die vollständige Rückverfolgbarkeit von Anforderung
     [/LF320/], [`Export`],             [`SafeFileSink`],                    [TC-090],
     [/LF340/], [`Peilung`],            [`ClockProvider`],                   [TC-160],
     [/LF400/], [`Peilung`],            [`SessionConfig`, `BearingSession`], [TC-400],
+    [/LL160/], [`Peilung`],            [`BearingSession`],                  [TC-180],
   ))
 )
 
@@ -235,8 +237,8 @@ Die folgende Matrix ordnet die Themengebiete der Softwareengineering-Vorlesung d
     [*Themenfeld*],                    [*Projektbezug*],                                                      [*Artefakt / Ort*],
     [Requirements Engineering],        [SOPHIST-Regeln, `/LF`/`/LL`/`/LD`, Traceability],                   [Kap. 3; Matrizen],
     [Lastenheft/Pflichtenheft],         [Zielhierarchie, Spezifikation nach IEEE 830],                       [Kap. 2, Kap. 3],
-    [Use-Case-Modellierung],           [UC-01–UC-12, Narrative],                                             [Kap. 2.3, Anhang],
-    [Aktivitätsdiagramme],             [Positionsupdate, GPX-Export-Pipeline],                               [Kap. 3.4],
+    [Use-Case-Modellierung],           [`/LF…/`-Spezifikationen mit Aktivitätsdiagrammen],                  [Kap. 3.1, Anhang],
+    [Aktivitätsdiagramme],             [Positionsupdate, GPX-Export, Session-Lebenszyklus],                  [Kap. 3.1],
     [Sequenzdiagramme],                [complete()-Pfad, Fehlerpfad Validierung],                            [Kap. 3.3],
     [Zustandsdiagramme],               [Session-Lebenszyklus IDLE/ACTIVE/COMPLETED/ABORTED],                 [Anhang A.3],
     [OOA/OOD],                         [Domänenmodell, Klassentabelle, Entwurfsklassen],                    [Anhang A.3],
@@ -330,9 +332,9 @@ Die folgende Checkliste dient dem Selbstaudit vor der Abgabe. Alle Punkte müsse
 
 + Keine User Stories als Ersatz für normierte SOPHIST-Anforderungen verwendet.
 + Alle Anforderungen sichtbar und eindeutig identifiziert: `/LF`, `/LL`, `/LD` durchgängig.
-+ Spezifikation präziser als Analyse: Use Cases, Zustandsdiagramm, Sequenzen vorhanden.
++ Spezifikation präziser als Analyse: `/LF…/`-Spezifikationen, Zustandsdiagramm, Sequenzen vorhanden.
 + Objektorientierte Analyse: Domänenmodell separat von technischen Entwurfsklassen.
-+ Aktivitätsdiagramm-Material vorhanden (textuell in Kap. 3.4).
++ Aktivitätsdiagramm-Material vorhanden (pro `/LF…/` in Kap. 3.1).
 + Testfälle abgegeben, nachvollziehbar benannt (TC-Nummern).
 + Quellcode per Maven (`mvn test`) ohne manuelle Schritte ausführbar.
 + Keine UI-Abhängigkeiten in der Bibliothek (/LF430/).

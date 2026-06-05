@@ -198,27 +198,29 @@ Der primäre Akteur ist die *Host-Anwendung*. Sie ruft die öffentliche Java-API
 
 Als optionaler sekundärer Akteur fungiert der *What3Words-Dienst* (W3W): Er beantwortet HTTPS-Reverse-Lookup-Anfragen, die die Bibliothek über ihren konfigurierten HTTP-Adapter stellt. Die Bibliothek greift nie direkt auf GNSS-Hardware zu.
 
-=== Use-Case-Übersicht
+=== Funktionale Anforderungen – Übersicht
+
+Die normativen Detail-Spezifikationen mit Aktivitätsdiagrammen stehen in *Kapitel 3.1*. Die folgende Tabelle fasst die Anforderungen auf Produktebene zusammen.
 
 #figure(
-  caption: [Use-Case-Übersicht der Java-Peilungskomponente.],
+  caption: [Übersicht funktionaler Anforderungen der Java-Peilungskomponente (Traceability zu Kap. 3.1).],
   kind: table,
   align(left, table(
-    columns: (1.6cm, 2.8cm, 1fr, 2.6cm),
+    columns: (2cm, 2.8cm, 1fr, 2.6cm),
     stroke: tbl-stroke, inset: 5pt,
-    [*ID*], [*Name*], [*Kurzbeschreibung*], [*Anforderungsverweis*],
-    [UC-01], [Session starten],     [Ziel setzen, Konfiguration validieren, Zustand ACTIVE.],          [/LF010/, /LF400/],
-    [UC-02], [Positionsupdate],     [Validieren, Track aktualisieren, Snapshot ableitbar.],             [/LF030/, /LF100/],
-    [UC-03], [Peilungswerte lesen], [Azimut, Distanz, Ordinalrichtung, optionaler Kursfehler.],         [/LF050/],
-    [UC-04], [Regulär beenden],     [Zustand COMPLETED, GPX erzeugen.],                                [/LF060/],
-    [UC-05], [Abbrechen],           [Zustand ABORTED, GPX-Daten ohne Pflichtdatei.],                   [/LF070/, /LF230/],
-    [UC-06], [Optimieren + Export], [Strategiewahl, Serialisierung, optionales Dateischreiben.],        [/LF200/–/LF270/, /LF490/],
-    [UC-07], [W3W auflösen],        [Optionaler Reverse-Lookup mit Cache.],                            [/LF280/, /LF290/],
-    [UC-08], [W3W-Key fehlt],       [Fallback-String, kein Netzwerkaufruf.],                           [/LF280/],
-    [UC-09], [Netzwerk-Timeout W3W],[WARN-Log, Fallback ohne Crash.],                                  [/LF280/],
-    [UC-10], [GPX als Bytes],       [`byte[]` UTF-8 ohne BOM.],                                        [/LF230/],
-    [UC-11], [Listener wirft],      [Exception gefangen, Session bleibt konsistent.],                  [/LF080/],
-    [UC-12], [Reset nach Fehler],   [IDLE erreichbar nach ABORTED.],                                   [/LL160/],
+    [*`/LF` / `/LL`*], [*Name*], [*Kurzbeschreibung*], [*Verwandte Anforderungen*],
+    [/LF010/], [Session starten],     [Ziel setzen, Konfiguration validieren, Zustand ACTIVE.],          [/LF400/],
+    [/LF030/], [Positionsupdate],     [Validieren, Track aktualisieren, Snapshot ableitbar.],             [/LF100/],
+    [/LF050/], [Peilungswerte lesen], [Azimut, Distanz, Ordinalrichtung, optionaler Kursfehler.],         [–],
+    [/LF060/], [Regulär beenden],     [Zustand COMPLETED, GPX erzeugen.],                                [/LF200/],
+    [/LF070/], [Abbrechen],           [Zustand ABORTED, GPX-Daten ohne Pflichtdatei.],                   [/LF200/, /LF230/],
+    [/LF200/], [Optimieren + Export], [Strategiewahl, Serialisierung, optionales Dateischreiben.],        [/LF240/–/LF270/, /LF490/],
+    [/LF280/], [W3W auflösen],        [Optionaler Reverse-Lookup mit Cache.],                            [/LF290/],
+    [/LF280/], [W3W-Key fehlt],       [Fallback-String, kein Netzwerkaufruf.],                           [Variante Kap. 3.1],
+    [/LF280/], [Netzwerk-Timeout W3W],[WARN-Log, Fallback ohne Crash.],                                  [Variante Kap. 3.1],
+    [/LF230/], [GPX als Bytes],       [`byte[]` UTF-8 ohne BOM.],                                        [/LF060/, /LF070/],
+    [/LF080/], [Listener wirft],      [Exception gefangen, Session bleibt konsistent.],                  [/LF010/–/LF070/],
+    [/LL160/], [Reset nach Ende],     [IDLE erreichbar nach COMPLETED/ABORTED.],                          [/LF010/],
   ))
 )
 
