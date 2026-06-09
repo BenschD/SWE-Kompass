@@ -102,7 +102,7 @@
 
 Richtung und Entfernung zu einem Ziel zu bestimmen, gehört zu den Grundaufgaben der mobilen Navigation. Die iOS-Anwendung _Kompass Professional_ zeigt diese Peilung anschaulich, verzahnt ihre Berechnungslogik aber fest mit der Benutzeroberfläche und der Sensorhardware. Die vorliegende Arbeit löst diese Logik heraus und überführt sie in eine eigenständige Java-Bibliothek ohne Benutzeroberfläche.
 
-Den Kern bildet die Berechnung von Azimut, Distanz und Himmelsrichtung aus WGS84-Koordinaten. Positions- und Kursdaten erhält die Bibliothek von einem Host-System; eigene Sensoren liest sie nicht. Über einen steuerbaren Session-Lebenszyklus lassen sich Tracks aufzeichnen, unterbrechen und beenden, wobei konfigurierbare Reduktionsverfahren die Datenmenge begrenzen. Den aufgezeichneten Track exportiert sie im Format GPX 1.1; optional bindet sie den Dienst What3Words an.
+Den Kern bildet die Berechnung von Azimut, Distanz und Himmelsrichtung aus WGS84-Koordinaten. Positions- und Kursdaten erhält die Bibliothek von einem Host-System, eigene Sensoren liest sie nicht. Über einen steuerbaren Session-Lebenszyklus lassen sich Tracks aufzeichnen, unterbrechen und beenden, wobei konfigurierbare Reduktionsverfahren die Datenmenge begrenzen. Den aufgezeichneten Track exportiert sie im Format GPX 1.1, optional bindet sie den Dienst What3Words an nach dem hinzufügen eines API-keys.
 
 Neben der Implementierung als Maven-Projekt enthält die Arbeit eine Spezifikation nach IEEE 830. Alle Anforderungen sind nach den SOPHIST-Regeln formuliert und auf konkrete Testfälle rückführbar. Hinzu kommen nicht-funktionale Anforderungen, ein objektorientiertes Analyse- und Entwurfsmodell sowie automatisierte Tests, deren Bezug zu den Anforderungen eine Traceability-Matrix festhält.
 

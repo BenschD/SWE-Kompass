@@ -11,17 +11,17 @@ Dieses Kapitel klärt, welchen Zweck die Java-Peilungskomponente erfüllt, in we
 
 Ziel dieses Dokuments ist eine vollständige und prüfbare Spezifikation einer Java-Bibliothek ohne Benutzeroberfläche, die Peilung, GPS-Track-Aufzeichnung und GPX-1.1-Export bereitstellt. Es richtet sich an zwei Gruppen: an Entwicklerinnen und Entwickler, die die Bibliothek in eigene Host-Anwendungen einbinden, und an Prüfende, die Anforderungen und Testabdeckung nachvollziehen. Jede Anforderung verweist auf konkrete Testfälle, sodass sich der Weg vom fachlichen Ziel bis zur Verifikation durchgehend belegen lässt.
 
-Die Bibliothek entsteht in einer Lehrveranstaltung, soll aber auch praktisch brauchbar sein. Sie ist als eigenständige, wiederverwendbare Komponente angelegt, die sich ohne Anpassung in verschiedene Java-Umgebungen einbetten lässt — sei es eine Kommandozeilenanwendung, ein Hintergrunddienst oder eine serverseitige Verarbeitung.
-
 *Konkrete Ziele der Bibliothek:*
 
-- *Anforderungsanalyse und Spezifikation:* alle Anforderungen nach den SOPHIST-Regeln eindeutig und prüfbar formulieren — funktional, nicht-funktional, an den Datenschnittstellen und als Randbedingungen —, ergänzt um Qualitäts- und Risikobetrachtungen sowie ein objektorientiertes Analyse- und Entwurfsmodell.
+- *Anforderungsanalyse und Spezifikation:* alle Anforderungen nach den SOPHIST-Regeln eindeutig und prüfbar formulieren funktional, nicht-funktional, an den Datenschnittstellen und als Randbedingungen, ergänzt um Qualitäts- und Risikobetrachtungen sowie ein objektorientiertes Analyse- und Entwurfsmodell.
 
 - *Implementierung:* eine Java-Komponente ohne Benutzeroberfläche mit klaren Schnittstellen für Positions- und Kursdaten, konfigurierbarer Aufzeichnung, GPX-1.1-Export und optionaler What3Words-Anbindung.
 
 - *Qualitätssicherung:* nachvollziehbare Testfälle je fachlichem Modul, automatisiert über Maven ausführbar und mit reproduzierbaren Ergebnissen als Grundlage für die Abnahme.
 
-- *Lieferfähigkeit:* lauffähiger Quellcode — ohne ausführbares Fat-JAR als Hauptartefakt — samt einer Test-Suite, die sich direkt mit `mvn test` starten lässt.
+
+//Was ist Test-Suite?
+- *Lieferfähigkeit:* lauffähiger Quellcode, ohne ausführbares Fat-JAR als Hauptartefakt mit einer Test-Suite, die sich direkt mit `mvn test` starten lässt.
 
 *Erfolgskriterien dieses Projekts:*
 
@@ -38,7 +38,7 @@ Die Bibliothek entsteht in einer Lehrveranstaltung, soll aber auch praktisch bra
 
 === Problemstellung und fachlicher Hintergrund
 
-Als fachliche Referenz dient die iOS-Anwendung _Kompass Professional_. Sie demonstriert eine Peilungsfunktion: Die App zeigt an, in welcher Richtung und Entfernung ein Zielpunkt relativ zur aktuellen Position liegt — ohne Turn-by-Turn-Führung wie ein klassisches Navigationssystem. Dabei zeichnet sie einen GPS-Track auf, der sich als GPX exportieren lässt. Unter Peilung wird in dieser Arbeit demnach die Berechnung von Richtung und Entfernung von der aktuellen Position zu einem Ziel verstanden.
+Als fachliche Referenz dient die iOS-Anwendung _Kompass Professional_. Sie demonstriert eine Peilungsfunktion: Die App zeigt an, in welcher Richtung und Entfernung ein Zielpunkt relativ zur aktuellen Position liegt, ohne Turn-by-Turn-Führung wie ein klassisches Navigationssystem. Dabei zeichnet sie einen GPS-Track auf, der sich als GPX exportieren lässt. Unter Peilung wird in dieser Arbeit demnach die Berechnung von Richtung und Entfernung von der aktuellen Position zu einem Ziel verstanden.
 
 Problematisch ist dabei, dass die Peilungslogik der App fest mit ihrer Oberfläche und der Sensorhardware verzahnt ist und sich deshalb nicht eigenständig nutzen lässt. Genau hier setzt diese Arbeit an: Die Bibliothek soll Zielrichtung (Azimut), Entfernung und Ordinalrichtung aus WGS84-Koordinaten konsistent und reproduzierbar berechnen — unter klar definierten Eingangs- und Schnittstellenbedingungen. Die Verarbeitung läuft als Session mit Start, Laufzeit und Abbruch; auch nach einem Abbruch bleibt der bis dahin erfasste Track vollständig exportierbar.
 
