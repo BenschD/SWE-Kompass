@@ -40,7 +40,7 @@ Ziel dieses Dokuments ist eine vollständige und prüfbare Spezifikation einer J
 
 Als fachliche Referenz dient die iOS-Anwendung _Kompass Professional_. Sie demonstriert eine Peilungsfunktion: Die App zeigt an, in welcher Richtung und Entfernung ein Zielpunkt relativ zur aktuellen Position liegt, ohne Turn-by-Turn-Führung wie ein klassisches Navigationssystem. Dabei zeichnet sie einen GPS-Track auf, der sich als GPX exportieren lässt. Unter Peilung wird in dieser Arbeit demnach die Berechnung von Richtung und Entfernung von der aktuellen Position zu einem Ziel verstanden.
 
-Problematisch ist dabei, dass die Peilungslogik der App fest mit ihrer Oberfläche und der Sensorhardware verzahnt ist und sich deshalb nicht eigenständig nutzen lässt. Genau hier setzt diese Arbeit an: Die Bibliothek soll Zielrichtung (Azimut), Entfernung und Ordinalrichtung aus WGS84-Koordinaten konsistent und reproduzierbar berechnen — unter klar definierten Eingangs- und Schnittstellenbedingungen. Die Verarbeitung läuft als Session mit Start, Laufzeit und Abbruch; auch nach einem Abbruch bleibt der bis dahin erfasste Track vollständig exportierbar.
+Problematisch ist dabei, dass die Peilungslogik der App fest mit ihrer Oberfläche und der Sensorhardware verzahnt ist und sich deshalb nicht eigenständig nutzen lässt. Genau hier setzt diese Arbeit an: Die Bibliothek soll Zielrichtung (Azimut), Entfernung und Ordinalrichtung aus WGS84-Koordinaten konsistent und reproduzierbar berechnen, unter klar definierten Eingangs- und Schnittstellenbedingungen. Die Verarbeitung läuft als Session mit Start, Laufzeit und Abbruch; auch nach einem Abbruch bleibt der bis dahin erfasste Track vollständig exportierbar.
 
 *Zielbild der Bibliothek:* Aus den vom Host gelieferten Positions- und Kursdaten ermittelt die Bibliothek die Peilungsgrößen und zeichnet parallel einen GPS-Track auf, der sich als GPX 1.1 exportieren lässt. Optional lassen sich Koordinaten zusätzlich als What3Words-Adresse auflösen.
 
@@ -58,8 +58,8 @@ Problematisch ist dabei, dass die Peilungslogik der App fest mit ihrer Oberfläc
 - Optimierung der eingehenden Rohdaten bereits beim Einlesen.
 - Magnetische Peilung samt automatischer Deklinationskorrektur.
 - Kartendarstellung, Map-Matching, Routing und Geocoding allgemeiner Adressen.
-- Hardwareanbindung — der Host liefert fertige Messwerte.
-- Feste Persistenzvorgaben wie ein vorgegebenes Dateiziel; über Speicherort und Dateiverwaltung entscheidet der Host.
+- Hardwareanbindung, der Host liefert fertige Messwerte.
+- Feste Persistenzvorgaben wie ein vorgegebenes Dateiziel, da über Speicherort und Dateiverwaltung entscheidet der Host.
 - Cloud-Persistenz, Benutzer- und Rechteverwaltung.
 
 #pagebreak()
