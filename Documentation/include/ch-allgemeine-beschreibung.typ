@@ -6,7 +6,7 @@
 #let ch-allgemeine-beschreibung-kapitel = [
 #set par(justify: true)
 
-Dieses Kapitel beschreibt die Java-Peilungskomponente aus übergeordneter Perspektive: ihre Einbettung in das technische Umfeld, ihre Hauptfunktionen, die relevanten Benutzerprofile und Stakeholder, systemweite Einschränkungen sowie grundlegende Annahmen und Abhängigkeiten. Es entspricht dem Abschnitt „General Description" der IEEE-830-Vorlage.
+Dieses Kapitel betrachtet die Java-Peilungskomponente aus der Übersicht: wie sie sich in ihr technisches Umfeld einfügt, welche Hauptfunktionen sie bietet, welche Stakeholder und Benutzerprofile eine Rolle spielen und welche systemweiten Einschränkungen, Annahmen und Abhängigkeiten gelten. Es entspricht dem Abschnitt „General Description" der IEEE-830-Vorlage.
 
 // ─────────────────────────────────────────────────────────────────────────────
 == Einbettung
@@ -105,7 +105,7 @@ Die Komponente wird als Bibliothek in den Host-Prozess eingebettet und läuft in
 == Funktionen
 // ─────────────────────────────────────────────────────────────────────────────
 
-Die folgende Tabelle gibt einen strukturierten Überblick über die Hauptfunktionsgruppen der Bibliothek. Die genaue Spezifikation der Einzelanforderungen folgt in Kapitel 3.
+Die folgende Tabelle fasst die Hauptfunktionsgruppen der Bibliothek zusammen. Die genaue Spezifikation der einzelnen Anforderungen folgt in Kapitel 3.
 
 #figure(
   caption: [Hauptfunktionsgruppen der Java-Peilungskomponente mit Verweis auf Anforderungen.],
@@ -231,23 +231,24 @@ Die normativen Detail-Spezifikationen mit Aktivitätsdiagrammen stehen in *Kapit
 // ─────────────────────────────────────────────────────────────────────────────
 
 
-=== Im Scope
-- Geografische Berechnung von Zielrichtung (Azimut), Entfernung und diskreten Himmelsrichtungen (Ordinalrichtungen) auf WGS84-Basis - inklusive optionaler Kursabweichung bei verfügbarem Kurswert.
-- Klar definierte Integrationsschnittstellen, über die der Host Positionsdaten und zugehörige Metadaten (z. B. Zeitstempel, Geschwindigkeit, Genauigkeit) bereitstellt.
-- Verwaltung des Session-Lebenszyklus (Start, laufende Aufzeichnung, Abbruch). Bei einem Abbruch bleiben die bis dahin erfassten Track-Daten für den Export erhalten.
-- Konfigurierbare Aufzeichnungslogik: Punktbudget (Soft-/Hard-Limits), Segmentierung bei Zeitlücken sowie die Validierung auf ungültige Eingaben (Koordinaten, Zeit). Die Frequenz der Positionsupdates wird dabei extern durch den Host gesteuert.
-- GPX-1.1-konformer Export der Track-Daten, wahlweise als String oder Bytefolge.
-- Auswählbare Optimierungsverfahren vor dem Export (n-ter Punkt, Mindestabstand, Geraden-Heuristik, Douglas-Peucker) sowie ein optionaler What3Words-Bezug inklusive lokalem Caching.
-- [Abgleichen mit den Tests die umgesetzt werden] Qualitätssicherung durch automatisierte Unit-Tests der Kernfunktionalitäten (insbesondere der geografischen Berechnungen, der Optimierungsalgorithmen sowie der GPX-Serialisierung).
+Kapitel 1.2 hat den Funktionsumfang bereits umrissen. Die folgende Auflistung hält ihn als verbindliche Abgrenzung fest und ergänzt die Aspekte Validierung und Qualitätssicherung.
 
+=== Im Scope
+- Berechnung von Zielrichtung (Azimut), Entfernung und Himmelsrichtung (Ordinalrichtung) auf WGS84-Basis, bei verfügbarem Kurswert auch der Kursabweichung.
+- Klar definierte Integrationsschnittstellen, über die der Host Positionsdaten und zugehörige Metadaten (z. B. Zeitstempel, Geschwindigkeit, Genauigkeit) bereitstellt.
+- Verwaltung des Session-Lebenszyklus aus Start, laufender Aufzeichnung und Abbruch. Nach einem Abbruch bleiben die bis dahin erfassten Track-Daten für den Export erhalten.
+- Konfigurierbare Aufzeichnung: Punktbudget (Soft-/Hard-Limit), Segmentierung bei Zeitlücken und Validierung der Eingaben (Koordinaten, Zeit). Wie oft Positionsupdates eintreffen, steuert der Host.
+- Export der Track-Daten als GPX 1.1, wahlweise als String oder Bytefolge.
+- Wählbare Optimierungsverfahren vor dem Export (n-ter Punkt, Mindestabstand, Geraden-Heuristik, Douglas-Peucker) sowie eine optionale What3Words-Auflösung mit lokalem Caching.
+- Qualitätssicherung durch automatisierte Unit-Tests der Kernfunktionen — insbesondere der geografischen Berechnungen, der Optimierungsalgorithmen und der GPX-Serialisierung.
 
 === Außerhalb des Scopes
-- Echtzeit-Optimierung der eingehenden Track-Daten während der laufenden Aufzeichnung.
+- Optimierung der eingehenden Track-Daten während der laufenden Aufzeichnung.
 - Magnetische Peilung sowie die automatische Korrektur der magnetischen Deklination.
-- Kartendarstellung, Map-Matching, Routing und das Geocoding allgemeiner Adressdaten (mit Ausnahme der genannten What3Words-Integration).
-- Direkte Hardwareanbindung (z. B. GNSS-Treiber, Sensorfusion); die Bereitstellung der rohen Messwerte obliegt ausschließlich dem Host.
-- Spezifische Persistenzvorgaben (wie z. B. ein fest definiertes Dateiziel für den GPX-Export). Die Entscheidung über Speicherort und Dateiverwaltung liegt beim Host.
-- Cloud-Persistenz, Benutzer- sowie Rechteverwaltung.
+- Kartendarstellung, Map-Matching, Routing und Geocoding allgemeiner Adressen (ausgenommen die genannte What3Words-Integration).
+- Direkte Hardwareanbindung (z. B. GNSS-Treiber, Sensorfusion); die rohen Messwerte liefert ausschließlich der Host.
+- Feste Persistenzvorgaben wie ein vorgegebenes Dateiziel für den GPX-Export; über Speicherort und Dateiverwaltung entscheidet der Host.
+- Cloud-Persistenz, Benutzer- und Rechteverwaltung.
 
 #pagebreak()
 
@@ -268,7 +269,7 @@ Dieses Kapitel beschreibt die Annahmen und externen Abhängigkeiten, auf denen d
     stroke: tbl-stroke, inset: tbl-inset,
     [*ID*], [*Annahme*], [*Einfluss auf Anforderungen und Verhalten*], [*Folge bei Verletzung*],
     [A1], [Der Host liefert fertige Positions- und Kursdaten über die öffentliche API; die Bibliothek liest keine Sensoren und führt keine Sensorfusion aus.], [Systemgrenze und Funktionsumfang (Peilung und Track aus bereitgestellten Messwerten) bleiben definiert.], [Ohne valide Host-Daten sind Peilung und Aufzeichnung nicht sinnvoll nutzbar; dies liegt außerhalb der Verantwortung der Bibliothek.],
-    [A2], [Nur der Host steuert den Aufruf,die Bibliothek verdünnt den Datenstrom nicht eigenständig.], [Roh-Trackfüllung, Punktbudget und Segmentierung folgen der vom Host gewählten Updatefrequenz.], [Andere Taktungsmodelle würden dokumentierte Erwartungen verletzen und Anpassungen am SRS nahelegen.],
+    [A2], [Nur der Host steuert die Aufruffrequenz; die Bibliothek dünnt den eingehenden Datenstrom nicht von sich aus aus.], [Roh-Trackfüllung, Punktbudget und Segmentierung folgen der vom Host gewählten Updatefrequenz.], [Andere Taktungsmodelle würden die dokumentierten Erwartungen verletzen und Anpassungen am SRS nach sich ziehen.],
     [A3], [Geografische Berechnungen und Eingaben beziehen sich auf WGS84-konforme Koordinaten, wie in der Spezifikation vorausgesetzt.], [Azimut, Distanz und Exportformate bleiben konsistent zur fachlichen Definition.], [Abweichende Bezugssysteme erfordern eine Überarbeitung der Anforderungen und Algorithmen.],
     [A4], [Die Host-JVM unterstützt mindestens Java~11.], [Bytecode, APIs und Tooling der Bibliothek sind darauf ausgelegt.], [Ältere JVMs werden nicht unterstützt; ein Wechsel der Mindestversion wäre eine SRS-Änderung.],
     [A5], [Integratoren und Tests können eine `Clock` injizieren, um zeitabhängiges Verhalten deterministisch abzusichern.], [Reproduzierbare Tests und nachvollziehbare Session-Zeitlogik.], [Ohne geeignete Zeitquelle können zeitbasierte Regeln in Tests schwer stabil gehalten werden.],

@@ -22,7 +22,13 @@
   number-align: right + bottom,
   margin:       (inside: 2.5cm, outside: 2.5cm, y: 2cm),
 )
-#set text(size: 14pt, lang: "de")
+#set text(
+  font:    ("New Computer Modern", "Libertinus Serif"),
+  size:    11pt,
+  lang:    "de",
+  hyphenate: true,
+)
+#show raw: set text(font: "DejaVu Sans Mono", size: 0.92em)
 
 // ─────────────────────────────────────────────────────────────────────────────
 // DECKBLATT
@@ -37,7 +43,7 @@
   autoren:             ((name: autor),),
   abgabedatum:         abgabedatum,
   bearbeitungszeitraum:"April 2026 – Juni 2026",
-  martikelnummer:      "8829906, 1341874, 5133713",
+  matrikelnummer:      "8829906, 1341874, 5133713",
 )
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -49,7 +55,7 @@
   numbering: "i",
   header: rect(height: 100%, inset: 0mm, stroke: none)[
     #set align(top)
-    #set text(11pt)
+    #set text(9.5pt, fill: rgb("#444444"))
     #grid(
       columns: (auto, 1fr, auto),
       rows:    (4cm),
@@ -68,7 +74,7 @@
     )
   ],
   footer: rect(height: 100%, inset: 0mm, stroke: none)[
-    #set text(11pt)
+    #set text(9.5pt, fill: rgb("#444444"))
     #grid(
       columns: (auto, 1fr, auto),
       rows:    (1cm),
@@ -80,8 +86,13 @@
   ],
 )
 
-#show heading: set text(rgb("#d90000"))
-#show heading: set block(below: 1em)
+#let dhbw-rot   = rgb("#c1121f")
+#let anthrazit  = rgb("#23272e")
+
+#show heading: set block(above: 1.4em, below: 0.9em)
+#show heading.where(level: 1): set text(fill: dhbw-rot,  size: 18pt, weight: "bold")
+#show heading.where(level: 2): set text(fill: anthrazit, size: 13.5pt, weight: "bold")
+#show heading.where(level: 3): set text(fill: anthrazit, size: 11.5pt, weight: "bold")
 
 // ═════════════════════════════════════════════════════════════════════════════
 // FRONTMATTER
@@ -89,11 +100,11 @@
 
 = Abstract
 
-Die präzise Bestimmung von Richtung und Entfernung zu einem Zielpunkt ist eine alltägliche Aufgabe in der mobilen Navigation. Die IOS-Anwendung _Kompass Professional_ bietet hierfür eine etablierte fachliche Orientierung, doch ihre Peilungslogik ist fest mit der grafischen Oberfläche und der Hardwareanbindung verknüpft. Diese Arbeit löst die Kernfunktionalität aus diesem Gesamtkontext heraus und überführt sie in eine eigenständige, UI-freie Java-Bibliothek.
+Richtung und Entfernung zu einem Ziel zu bestimmen, gehört zu den Grundaufgaben der mobilen Navigation. Die iOS-Anwendung _Kompass Professional_ zeigt diese Peilung anschaulich, verzahnt ihre Berechnungslogik aber fest mit der Benutzeroberfläche und der Sensorhardware. Die vorliegende Arbeit löst diese Logik heraus und überführt sie in eine eigenständige Java-Bibliothek ohne Benutzeroberfläche.
 
-Im Mittelpunkt steht die robuste Berechnung von Azimut, Distanz und diskreter Himmelsrichtung auf Basis von WGS84-Koordinaten. Die Bibliothek verarbeitet Positions- und Kursdaten, die ein Host-System liefert. Ein kontrollierbarer Session-Lebenszyklus ermöglicht das Aufzeichnen, Unterbrechen und Fortsetzen von Tracks, wobei die Daten durch konfigurierbare Reduktionsstrategien effizient gehalten werden. Der Export erfolgt standardkonform im GPX-Format Version 1.1. Zusätzlich lässt sich der What3Words-Dienst optional anbinden.
+Den Kern bildet die Berechnung von Azimut, Distanz und Himmelsrichtung aus WGS84-Koordinaten. Positions- und Kursdaten erhält die Bibliothek von einem Host-System; eigene Sensoren liest sie nicht. Über einen steuerbaren Session-Lebenszyklus lassen sich Tracks aufzeichnen, unterbrechen und beenden, wobei konfigurierbare Reduktionsverfahren die Datenmenge begrenzen. Den aufgezeichneten Track exportiert sie im Format GPX 1.1; optional bindet sie den Dienst What3Words an.
 
-Neben der Implementierung als Maven-Projekt legt die Arbeit besonderen Wert auf eine nachvollziehbare Spezifikation nach IEEE 830: Die Anforderungen sind SOPHIST-konform formuliert und durchgängig prüfbar. Nicht-funktionale sowie objektorientierte Analyse- und Entwurfsartefakte begleiten die Architektur. Ein umfassendes Qualitätssicherungskonzept mit automatisierten Testfällen und vollständiger Traceability sichert die reproduzierbare Abnahme der Bibliothek.
+Neben der Implementierung als Maven-Projekt enthält die Arbeit eine Spezifikation nach IEEE 830. Alle Anforderungen sind nach den SOPHIST-Regeln formuliert und auf konkrete Testfälle rückführbar. Hinzu kommen nicht-funktionale Anforderungen, ein objektorientiertes Analyse- und Entwurfsmodell sowie automatisierte Tests, deren Bezug zu den Anforderungen eine Traceability-Matrix festhält.
 
 #pagebreak()
 
@@ -114,7 +125,7 @@ Neben der Implementierung als Maven-Projekt legt die Arbeit besonderen Wert auf 
 // ═════════════════════════════════════════════════════════════════════════════
 
 #set heading(numbering: "1.1.1 ")
-#set par(spacing: 2em, justify: true)
+#set par(spacing: 1.25em, leading: 0.72em, justify: true)
 
 #set page(numbering: "1")
 #counter(page).update(1)

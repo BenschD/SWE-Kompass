@@ -1,8 +1,13 @@
+#import "ad-diagram.typ": zustandsdiagramm-session
+
 #let tbl-stroke = 0.45pt + rgb("#9a9a9a")
 #let tbl-inset  = 6pt
 
-#let ch-anhang-kapitel = []
+#let ch-anhang-kapitel = [
 #set par(justify: true)
+#show figure: set block(breakable: true)
+
+Der Anhang bündelt vertiefende und unterstützende Artefakte, die den normativen Teil des Dokuments ergänzen, ohne ihn zu unterbrechen: erweiterte Akzeptanzkriterien, den Referenzalgorithmus der Peilung, die vollständige Traceability-Matrix, das objektorientierte Analyse- und Entwurfsmodell sowie Verzeichnisse, Checklisten und die Versionshistorie.
 
 // ─────────────────────────────────────────────────────────────────────────────
 == Erweiterte Akzeptanzkriterien (Kap. 3.1)
@@ -47,15 +52,15 @@ $
   d = 2 R dot arcsin(sqrt(a))
 $
 
-wobei $R = 6{,}371{,}000$ m der mittlere Erdradius ist.
+wobei $R = 6.371.000$ m der mittlere Erdradius ist.
 
 *Azimutberechnung:*
 
 $
-  alpha = "atan2"(sin(Delta lambda) dot cos(phi_2),; cos(phi_1) dot sin(phi_2) - sin(phi_1) dot cos(phi_2) dot cos(Delta lambda))
+  alpha = "atan2"(sin(Delta lambda) dot cos(phi_2), space cos(phi_1) dot sin(phi_2) - sin(phi_1) dot cos(phi_2) dot cos(Delta lambda))
 $
 
-Anschließend Normalisierung auf [0°, 360°): `azimuth = (alpha + 360°) mod 360°`.
+Anschließend Normalisierung auf $[0°, 360°)$: `azimuth = (alpha + 360°) mod 360°`.
 
 *Grenzfälle:*
 - Identische Punkte (d = 0): Azimut undefiniert → Rückgabe 0° per Konvention.
@@ -89,7 +94,7 @@ Die folgende Matrix stellt die vollständige Rückverfolgbarkeit von Anforderung
   caption: [Vollständige Traceability-Matrix: Anforderung → OOA-Konzept → OOD-Klasse → Test.],
   kind: table,
   align(left, table(
-    columns: (1.8cm, 2.4cm, 3.5cm, 1fr),
+    columns: (1.9cm, 2.7cm, 4.4cm, 1fr),
     stroke: tbl-stroke, inset: 5pt,
     [*`/LF`*], [*OOA-Konzept*],        [*OOD-Klasse*],                      [*Test-Cluster*],
     [/LF010/], [`Peilung`],            [`BearingSession`],                   [TC-200, TC-010],
@@ -123,9 +128,11 @@ Die folgende Matrix stellt die vollständige Rückverfolgbarkeit von Anforderung
 == Objektorientiertes Analyse- und Entwurfsmodell (OOA/OOD)
 // ─────────────────────────────────────────────────────────────────────────────
 
+Dieser Abschnitt trennt bewusst zwei Sichten: Die objektorientierte Analyse (OOA) hält fest, _was_ die Domäne ausmacht; der objektorientierte Entwurf (OOD) legt fest, _wie_ sie technisch umgesetzt wird. Diese Reihenfolge stellt sicher, dass der Entwurf der Fachlichkeit folgt und nicht umgekehrt.
+
 === OOA: Domänenmodell
 
-Die OOA fokussiert *fachliche* Konzepte ohne technische Middleware. Assoziationen sind semantisch, Multiplizitäten pragmatisch.
+Die Analyse betrachtet die Fachlichkeit, bevor technische Entscheidungen einfließen. Sie hält fest, welche Konzepte die Domäne kennt und wie sie zusammenhängen — noch ohne Klassen, Schnittstellen oder Frameworks. Die Assoziationen sind daher fachlich zu lesen, die Multiplizitäten bewusst pragmatisch gehalten. Das folgende Domänenmodell bildet die Grundlage für den technischen Entwurf im nächsten Abschnitt.
 
 #figure(
   caption: [Fachliches Domänenmodell (OOA): Konzepte und ihre Beziehungen.],
@@ -147,11 +154,13 @@ Die OOA fokussiert *fachliche* Konzepte ohne technische Middleware. Assoziatione
 
 === OOD: Technischer Feinentwurf
 
+Der Entwurf überführt die fachlichen Konzepte in konkrete Klassen und Schnittstellen und ordnet ihnen ein Stereotyp zu — Value Object, Domain Service, Infrastructure oder Port. Auffällig ist die durchgängige Trennung über Port-Interfaces (`TrackOptimizer`, `W3wClient`, `ClockProvider`): Sie hält die Domäne frei von technischen Abhängigkeiten und erlaubt, im Test echte Implementierungen durch Mocks zu ersetzen.
+
 #figure(
   caption: [OOD-Klassenübersicht: Zentrale Entwurfsklassen und Schnittstellen.],
   kind: table,
   align(left, table(
-    columns: (3.5cm, 2.2cm, 1fr),
+    columns: (4.4cm, 1.9cm, 1fr),
     stroke: tbl-stroke, inset: 5pt,
     [*Klasse / Interface*],  [*Stereotyp*],           [*Kernverantwortung*],
     [`BearingSession`],      [Entity/Controller],     [Zustandsautomat IDLE/ACTIVE/COMPLETED/ABORTED.],
@@ -180,11 +189,15 @@ Die OOA fokussiert *fachliche* Konzepte ohne technische Middleware. Assoziatione
 *Invariante ACTIVE:* Positionsupdates zulässig; Konfiguration fix; UUID vergeben.\
 *Invariante COMPLETED/ABORTED:* Keine weiteren Positionsupdates (/LF060/, /LF070/).
 
+#zustandsdiagramm-session()
+
+Die folgende Tabelle führt dieselben Übergänge mit den jeweiligen Guards und Aktionen im Detail auf.
+
 #figure(
   caption: [Zustandsdiagramm: Session-Lebenszyklus mit Transitionen und Guards.],
   kind: table,
   align(left, table(
-    columns: (2.5cm, 3cm, 2cm, 1fr),
+    columns: (2.3cm, 2.6cm, 2.9cm, 1fr),
     stroke: tbl-stroke, inset: 5pt,
     [*Von*],      [*Nach*],    [*Auslöser*],          [*Guard / Aktion*],
     [IDLE],       [ACTIVE],    [`startSession()`],    [Konfiguration gültig; UUID erzeugt; `onSessionStarted` gefeuert.],

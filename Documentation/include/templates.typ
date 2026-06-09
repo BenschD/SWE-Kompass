@@ -6,7 +6,7 @@
   autoren: (),
   abgabedatum: datetime,
   bearbeitungszeitraum: none,
-  martikelnummer: none,
+  matrikelnummer: none,
   doc,
 ) = {
 
@@ -80,10 +80,16 @@
 
   set align(left)
 
-  linebreak()
+  v(1.5em)
 
-  text("\nBearbeitungszeitraum:                            " + bearbeitungszeitraum)
-  text("\nMartikelnummer:                                    " + martikelnummer)
+  grid(
+    columns: (auto, 1fr),
+    row-gutter: 0.7em,
+    column-gutter: 1.2em,
+    align: left,
+    [Bearbeitungszeitraum:], [#bearbeitungszeitraum],
+    [Matrikelnummer:],       [#matrikelnummer],
+  )
 
   set page(header: none)
   pagebreak()

@@ -3,27 +3,25 @@
 #let ch-einleitung-kapitel = [
 #set par(justify: true)
 
-Dieses Kapitel führt in die Problemstellung, den Zweck und den Einsatzbereich der Java-Peilungskomponente ein. Es beschreibt zunächst, welche Ziele mit der Bibliothek verfolgt werden und anhand welcher Kriterien deren Erfolg messbar ist. Anschließend wird der fachliche Hintergrund erläutert, aus dem heraus die Notwendigkeit einer solchen Komponente entstand. Abschließend grenzt das Kapitel klar ab, welche Funktionalitäten im Rahmen dieser Arbeit realisiert werden und welche bewusst außerhalb des Betrachtungsrahmens liegen. Diese Abgrenzung dient sowohl der Fokussierung der Implementierung als auch der eindeutigen Kommunikation gegenüber zukünftigen Nutzerinnen und Nutzern der Bibliothek.
+Dieses Kapitel klärt, welchen Zweck die Java-Peilungskomponente erfüllt, in welchem fachlichen Umfeld sie entsteht und wo ihre Grenzen liegen. Es benennt die Ziele der Bibliothek und die Kriterien, an denen sich ihr Erfolg messen lässt. Den Abschluss bildet eine Abgrenzung, welche Funktionen die Arbeit umsetzt und welche nicht. Diese Abgrenzung hält die Implementierung fokussiert und schafft Klarheit für alle, die die Bibliothek später einsetzen.
 
 // ─────────────────────────────────────────────────────────────────────────────
 == Zweck
 // ─────────────────────────────────────────────────────────────────────────────
 
-Ziel dieses Dokuments ist die vollständige, prüfbare Spezifikation einer UI-freien Java-Bibliothek, die Peilungsfunktionalität, GPS-Track-Aufzeichnung und GPX-1.1-Export bereitstellt. Die Spezifikation richtet sich an Entwicklerinnen und Entwickler, die die Bibliothek in eigene Host-Anwendungen integrieren möchten, sowie an Prüfende, die Anforderungserfüllung und Testabdeckung nachvollziehen müssen. Das Dokument ist so gestaltet, dass sämtliche Anforderungen direkt auf konkrete Testfälle rückführbar sind und damit eine lückenlose Nachverfolgbarkeit vom fachlichen Ziel bis zur Verifikation gewährleistet ist.
+Ziel dieses Dokuments ist eine vollständige und prüfbare Spezifikation einer Java-Bibliothek ohne Benutzeroberfläche, die Peilung, GPS-Track-Aufzeichnung und GPX-1.1-Export bereitstellt. Es richtet sich an zwei Gruppen: an Entwicklerinnen und Entwickler, die die Bibliothek in eigene Host-Anwendungen einbinden, und an Prüfende, die Anforderungen und Testabdeckung nachvollziehen. Jede Anforderung verweist auf konkrete Testfälle, sodass sich der Weg vom fachlichen Ziel bis zur Verifikation durchgehend belegen lässt.
 
-Die Bibliothek entsteht im Kontext einer Lehrveranstaltung und verfolgt gleichzeitig einen praktisch verwertbaren Anspruch: Sie soll als eigenständige, wiederverwendbare Komponente konzipiert sein, die ohne Anpassung in unterschiedliche Java-basierte Host-Umgebungen eingebettet werden kann, unabhängig davon, ob es sich um eine Kommandozeilenapplikation, einen Hintergrunddienst oder eine serverbasierte Verarbeitungseinheit handelt.
+Die Bibliothek entsteht in einer Lehrveranstaltung, soll aber auch praktisch brauchbar sein. Sie ist als eigenständige, wiederverwendbare Komponente angelegt, die sich ohne Anpassung in verschiedene Java-Umgebungen einbetten lässt — sei es eine Kommandozeilenanwendung, ein Hintergrunddienst oder eine serverseitige Verarbeitung.
 
 *Konkrete Ziele der Bibliothek:*
 
+- *Anforderungsanalyse und Spezifikation:* alle Anforderungen nach den SOPHIST-Regeln eindeutig und prüfbar formulieren — funktional, nicht-funktional, an den Datenschnittstellen und als Randbedingungen —, ergänzt um Qualitäts- und Risikobetrachtungen sowie ein objektorientiertes Analyse- und Entwurfsmodell.
 
-//Abändern?
-- *(nachdem 3. fertig ist ändern) Anforderungsanalyse und Spezifikation:* SOPHIST-konforme, eindeutig prüfbare Formulierung aller Anforderungen (funktional, nicht-funktional, Datenschnittstellen, Randbedingungen), ergänzt um Qualitäts- und Risikoaspekte sowie objektorientierte Analyse- und Entwurfsartefakte.
+- *Implementierung:* eine Java-Komponente ohne Benutzeroberfläche mit klaren Schnittstellen für Positions- und Kursdaten, konfigurierbarer Aufzeichnung, GPX-1.1-Export und optionaler What3Words-Anbindung.
 
-- *Implementierung:* UI-freie Java-Komponente mit klaren Eingabeschnittstellen für Positions- und Kursdaten, konfigurierbarer Aufzeichnung, GPX-1.1-konformem Export und optionaler What3Words-Anbindung.
+- *Qualitätssicherung:* nachvollziehbare Testfälle je fachlichem Modul, automatisiert über Maven ausführbar und mit reproduzierbaren Ergebnissen als Grundlage für die Abnahme.
 
-- *Qualitätssicherung:* Nachvollziehbare Testfälle pro fachlichem Modul mit automatisierter Ausführung über Maven und reproduzierbaren Ergebnissen als Grundlage für die Abnahme.
-
-- *Lieferfähigkeit:* Lauffähiger Quellcode ohne ausführbare Fat-JAR als Hauptartefakt sowie eine Test-Suite, die sich direkt mit `mvn test` ausführen lässt.
+- *Lieferfähigkeit:* lauffähiger Quellcode — ohne ausführbares Fat-JAR als Hauptartefakt — samt einer Test-Suite, die sich direkt mit `mvn test` starten lässt.
 
 *Erfolgskriterien dieses Projekts:*
 
@@ -40,31 +38,29 @@ Die Bibliothek entsteht im Kontext einer Lehrveranstaltung und verfolgt gleichze
 
 === Problemstellung und fachlicher Hintergrund
 
-Im Rahmen der Projektarbeit wird die IOS-Anwendung _Kompass Professional_ als fachliche Referenz analysiert. Der Fokus liegt auf der Peilungsfunktion und nicht auf einer vollständigen Navigationslösung. Unter Peilung wird in dieser Arbeit die Berechnung der Richtung und Entfernung von der aktuellen Position zu einem Zielpunkt verstanden.
+Als fachliche Referenz dient die iOS-Anwendung _Kompass Professional_. Sie demonstriert eine Peilungsfunktion: Die App zeigt an, in welcher Richtung und Entfernung ein Zielpunkt relativ zur aktuellen Position liegt — ohne Turn-by-Turn-Führung wie ein klassisches Navigationssystem. Dabei zeichnet sie einen GPS-Track auf, der sich als GPX exportieren lässt. Unter Peilung wird in dieser Arbeit demnach die Berechnung von Richtung und Entfernung von der aktuellen Position zu einem Ziel verstanden.
 
-*Hintergrund:* Die IOS-App „Kompass Professional" demonstriert eine Peilungsfunktion: Sie zeigt wohin, relativ zur aktuellen Orientierung bzw. Position, ohne Navigation im Sinne einer Turn-by-Turn-Führung. Die App zeichnet dabei einen GPS-Track auf, der als GPX exportierbar ist. Ihre Peilungslogik ist jedoch fest mit der grafischen Oberfläche und der Hardwareanbindung verknüpft.
+Problematisch ist dabei, dass die Peilungslogik der App fest mit ihrer Oberfläche und der Sensorhardware verzahnt ist und sich deshalb nicht eigenständig nutzen lässt. Genau hier setzt diese Arbeit an: Die Bibliothek soll Zielrichtung (Azimut), Entfernung und Ordinalrichtung aus WGS84-Koordinaten konsistent und reproduzierbar berechnen — unter klar definierten Eingangs- und Schnittstellenbedingungen. Die Verarbeitung läuft als Session mit Start, Laufzeit und Abbruch; auch nach einem Abbruch bleibt der bis dahin erfasste Track vollständig exportierbar.
 
-Die zentrale Problemstellung besteht in der konsistenten und reproduzierbaren Berechnung von Zielrichtung (Azimut), Entfernung und diskreter Ordinalrichtung auf Basis von WGS84-Koordinaten unter klar definierten Eingangs- und Schnittstellenbedingungen. Zusätzlich muss die Verarbeitung als kontinuierlicher Session-Prozess mit Start, Laufzeit und Abbruch konzipiert werden, bei dem Track-Daten trotz Unterbrechungen vollständig exportierbar bleiben.
-
-*Zielbild der Bibliothek:* Die Bibliothek ermittelt durch vom Host gelieferte Positions- und Kursdaten die Peilungsgrößen  und zeichnet währenddessen einen GPS-Track auf, der als GPX 1.1 exportierbar ist. Zusätlich ist eine Auflösung als What3Word möglich.
+*Zielbild der Bibliothek:* Aus den vom Host gelieferten Positions- und Kursdaten ermittelt die Bibliothek die Peilungsgrößen und zeichnet parallel einen GPS-Track auf, der sich als GPX 1.1 exportieren lässt. Optional lassen sich Koordinaten zusätzlich als What3Words-Adresse auflösen.
 
 === Im Scope
 
-- Geografische Berechnung von Zielrichtung (Azimut), Entfernung und diskreter Ordinalrichtung auf WGS84-Basis mit optionaler Kursabweichung bei verfügbarem Kurswert.
-- Klar definierte Integrationsschnittstellen, über die der Host Positionsdaten und weitere Rechnungsdaten (z.B. Zeitstempel, Geschwindigkeit, Genauigkeit) bereitstellt.
-- Session-Lebenszyklus mit Start, laufender Aufzeichnung und Abbruch. Bei Abbruch werden die bis dahin erfassten Track-Daten weiterhin exportierbar bereitgestellt.
-- Konfigurierbare Aufzeichnungslogik: Punktbudget (Soft-/Hard-Limit), Segmentierung bei Zeitlücken. Die Aufrufhäufigkeit von Positionsupdates steuert der Host.
-- GPX-1.1-konformer Export der Track-Daten als String oder Bytefolge.
-- Vor dem Export möglich: Erweiterbare Optimierungsverfahren (z.B. n-ter Punkt, Mindestabstand, Geraden-Heuristik, Douglas-Peucker) sowie optionaler What3Words-Bezug inklusive Caching.
+- Berechnung von Zielrichtung (Azimut), Entfernung und Ordinalrichtung auf WGS84-Basis, bei verfügbarem Kurswert auch der Kursabweichung.
+- Klar definierte Integrationsschnittstellen, über die der Host Positionsdaten und zugehörige Metadaten (Zeitstempel, Geschwindigkeit, Genauigkeit) bereitstellt.
+- Ein Session-Lebenszyklus mit Start, laufender Aufzeichnung und Abbruch. Nach einem Abbruch bleiben die bis dahin erfassten Track-Daten exportierbar.
+- Konfigurierbare Aufzeichnung: Punktbudget (Soft-/Hard-Limit) und Segmentierung bei Zeitlücken. Wie oft Positionsupdates eintreffen, steuert der Host.
+- Export der Track-Daten als GPX 1.1, wahlweise als String oder Bytefolge.
+- Optional vor dem Export: erweiterbare Optimierungsverfahren (n-ter Punkt, Mindestabstand, Geraden-Heuristik, Douglas-Peucker) sowie eine What3Words-Auflösung mit Caching.
 
 === Außerhalb des Scopes
 
-- Track-Optimierung der eingehenden Rohdaten beim Einlesen.
-- Magnetische Peilung inklusive automatischer Deklinationskorrektur.
-- Kartendarstellung, Kartenmatching, Routing, Geocoding allgemeiner Adressstrings.
-- Hardwareanbindung, da der Host fertige Messwerte liefert.
-- Persistenzvorgaben wie ein festes Dateiziel für den GPX-Export, zusätlich liegt die Entscheidung über Speicherort und Dateiverwaltung liegt beim Host.
-- Cloud-Persistenz, Benutzerverwaltung, Rechteverwaltung.
+- Optimierung der eingehenden Rohdaten bereits beim Einlesen.
+- Magnetische Peilung samt automatischer Deklinationskorrektur.
+- Kartendarstellung, Map-Matching, Routing und Geocoding allgemeiner Adressen.
+- Hardwareanbindung — der Host liefert fertige Messwerte.
+- Feste Persistenzvorgaben wie ein vorgegebenes Dateiziel; über Speicherort und Dateiverwaltung entscheidet der Host.
+- Cloud-Persistenz, Benutzer- und Rechteverwaltung.
 
 #pagebreak()
 
@@ -72,7 +68,7 @@ Die zentrale Problemstellung besteht in der konsistenten und reproduzierbaren Be
 == Glossar
 // ─────────────────────────────────────────────────────────────────────────────
 
-Das folgende Glossar normiert alle für dieses Dokument relevanten Fachbegriffe. Die Begriffskarten folgen dem SOPHIST-Standard mit den Feldern Definition, Abgrenzung, Gültigkeit, Bezeichnung/Symbol und Quellverweis.
+Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einheitlich. Jede Begriffskarte folgt dabei demselben SOPHIST-Schema mit den Feldern Definition, Abgrenzung, Gültigkeit, Bezeichnung/Symbol und Quellverweis.
 
 === Fachbegriffe Navigation und Geografie
 
@@ -427,8 +423,8 @@ Das folgende Glossar normiert alle für dieses Dokument relevanten Fachbegriffe.
   "JVM (Java Virtual Machine)",
   "Laufzeitumgebung, die Java-Bytecode plattformunabhängig ausführt; die Bibliothek setzt eine JVM voraus, stellt selbst jedoch keine bereit.",
   "",
-  "Ziel-Kompatibilität: Java 17 LTS; die Bibliothek wird als reines Source-Artefakt ohne ausführbares JAR ausgeliefert.",
-  "Die JVM-Version des Host-Projekts muss ≥ 17 sein; niedrigere Versionen werden nicht unterstützt.",
+  "Ziel-Kompatibilität: Java 11 (LTS); die Bibliothek wird als reines Source-Artefakt ohne ausführbares JAR ausgeliefert.",
+  "Die JVM-Version des Host-Projekts muss ≥ 11 sein; niedrigere Versionen werden nicht unterstützt.",
   "Systemvoraussetzungen; /LF000/",
 )
 
@@ -573,16 +569,15 @@ Das folgende Glossar normiert alle für dieses Dokument relevanten Fachbegriffe.
 == Überblick
 // ─────────────────────────────────────────────────────────────────────────────
 
-Dieses Dokument gliedert sich gemäß IEEE 830 in drei Hauptkapitel:
+Das Dokument folgt dem Aufbau nach IEEE 830 und gliedert sich in drei Hauptkapitel:
 
-*Kapitel 1 Einleitung* definiert Zweck und Einsatzbereich der Bibliothek, normiert die Terminologie im Glossar und gibt den Überblick über die Dokumentstruktur.
+*Kapitel 1 -- Einleitung* legt Zweck und Einsatzbereich der Bibliothek fest, vereinheitlicht die Terminologie im Glossar und gibt einen Überblick über den Dokumentaufbau.
 
-*Kapitel 2 Allgemeine Beschreibung* stellt die Einbettung der Bibliothek in ihr System-Umfeld dar (Systemsicht, physische Sicht, externe Kommunikationspartner), benennt die Hauptfunktionen, formuliert systemweite Einschränkungen und listet Annahmen und Abhängigkeiten auf.
+*Kapitel 2 -- Allgemeine Beschreibung* zeigt, wie sich die Bibliothek in ihr Umfeld einfügt (System- und physische Sicht, externe Kommunikationspartner), benennt die Hauptfunktionen und hält systemweite Einschränkungen, Annahmen und Abhängigkeiten fest.
 
+*Kapitel 3 -- Spezifische Anforderungen* bildet den normativen Kern: funktionale Spezifikationen (`/LF…/`) mit Aktivitätsdiagrammen (Kap. 3.1), nicht-funktionale Anforderungen (`/LL…/`), externe Schnittstellen, Performance-Anforderungen sowie das Qualitätsmodell nach ISO/IEC 25010.
 
-*Kapitel 3 Spezifische Anforderungen* enthält die normativ bindenden Anforderungsartefakte: funktionale Spezifikationen (`/LF…/`) mit Aktivitätsdiagrammen (Kap. 3.1), nicht-funktionale Anforderungen (`/LL…/`), externe Schnittstellen, Performance-Anforderungen sowie das Qualitätsmodell nach ISO/IEC 25010.
-
-Der *Anhang* ergänzt das Dokument um Traceability-Matrizen, Review-Checklisten, Normreferenzen, erweiterte Akzeptanzkriterien sowie algorithmische Hinweise.
+Der *Anhang* ergänzt das Ganze um Traceability-Matrizen, das objektorientierte Analyse- und Entwurfsmodell, Review-Checklisten, Normreferenzen, erweiterte Akzeptanzkriterien und algorithmische Hinweise.
 
 #pagebreak()
 ]
