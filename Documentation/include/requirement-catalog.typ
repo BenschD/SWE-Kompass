@@ -66,7 +66,7 @@
 )
 
 #let catalog-tc-table = table(
-  columns: (2cm, 2.5cm, 1fr, 3.2cm),
+  columns: (2cm, 2.5cm, 1fr, 5.5cm),
   stroke: 0.45pt + rgb("#9a9a9a"),
   inset: 6pt,
   table.header([*TC*], [*LF / LL*], [*Beschreibung*], [*JUnit*]),

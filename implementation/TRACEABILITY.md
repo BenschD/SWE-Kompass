@@ -2,7 +2,7 @@
 
 Master-Katalog: [`Documentation/include/requirement-catalog.typ`](../Documentation/include/requirement-catalog.typ)
 
-Nummerierung: `/LF010/` … `/LF250/`, `/LL010/` … `/LL080/`, `/TC010/` … `/TC150/` (+10, lückenlos).
+Nummerierung: `/LF010/` … `/LF250/`, `/LL010/` … `/LL080/`, `/TC010/` … `/TC150/`
 
 ## Testfälle
 
