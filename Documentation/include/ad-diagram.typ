@@ -1,6 +1,6 @@
 // ═════════════════════════════════════════════════════════════════════════════
 // ad-diagram.typ   Mehrstufige Aktivitätsdiagramme in reinem Typst
-// Keine externen Pakete — kompiliert offline ohne Typst Universe.
+// Keine externen Pakete - kompiliert offline ohne Typst Universe.
 //
 // Knoten werden als Dictionaries übergeben und vertikal verkettet:
 //   (start: [Label])                       runder Startknoten

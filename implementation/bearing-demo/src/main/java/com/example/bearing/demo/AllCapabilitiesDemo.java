@@ -45,7 +45,7 @@ public final class AllCapabilitiesDemo {
     private AllCapabilitiesDemo() {}
 
     public static void main(String[] args) {
-        outHeader("SWE-Kompass / Peilungskomponente — Funktionsdemo");
+        outHeader("SWE-Kompass / Peilungskomponente - Funktionsdemo");
         runDomainBearingCalculator();
         runSessionLifecycleErrors();
         runRawTrackKeepsAllFixesIncludingHdop();

@@ -91,7 +91,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
 
 #begriffskarte(
   "Kurs (Heading)",
-  "Orientierung der lokalen Horizontalebene relativ zu geografisch Nord, typischerweise als Winkel 0°–360°.",
+  "Orientierung der lokalen Horizontalebene relativ zu geografisch Nord, typischerweise als Winkel 0°-360°.",
   "",
   "Gültig, wenn der Host verlässliche Kursinformation liefert.",
   "Symbol: ψ oder `headingDeg`; Einheit: °.",
@@ -166,7 +166,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "Schrittweise Routenführung entlang von Kanten eines Straßengraphen mit Manöveranweisungen.",
   "",
   "Explizit *nicht* Gegenstand der Peilungskomponente.",
-  "—",
+  "-",
   "Allgemeiner Sprachgebrauch; Abgrenzung Projektauftrag.",
 )
 
@@ -250,9 +250,9 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "Trackoptimierung",
   "Austauschbare Algorithmen hinter gemeinsamer Schnittstelle zur Reduktion oder Vereinfachung von Trackpunkten.",
   "",
-  "Nur optional vor GPX-Export über `SessionConfig.addOptimizer` (leere Liste = unveränderter Rohtrack); /LF170/–/LF200/.",
+  "Nur optional vor GPX-Export über `SessionConfig.addOptimizer` (leere Liste = unveränderter Rohtrack); /LF170/-/LF200/.",
   "",
-  "/LF170/–/LF200/",
+  "/LF170/-/LF200/",
 )
 
 #begriffskarte(
@@ -352,7 +352,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
 === Begriffe zu Algorithmen
 
 #begriffskarte(
-  "Douglas–Peucker-Algorithmus",
+  "Douglas-Peucker-Algorithmus",
   "Algorithmus zur Linienvereinfachung: Punkte mit geringer Abweichung von der Verbindungslinie werden rekursiv entfernt.",
   "",
   "Im Projekt mit metrischer Toleranz in Metern und lokaler Tangentialebene als Näherung (/LF200/).",
@@ -412,7 +412,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "Gleiche Eingaben und gleiche konfigurierte Abhängigkeiten (Clock) erzeugen identische Ausgaben.",
   "",
   "Gilt für Kern-Pfade ohne bewusst randomisierte Algorithmen.",
-  "—",
+  "-",
   "/LL070/.",
 )
 
@@ -442,7 +442,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "",
   "Standardbuild ohne Profil bleibt offline-fähig.",
   "Aktivierung: `mvn -Pw3w test` (konzeptionell).",
-  "Apache Maven Documentation – Profiles.",
+  "Apache Maven Documentation - Profiles.",
 )
 
 #begriffskarte(
@@ -549,7 +549,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "Qualitative Gegenüberstellung der Referenz-App mit der Java-Bibliothek ohne pixelgenaue UI-Nachbildung.",
   "",
   "Dient der Motivation und Begriffsableitung, nicht als normative Spezifikation der UI.",
-  "—",
+  "-",
   "Apple App Store, Produktseite Kompass Professional.",
 )
 

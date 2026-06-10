@@ -114,14 +114,14 @@ Die folgende Tabelle fasst die Hauptfunktionsgruppen der Bibliothek zusammen. Di
     columns: (4cm, 1fr, 2.5cm),
     stroke: tbl-stroke, inset: tbl-inset,
     [*Funktionsgruppe*],           [*Beschreibung*],                                                           [*Anforderungen*],
-    [Session-Lebenszyklus],        [Start, laufende Aufzeichnung und Abbruch einer Peilungs-Session mit UUID-Identifikation.], [/LF010/–/LF090/],
-    [Peilung und Kurs],            [Berechnung von geografischem Azimut, Entfernung (Haversine) und diskreter Himmelsrichtung; optionale Kursabweichung.], [/LF030/–/LF050/],
-    [GPS-Track-Aufzeichnung],      [Kontinuierlicher Rohspeicher validierter GPS-Fixes; Segmentierung bei Zeitlücken; zweistufiges Punktbudget.], [/LF100/–/LF130/],
-    [GPX-Export],                  [GPX-1.1-konformer Export als `byte[]`; optionales atomares Dateischreiben.], [/LF140/–/LF160/],
-    [Track-Optimierung],           [Austauschbare Strategie-Algorithmen: n-ter Punkt, Mindestabstand, Geraden-Heuristik, Douglas-Peucker.], [/LF170/–/LF200/],
+    [Session-Lebenszyklus],        [Start, laufende Aufzeichnung und Abbruch einer Peilungs-Session mit UUID-Identifikation.], [/LF010/-/LF090/],
+    [Peilung und Kurs],            [Berechnung von geografischem Azimut, Entfernung (Haversine) und diskreter Himmelsrichtung; optionale Kursabweichung.], [/LF030/-/LF050/],
+    [GPS-Track-Aufzeichnung],      [Kontinuierlicher Rohspeicher validierter GPS-Fixes; Segmentierung bei Zeitlücken; zweistufiges Punktbudget.], [/LF100/-/LF130/],
+    [GPX-Export],                  [GPX-1.1-konformer Export als `byte[]`; optionales atomares Dateischreiben.], [/LF140/-/LF160/],
+    [Track-Optimierung],           [Austauschbare Strategie-Algorithmen: n-ter Punkt, Mindestabstand, Geraden-Heuristik, Douglas-Peucker.], [/LF170/-/LF200/],
     [What3Words-Integration],      [Optionaler Reverse-Lookup mit Cache via `W3wClientPort`.], [/LF210/, /LF220/],
-    [Validierung und Sicherheit],  [Koordinaten- und Zeitstempelprüfung; Path-Traversal-Schutz; XML-Escaping.], [/LF230/–/LF250/],
-    [Betrieb und Qualität],        [Deterministische Tests, strukturiertes Logging, reproduzierbarer Build.], [/LL010/–/LL080/],
+    [Validierung und Sicherheit],  [Koordinaten- und Zeitstempelprüfung; Path-Traversal-Schutz; XML-Escaping.], [/LF230/-/LF250/],
+    [Betrieb und Qualität],        [Deterministische Tests, strukturiertes Logging, reproduzierbarer Build.], [/LL010/-/LL080/],
   ))
 )
 
@@ -180,7 +180,7 @@ Als Bibliothek ohne eigene Benutzeroberfläche kennt die Peilungskomponente kein
     [Studierendenteam],     [Wartbare, erweiterbare Architektur; klare Testbarkeit; nachvollziehbare Anforderungen.], [mittel],
     [Host-Entwickler/in],   [Stabile, vollständig dokumentierte API; klare Fehlersemantik über maschinenlesbare Exception-Codes.], [hoch],
     [Endnutzer/in (indirekt)],[Zuverlässige Peilungswerte und korrekte GPX-Ausgabe in der Host-Anwendung.], [mittel],
-    [Betrieb],              [Strukturiertes Logging auf WARN-Level; keine stillen Fehler; deterministisches Verhalten.], [niedrig–mittel],
+    [Betrieb],              [Strukturiertes Logging auf WARN-Level; keine stillen Fehler; deterministisches Verhalten.], [niedrig-mittel],
   ))
 )
 
@@ -198,7 +198,7 @@ Der primäre Akteur ist die *Host-Anwendung*. Sie ruft die öffentliche Java-API
 
 Als optionaler sekundärer Akteur fungiert der *What3Words-Dienst* (W3W): Er beantwortet HTTPS-Reverse-Lookup-Anfragen, die die Bibliothek über ihren konfigurierten HTTP-Adapter stellt. Die Bibliothek greift nie direkt auf GNSS-Hardware zu.
 
-=== Funktionale Anforderungen – Übersicht
+=== Funktionale Anforderungen - Übersicht
 
 Die normativen Detail-Spezifikationen stehen in *Kapitel 3.1* (`/LF010/` … `/LF250/`, lückenlos). Vollständiger Katalog:
 
@@ -226,7 +226,7 @@ Kapitel 1.2 hat den Funktionsumfang bereits umrissen. Die folgende Auflistung h�
 - Konfigurierbare Aufzeichnung: Punktbudget (Soft-/Hard-Limit), Segmentierung bei Zeitlücken und Validierung der Eingaben (Koordinaten, Zeit). Wie oft Positionsupdates eintreffen, steuert der Host.
 - Export der Track-Daten als GPX 1.1, wahlweise als String oder Bytefolge.
 - Wählbare Optimierungsverfahren vor dem Export (n-ter Punkt, Mindestabstand, Geraden-Heuristik, Douglas-Peucker) sowie eine optionale What3Words-Auflösung mit lokalem Caching.
-- Qualitätssicherung durch automatisierte Unit-Tests der Kernfunktionen — insbesondere der geografischen Berechnungen, der Optimierungsalgorithmen und der GPX-Serialisierung.
+- Qualitätssicherung durch automatisierte Unit-Tests der Kernfunktionen - insbesondere der geografischen Berechnungen, der Optimierungsalgorithmen und der GPX-Serialisierung.
 
 === Außerhalb des Scopes
 - Optimierung der eingehenden Track-Daten während der laufenden Aufzeichnung.

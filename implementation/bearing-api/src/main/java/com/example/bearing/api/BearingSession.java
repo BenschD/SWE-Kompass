@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Lebenszyklus einer Peilungssession ({@code /LF010/}–{@code /LF090/}).
+ * Lebenszyklus einer Peilungssession ({@code /LF010/}-{@code /LF090/}).
  */
 public interface BearingSession {
 
@@ -33,7 +33,7 @@ public interface BearingSession {
     /**
      * @param courseDeg Kurs geografisch Nord 0..360
      */
-    /** @param courseDeg Kurs 0–360° ({@code /LF040/}) */
+    /** @param courseDeg Kurs 0-360° ({@code /LF040/}) */
     void onCourseUpdate(double courseDeg);
 
     /**

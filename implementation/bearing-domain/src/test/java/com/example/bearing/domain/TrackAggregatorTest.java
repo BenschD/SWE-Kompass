@@ -8,7 +8,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
-/** /TC060/, /TC070/, /TC150/ — Track-Limits und Segmentierung. */
+/** /TC060/, /TC070/, /TC150/ - Track-Limits und Segmentierung. */
 class TrackAggregatorTest {
 
     private static GpsFix fix(Instant t, double lat, double lon) {

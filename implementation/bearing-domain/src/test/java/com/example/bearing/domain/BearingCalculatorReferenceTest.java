@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-/** /TC140/ — {@code /LL020/} Haversine/Azimut-Referenz. */
+/** /TC140/ - {@code /LL020/} Haversine/Azimut-Referenz. */
 class BearingCalculatorReferenceTest {
 
     private final BearingCalculator calc = new BearingCalculator();

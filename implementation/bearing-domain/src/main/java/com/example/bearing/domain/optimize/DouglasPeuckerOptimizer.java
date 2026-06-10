@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Douglas–Peucker mit metrischer Toleranz ({@code /LF200/}) — lokale Tangentialebene um den
+ * Douglas-Peucker mit metrischer Toleranz ({@code /LF200/}) - lokale Tangentialebene um den
  * Segmentstart als dokumentierte Kugel-Näherung.
  */
 public final class DouglasPeuckerOptimizer implements TrackOptimizer {

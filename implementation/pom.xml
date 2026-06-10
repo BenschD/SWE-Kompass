@@ -9,7 +9,7 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Java Peilungskomponente (Parent)</name>
-  <description>SWE-Kompass — UI-freie Peilungs- und GPX-Bibliothek gemäß Documentation/</description>
+  <description>SWE-Kompass - UI-freie Peilungs- und GPX-Bibliothek gemäß Documentation/</description>
 
   <modules>
     <module>bearing-spi</module>

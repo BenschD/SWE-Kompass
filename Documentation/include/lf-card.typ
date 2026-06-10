@@ -1,5 +1,5 @@
 // ═════════════════════════════════════════════════════════════════════════════
-// lf-card.typ  –  Funktionale Anforderung (/LF…/, /LL…/)
+// lf-card.typ  -  Funktionale Anforderung (/LF…/, /LL…/)
 // Layout identisch zu ll-card in ch-spezifische-anforderungen.typ
 // ═════════════════════════════════════════════════════════════════════════════
 

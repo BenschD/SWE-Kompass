@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 
-/** /TC010/ … /TC130/ — Session-Lebenszyklus und Sicherheit. */
+/** /TC010/ … /TC130/ - Session-Lebenszyklus und Sicherheit. */
 class BearingSessionTest {
 
     private static final class SettableClock extends Clock {

@@ -1,14 +1,14 @@
 // ═════════════════════════════════════════════════════════════════════════════
 // Java-Kompass mit GPX-Track und What3Words-Anbindung
 // Softwareengineering-Projektdokumentation
-// DHBW Stuttgart – Informatik
+// DHBW Stuttgart - Informatik
 // Autoren: Moritz Pfitzenmaier, Marius Müllmaier, Daniel Bensch
 // ═════════════════════════════════════════════════════════════════════════════
 
 #let titel             = "Java-Kompass mit GPX-Track"
 #let autoren           = "Moritz Pfitzenmaier, Marius Müllmaier, Daniel Bensch"
 #let autor             = autoren
-#let kurzthema         = "Softwareengineering – Projektdokumentation"
+#let kurzthema         = "Softwareengineering - Projektdokumentation"
 
 #let abgabedatum = datetime(
   year:  2026,
@@ -42,7 +42,7 @@
   standort:            "Stuttgart",
   autoren:             ((name: autor),),
   abgabedatum:         abgabedatum,
-  bearbeitungszeitraum:"April 2026 – Juni 2026",
+  bearbeitungszeitraum:"April 2026 - Juni 2026",
   matrikelnummer:      "8829906, 1341874, 5133713",
 )
 
@@ -121,7 +121,7 @@ Neben der Implementierung als Maven-Projekt enthält die Arbeit eine Spezifikati
 #pagebreak()
 
 // ═════════════════════════════════════════════════════════════════════════════
-// HAUPTTEIL – Nummerierung und Absatzformatierung
+// HAUPTTEIL - Nummerierung und Absatzformatierung
 // ═════════════════════════════════════════════════════════════════════════════
 
 #set heading(numbering: "1.1.1 ")
@@ -132,7 +132,7 @@ Neben der Implementierung als Maven-Projekt enthält die Arbeit eine Spezifikati
 #show math.equation: set align(center)
 
 // ═════════════════════════════════════════════════════════════════════════════
-// KAPITEL 1 – EINLEITUNG
+// KAPITEL 1 - EINLEITUNG
 // ═════════════════════════════════════════════════════════════════════════════
 
 = Einleitung
@@ -141,7 +141,7 @@ Neben der Implementierung als Maven-Projekt enthält die Arbeit eine Spezifikati
 #ch-einleitung-kapitel
 
 // ═════════════════════════════════════════════════════════════════════════════
-// KAPITEL 2 – ALLGEMEINE BESCHREIBUNG
+// KAPITEL 2 - ALLGEMEINE BESCHREIBUNG
 // ═════════════════════════════════════════════════════════════════════════════
 
 = Allgemeine Beschreibung
@@ -150,7 +150,7 @@ Neben der Implementierung als Maven-Projekt enthält die Arbeit eine Spezifikati
 #ch-allgemeine-beschreibung-kapitel
 
 // ═════════════════════════════════════════════════════════════════════════════
-// KAPITEL 3 – SPEZIFISCHE ANFORDERUNGEN
+// KAPITEL 3 - SPEZIFISCHE ANFORDERUNGEN
 // ══════════════════════════════════════════════════════════════════════════════
 
 = Spezifische Anforderungen

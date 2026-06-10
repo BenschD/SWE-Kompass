@@ -67,7 +67,7 @@
 
 #lf-flowchart("/LF030/", [Fix validieren], decision: [Gültig?], error-label: [nein], branch-fail: [Exception], steps-after: ([Segment + Budget], [Speichern], [Listener]))
 
-#lf-compact("/LF040/", "Kurs aktualisieren", [Host setzt geografischen Kurs 0–360° via `onCourseUpdate`; Wert fließt in /LF050/ ein.], verweise: [/LF030/, /LF050/], code: "onCourseUpdate")
+#lf-compact("/LF040/", "Kurs aktualisieren", [Host setzt geografischen Kurs 0-360° via `onCourseUpdate`; Wert fließt in /LF050/ ein.], verweise: [/LF030/, /LF050/], code: "onCourseUpdate")
 
 #lf-card(
   id: "/LF050/",
@@ -127,9 +127,9 @@
   ausloeser: [Listener-Callback während Session-Events.],
   vorbedingung: [Listener registriert via `addListener`.],
   nach_erfolg: [Session konsistent; restliche Listener benachrichtigt.],
-  nach_fehler: [–],
+  nach_fehler: [-],
   standardablauf: [1. Callback 2. Exception fangen 3. WARN-Log mit sessionId 4. nächster Listener],
-  alternativablauf: [–],
+  alternativablauf: [-],
   sonstiges: lf-sonstiges(speziell: [/LL060/ Logging.]),
 )
 
@@ -159,7 +159,7 @@
   id: "/LF140/",
   funktion: "GPX 1.1 exportieren",
   akteur: [System (intern via /LF060/, /LF070/).],
-  verweise: [/LF170/–/LF200/, /LF160/, /LL050/],
+  verweise: [/LF170/-/LF200/, /LF160/, /LL050/],
   beschreibung: [Rohtrack-Snapshot → optionale Optimierer-Kette → GPX 1.1 XML mit Namespace und UTC-Zeiten.],
   ausloeser: [`complete()` oder `abort()`.],
   vorbedingung: [Session beendet oder Export intern angestoßen.],
@@ -167,7 +167,7 @@
   nach_fehler: [Serialisierungsfehler: `RuntimeException` aus `GpxXmlWriter`.],
   standardablauf: [
     1. Immutable Track-Snapshot.\
-    2. Optimierer (/LF170/–/LF200/) falls konfiguriert.\
+    2. Optimierer (/LF170/-/LF200/) falls konfiguriert.\
     3. `GpxExportMapper` + `GpxXmlWriter` (/LL050/ Escaping).
   ],
   alternativablauf: [Keine Optimierer: Rohpunkte exportieren.],

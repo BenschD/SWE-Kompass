@@ -136,10 +136,10 @@ Nicht-funktionale Anforderungen beschreiben *wie* das System seine Aufgaben erf�
 #ll-card("/LL020/", "Genauigkeit der Peilungsberechnung", "Fachanforderung", "/LF030/, /LF050/",
   [Azimut-Abweichung ≤ ±1° vs. Haversine-Referenz für D > 10 m; Nachweis /TC140/.])
 
-#ll-card("/LL030/", "Portabilität", "Projektauftrag", "–",
+#ll-card("/LL030/", "Portabilität", "Projektauftrag", "-",
   [Java 11+, keine UI-Framework-Abhängigkeiten; plattformunabhängige Pfade und APIs.])
 
-#ll-card("/LL040/", "Build-Reproduzierbarkeit", "Projektauftrag", "–",
+#ll-card("/LL040/", "Build-Reproduzierbarkeit", "Projektauftrag", "-",
   [`mvn clean test` auf frisch geklontem Repository erfolgreich; Abhängigkeiten über Maven Central.])
 
 #ll-card("/LL050/", "XML-Escaping", "Sicherheitsrichtlinie", "/LF140/",
@@ -148,10 +148,10 @@ Nicht-funktionale Anforderungen beschreiben *wie* das System seine Aufgaben erf�
 #ll-card("/LL060/", "Strukturiertes Logging", "Betriebsanforderung", "/LF080/",
   [WARN/ERROR via SLF4J; `sessionId` in der Log-Nachricht (`Slf4jLoggerAdapter`).])
 
-#ll-card("/LL070/", "Test-Determinismus", "Testbarkeitsanforderung", "–",
+#ll-card("/LL070/", "Test-Determinismus", "Testbarkeitsanforderung", "-",
   [Zeitabhängige Tests nutzen `ClockPort`-Mocks; kein `Thread.sleep()` im Testcode.])
 
-#ll-card("/LL080/", "Javadoc der öffentlichen API", "Vorlesung SWE", "–",
+#ll-card("/LL080/", "Javadoc der öffentlichen API", "Vorlesung SWE", "-",
   [Öffentliche API-Klassen und -Methoden sind mit Javadoc dokumentiert (ohne Build-Gate).])
 
 #pagebreak()
@@ -174,7 +174,7 @@ Alle Aufrufe laufen über eine einzige Fassade. Sie spiegelt den Session-Lebensz
 
 === Exception-Hierarchie
 
-Fehler meldet die Bibliothek über ungeprüfte Ausnahmen (`RuntimeException`). Validierungsfehler nutzen `ValidationException` mit `ErrorCode`-Enum (`COORD_RANGE`, `TIMESTAMP_INVALID`). Zustandsfehler (z.\ B. Doppelstart /LF020/, Snapshot ohne Fix /LF050/) nutzen die JDK-`IllegalStateException` — nicht `ValidationException`. Path-Traversal: `SecurityException` (/LF250/). GPX-Serialisierungsfehler (/LF140/): `RuntimeException` aus dem Writer.
+Fehler meldet die Bibliothek über ungeprüfte Ausnahmen (`RuntimeException`). Validierungsfehler nutzen `ValidationException` mit `ErrorCode`-Enum (`COORD_RANGE`, `TIMESTAMP_INVALID`). Zustandsfehler (z.\ B. Doppelstart /LF020/, Snapshot ohne Fix /LF050/) nutzen die JDK-`IllegalStateException` - nicht `ValidationException`. Path-Traversal: `SecurityException` (/LF250/). GPX-Serialisierungsfehler (/LF140/): `RuntimeException` aus dem Writer.
 
 #diagramm-box("Exception-Hierarchie der Bibliothek")[
   `RuntimeException` (JDK)\
@@ -196,7 +196,7 @@ Der Export folgt dem GPX-1.1-Schema von Topografix (/LF140/, /LF160/). Verbindli
        xsi:schemaLocation="http://www.topografix.com/GPX/1/1
                            http://www.topografix.com/GPX/1/1/gpx.xsd">
     <metadata>
-      <name>Peilung Stuttgart – Schlossplatz</name>
+      <name>Peilung Stuttgart - Schlossplatz</name>
       <time>2026-06-12T10:00:00Z</time>
     </metadata>
     <trk>
@@ -216,7 +216,7 @@ Der Export folgt dem GPX-1.1-Schema von Topografix (/LF140/, /LF160/). Verbindli
 
 === AD-01: Aktivitätsdiagramm `onPositionUpdate`
 
-Dieses Diagramm zeigt den vollständigen Ablauf eines Positionsupdates (/LF030/). Es bildet die drei Entscheidungspunkte ab — Eingabevalidierung, Segmentgrenze und Punktbudget — sowie die anschließende Berechnung der Peilungsgrößen und die Benachrichtigung der Listener. Schlägt die Validierung fehl, bricht der Ablauf mit einer Ausnahme ab, ohne den Track zu verändern.
+Dieses Diagramm zeigt den vollständigen Ablauf eines Positionsupdates (/LF030/). Es bildet die drei Entscheidungspunkte ab - Eingabevalidierung, Segmentgrenze und Punktbudget - sowie die anschließende Berechnung der Peilungsgrößen und die Benachrichtigung der Listener. Schlägt die Validierung fehl, bricht der Ablauf mit einer Ausnahme ab, ohne den Track zu verändern.
 
 #ad-diagramm(
   caption: [AD-01: Ablauf von `onPositionUpdate` (/LF030/) mit Validierungs-, Segment- und Budgetprüfung.],
@@ -234,7 +234,7 @@ Dieses Diagramm zeigt den vollständigen Ablauf eines Positionsupdates (/LF030/)
 
 === AD-02: Aktivitätsdiagramm GPX-Export
 
-Dieses Diagramm zeigt den Exportvorgang (/LF140/). Der Rohtrack wird zunächst als unveränderlicher Snapshot festgehalten. Sind Optimierer konfiguriert (/LF170/–/LF200/), durchläuft der Track die Optimierer-Kette; anschließend entstehen Metadaten und XML (/LF160/).
+Dieses Diagramm zeigt den Exportvorgang (/LF140/). Der Rohtrack wird zunächst als unveränderlicher Snapshot festgehalten. Sind Optimierer konfiguriert (/LF170/-/LF200/), durchläuft der Track die Optimierer-Kette; anschließend entstehen Metadaten und XML (/LF160/).
 
 #ad-diagramm(
   caption: [AD-02: Ablauf des GPX-Exports (/LF140/) mit optionaler Optimierer-Kette.],
@@ -274,7 +274,7 @@ Dieses Diagramm zeigt den Start einer Session (/LF010/). Zwei Vorbedingungen wer
 
 === Qualitätsmodell nach ISO/IEC 25010
 
-ISO/IEC 25010 beschreibt Produktqualität anhand von acht Hauptmerkmalen mit ihren Unterkriterien. Die folgende Matrix gewichtet jedes Unterkriterium nach seiner Bedeutung für genau dieses Projekt — von _sehr wichtig_ bis _nicht relevant_. Die Gewichtung macht die Schwerpunkte sichtbar: Hoch eingestuft sind vor allem die Richtigkeit der Berechnung, die Zuverlässigkeit und die Wartbarkeit, während Aspekte wie Verbrauchsverhalten oder Anpassbarkeit für eine eingebettete Bibliothek dieser Größe nachrangig sind.
+ISO/IEC 25010 beschreibt Produktqualität anhand von acht Hauptmerkmalen mit ihren Unterkriterien. Die folgende Matrix gewichtet jedes Unterkriterium nach seiner Bedeutung für genau dieses Projekt - von _sehr wichtig_ bis _nicht relevant_. Die Gewichtung macht die Schwerpunkte sichtbar: Hoch eingestuft sind vor allem die Richtigkeit der Berechnung, die Zuverlässigkeit und die Wartbarkeit, während Aspekte wie Verbrauchsverhalten oder Anpassbarkeit für eine eingebettete Bibliothek dieser Größe nachrangig sind.
 
 #let _category-rows = (1, 8, 13, 19, 23, 29)
 #{
@@ -359,7 +359,7 @@ Die Produktdaten beschreiben die zentralen Datenstrukturen der Bibliothek mit ih
     [segmentGapThreshold], [Duration (Standard: PT5M)],
     [maxFixAge], [Duration (Standard: PT24H)],
     [persistOnAbort], [boolean],
-    [optimizers], [List\<TrackOptimizer\> (/LF170/–/LF200/)],
+    [optimizers], [List\<TrackOptimizer\> (/LF170/-/LF200/)],
   )
 ])
 

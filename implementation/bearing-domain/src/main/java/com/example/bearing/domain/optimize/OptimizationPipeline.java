@@ -6,7 +6,7 @@ import com.example.bearing.domain.TrackSegment;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Wendet Strategien sequentiell an ({@code /LF140/} Pipeline, {@code /LF170/}–{@code /LF200/}). */
+/** Wendet Strategien sequentiell an ({@code /LF140/} Pipeline, {@code /LF170/}-{@code /LF200/}). */
 public final class OptimizationPipeline {
 
     public Track apply(Track track, List<TrackOptimizer> strategies) {

@@ -1,6 +1,6 @@
 // ═════════════════════════════════════════════════════════════════════════════
 // lf-diagram.typ    Aktivitätsdiagramme für /LF…/-Anforderungen (reines Typst)
-// Keine externen Pakete — kompiliert offline ohne Typst Universe.
+// Keine externen Pakete - kompiliert offline ohne Typst Universe.
 // ═════════════════════════════════════════════════════════════════════════════
 
 #let _node-stroke = 0.8pt + rgb("#1a1a1a")

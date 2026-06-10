@@ -39,9 +39,9 @@ Auszug funktionale API (`BearingSession` / `DefaultBearingSession`):
 | /LF070/ | `abort()` → `GpxResult` |
 | /LF080/ | `BearingListener` (Fehler isoliert) |
 | /LF090/ | `reset()` |
-| /LF100/–/LF130/ | Rohtrack, Soft/Hard-Limit, Segmente (`TrackAggregator`) |
-| /LF140/–/LF200/ | GPX-Export, Persistenz, vier Optimierer |
-| /LF210/–/LF250/ | W3W, Validierung, Path-Traversal |
+| /LF100/-/LF130/ | Rohtrack, Soft/Hard-Limit, Segmente (`TrackAggregator`) |
+| /LF140/-/LF200/ | GPX-Export, Persistenz, vier Optimierer |
+| /LF210/-/LF250/ | W3W, Validierung, Path-Traversal |
 
 Details und Code-Anker: Katalog + [`TRACEABILITY.md`](implementation/TRACEABILITY.md).
 
@@ -68,7 +68,7 @@ Mehr Build- und Demo-Details: [`implementation/README.md`](implementation/README
 mvn test
 ```
 
-15 verbindliche Tests — Namensschema `tcNNN_*` in JUnit:
+15 verbindliche Tests - Namensschema `tcNNN_*` in JUnit:
 
 | TC | LF / LL | Testklasse |
 | -- | ------- | ---------- |

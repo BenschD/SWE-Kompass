@@ -1,5 +1,5 @@
 // ═════════════════════════════════════════════════════════════════════════════
-// uc-card.typ  –  Normierte Use-Case-Karte im ID-Card-Stil
+// uc-card.typ  -  Normierte Use-Case-Karte im ID-Card-Stil
 // ═════════════════════════════════════════════════════════════════════════════
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -18,7 +18,7 @@
 #let uc-warn-t = rgb("#92400e")   // Fußzeile Text (dunkelbraun)
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  Hilfsmakros  (alle rein in Code-Modus – kein Markup-Block-Problem)
+//  Hilfsmakros  (alle rein in Code-Modus - kein Markup-Block-Problem)
 // ─────────────────────────────────────────────────────────────────────────────
 
 // Prioritäts-Badge
@@ -169,7 +169,7 @@
     )
   }
 
-  // ── Äußerer Rahmen – Inhalt als Code-Variable übergeben ───────────────────
+  // ── Äußerer Rahmen - Inhalt als Code-Variable übergeben ───────────────────
   let inner = {
     hdr
     desc

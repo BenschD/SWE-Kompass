@@ -70,10 +70,10 @@ Anschließend Normalisierung auf $[0°, 360°)$: `azimuth = (alpha + 360°) mod 
 #pagebreak()
 
 // ─────────────────────────────────────────────────────────────────────────────
-== Douglas–Peucker auf Kugeloberfläche (Hinweis für Erweiterungen)
+== Douglas-Peucker auf Kugeloberfläche (Hinweis für Erweiterungen)
 // ─────────────────────────────────────────────────────────────────────────────
 
-Klassisches Douglas–Peucker arbeitet in der Ebene. Für lange Tracks auf der Erdkugel sollte die Metrik entweder in *lokaler Tangentialebene* (ECEF-Projektion pro Segment) oder über *Chordal-Distanzen* approximiert werden.
+Klassisches Douglas-Peucker arbeitet in der Ebene. Für lange Tracks auf der Erdkugel sollte die Metrik entweder in *lokaler Tangentialebene* (ECEF-Projektion pro Segment) oder über *Chordal-Distanzen* approximiert werden.
 
 Die Spezifikation `/LF200/` verlangt eine *metrische Toleranz in Metern* (Epsilon). Die Implementierung muss daher dokumentieren, welche Näherungsmetrik verwendet wird:
 
@@ -135,7 +135,7 @@ Dieser Abschnitt trennt bewusst zwei Sichten: Die objektorientierte Analyse (OOA
 
 === OOA: Domänenmodell
 
-Die Analyse betrachtet die Fachlichkeit, bevor technische Entscheidungen einfließen. Sie hält fest, welche Konzepte die Domäne kennt und wie sie zusammenhängen — noch ohne Klassen, Schnittstellen oder Frameworks. Die Assoziationen sind daher fachlich zu lesen, die Multiplizitäten bewusst pragmatisch gehalten. Das folgende Domänenmodell bildet die Grundlage für den technischen Entwurf im nächsten Abschnitt.
+Die Analyse betrachtet die Fachlichkeit, bevor technische Entscheidungen einfließen. Sie hält fest, welche Konzepte die Domäne kennt und wie sie zusammenhängen - noch ohne Klassen, Schnittstellen oder Frameworks. Die Assoziationen sind daher fachlich zu lesen, die Multiplizitäten bewusst pragmatisch gehalten. Das folgende Domänenmodell bildet die Grundlage für den technischen Entwurf im nächsten Abschnitt.
 
 #figure(
   caption: [Fachliches Domänenmodell (OOA): Konzepte und ihre Beziehungen.],
@@ -157,7 +157,7 @@ Die Analyse betrachtet die Fachlichkeit, bevor technische Entscheidungen einflie
 
 === OOD: Technischer Feinentwurf
 
-Der Entwurf überführt die fachlichen Konzepte in konkrete Klassen und Schnittstellen und ordnet ihnen ein Stereotyp zu — Value Object, Domain Service, Infrastructure oder Port. Auffällig ist die Trennung über Strategie- und Port-Interfaces (`TrackOptimizer`, `W3wClientPort`, `ClockPort`): Sie hält die Domäne frei von technischen Abhängigkeiten und erlaubt, im Test echte Implementierungen durch Mocks zu ersetzen.
+Der Entwurf überführt die fachlichen Konzepte in konkrete Klassen und Schnittstellen und ordnet ihnen ein Stereotyp zu - Value Object, Domain Service, Infrastructure oder Port. Auffällig ist die Trennung über Strategie- und Port-Interfaces (`TrackOptimizer`, `W3wClientPort`, `ClockPort`): Sie hält die Domäne frei von technischen Abhängigkeiten und erlaubt, im Test echte Implementierungen durch Mocks zu ersetzen.
 
 #figure(
   caption: [OOD-Klassenübersicht: Zentrale Entwurfsklassen und Schnittstellen.],
@@ -215,7 +215,7 @@ Die folgende Tabelle führt dieselben Übergänge mit den jeweiligen Guards und 
 
 === Subsystem-Dekomposition
 
-*Erster Schritt – Subsystem-Identifikation:*
+*Erster Schritt - Subsystem-Identifikation:*
 
 #figure(
   caption: [Subsystem-Identifikation: Dienste und ihre Fehlerfälle.],
@@ -233,7 +233,7 @@ Die folgende Tabelle führt dieselben Übergänge mit den jeweiligen Guards und 
   ))
 )
 
-*Zweiter Schritt – Subsystem-Anordnung:*
+*Zweiter Schritt - Subsystem-Anordnung:*
 
 Die Anordnung folgt einer streng hierarchischen Struktur (Presentation Layer → Service Layer → Business Rules Layer → Data Access Layer). Die Kommunikation erfolgt strikt einseitig von oben nach unten; direkter Zugriff von der API-Ebene auf den Data Access Layer ist verboten.
 
@@ -281,13 +281,13 @@ Die Anordnung folgt einer streng hierarchischen Struktur (Presentation Layer →
     columns: (4cm, 1fr),
     stroke: tbl-stroke, inset: 5pt,
     [*Begriff*],                  [*Vorkommen*],
-    [Peilung],                    [Glossar (Kap. 1.3); /LF010/–/LF050/],
+    [Peilung],                    [Glossar (Kap. 1.3); /LF010/-/LF050/],
     [Azimut],                     [Glossar; /LF050/; Anhang A.2],
     [Haversine-Formel],           [Glossar; /LL020/; Anhang A.2],
     [GPX 1.1],                    [Glossar; /LF140/; Kap. 3.3; Anhang A.2],
-    [Session],                    [Glossar; /LF010/–/LF090/; Anhang A.3],
+    [Session],                    [Glossar; /LF010/-/LF090/; Anhang A.3],
     [SOPHIST],                    [Glossar; Kap. 1.1; Kap. 3 (Einleitung)],
-    [Strategy-Pattern],           [Glossar (Trackoptimierung); /LF170/–/LF200/; Anhang A.3],
+    [Strategy-Pattern],           [Glossar (Trackoptimierung); /LF170/-/LF200/; Anhang A.3],
     [Observer-Pattern],           [Glossar (Listener); /LF080/; Kap. 3.3],
     [Builder-Pattern],            [Glossar; /LD020/],
     [Immutability],               [Glossar; /LD020/; Kap. 2.2],

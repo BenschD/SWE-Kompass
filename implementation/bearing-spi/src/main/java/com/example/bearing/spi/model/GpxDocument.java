@@ -2,7 +2,7 @@ package com.example.bearing.spi.model;
 
 import java.util.List;
 
-/** {@code /LD150/} — Eingabe für {@link com.example.bearing.spi.GpxWriterPort}. */
+/** {@code /LD150/} - Eingabe für {@link com.example.bearing.spi.GpxWriterPort}. */
 public final class GpxDocument {
 
     public static final String GPX_11_NAMESPACE = "http://www.topografix.com/GPX/1/1";

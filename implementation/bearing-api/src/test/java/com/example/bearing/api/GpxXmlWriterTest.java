@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
-/** /TC100/ — GPX-Namespace ({@code /LF140/}). */
+/** /TC100/ - GPX-Namespace ({@code /LF140/}). */
 class GpxXmlWriterTest {
 
     @Test

@@ -5,7 +5,7 @@ import java.util.Objects;
 
 /**
  * Eingefrorene Aufzeichnungsparameter ({@code /LD020/}), aus {@link com.example.bearing.api.SessionConfig}
- * abgeleitet. Enthält nur Segmentierung und Punktbudget für den Roh-Track — keine Filter beim Einlesen.
+ * abgeleitet. Enthält nur Segmentierung und Punktbudget für den Roh-Track - keine Filter beim Einlesen.
  */
 public final class RecordingParameters {
 
