@@ -20,13 +20,12 @@ Ziel dieses Dokuments ist eine vollständige und prüfbare Spezifikation einer J
 - *Qualitätssicherung:* nachvollziehbare Testfälle je fachlichem Modul, automatisiert über Maven ausführbar und mit reproduzierbaren Ergebnissen als Grundlage für die Abnahme.
 
 
-//Was ist Test-Suite?
-- *Lieferfähigkeit:* lauffähiger Quellcode, ohne ausführbares Fat-JAR als Hauptartefakt mit einer Test-Suite, die sich direkt mit `mvn test` starten lässt.
+- *Lieferfähigkeit:* lauffähiger Quellcode; ohne ausführbares Fat-JAR als Hauptartefakt; automatisierte Tests startbar mit `mvn test`.
 
 *Erfolgskriterien dieses Projekts:*
 
-- Die Komponente ist ohne UI lauffähig und per `mvn test` vollständig verifizierbar.
-- Alle Anforderungen sind durch mindestens einen dokumentierten Testfall abdeckbar.
+- Die Komponente ist ohne UI lauffähig; die 15 verbindlichen Testfälle `/TC010/` … `/TC150/` sind per `mvn test` ausführbar.
+- Jede Anforderung `/LF010/` … `/LF250/` und `/LL010/` … `/LL080/` ist in der Traceability-Matrix (Anhang) einem `/TC/`, einer dokumentierten indirekten Abdeckung oder einem Konsolen-Demo-Nachweis zugeordnet.
 - GPX-Ausgaben enthalten den GPX-1.1-Namespace und valide Zeitstempel im UTC-ISO-8601-Format.
 - Keine Klassen aus UI-Frameworks werden referenziert.
 
@@ -59,7 +58,7 @@ Problematisch ist dabei, dass die Peilungslogik der App fest mit ihrer Oberfläc
 - Magnetische Peilung samt automatischer Deklinationskorrektur.
 - Kartendarstellung, Map-Matching, Routing und Geocoding allgemeiner Adressen.
 - Hardwareanbindung, der Host liefert fertige Messwerte.
-- Feste Persistenzvorgaben wie ein vorgegebenes Dateiziel, da über Speicherort und Dateiverwaltung entscheidet der Host.
+- Feste Persistenzvorgaben wie ein vorgegebenes Dateiziel, da der Host über den Speicherort und die Dateiverwaltung entscheidet.
 - Cloud-Persistenz, Benutzer- und Rechteverwaltung.
 
 #pagebreak()
@@ -105,7 +104,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "",
   "",
   "Symbol: Δ oder `bearingErrorDeg`; Einheit: °.",
-  "Interne Systemdefinition gemäß Lastenheft /LF040/.",
+  "Berechnung in `BearingSnapshot` gemäß /LF050/ (optionaler Kurs aus /LF040/).",
 )
 
 #begriffskarte(
@@ -195,7 +194,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "HDOP (Horizontal Dilution of Precision)",
   "Dimensionsloses Maß für die geometrische Güte der Satellitenkonstellation; niedriger ist typischerweise besser.",
   "",
-  "Optional im Datenmodell und in GPX; keine automatische Verwerfung beim Einlesen (/LF130/ Out-of-Scope).",
+  "Optional im Datenmodell und in GPX; keine automatische Verwerfung beim Einlesen (/LF030/, /LD040/).",
   "",
   "Herstellerdokumentation GNSS-Empfänger.",
 )
@@ -233,7 +232,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "Abbruchverhalten (Abort)",
   "Vorzeitiges Beenden einer aktiven Session durch den Host, ohne die bis dahin erfassten Daten zu verlieren.",
   "",
-  "Session wechselt auf `ABORTED`; Rückgabe erfolgt als `GpxResult` (UTF-8-Bytes plus String-Zugriff) gemäß /LF070/ und /LF230/.",
+  "Session wechselt auf `ABORTED`; Rückgabe erfolgt als `GpxResult` (UTF-8-Bytes plus String-Zugriff) gemäß /LF070/ und /LF160/.",
   "Persistenz beim Abort erfolgt nur bei aktivem `persistOnAbort`.",
   "Klärungsgespräch; /LF070/",
 )
@@ -251,16 +250,16 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "Trackoptimierung",
   "Austauschbare Algorithmen hinter gemeinsamer Schnittstelle zur Reduktion oder Vereinfachung von Trackpunkten.",
   "",
-  "Nur optional vor GPX-Export über `SessionConfig.addOptimizer` (leere Liste = unveränderter Rohtrack); /LF240/-/LF270/.",
+  "Nur optional vor GPX-Export über `SessionConfig.addOptimizer` (leere Liste = unveränderter Rohtrack); /LF170/–/LF200/.",
   "",
-  "/LF480/",
+  "/LF170/–/LF200/",
 )
 
 #begriffskarte(
   "Soft-Limit / Hard-Limit (Punktbudget)",
   "Zweistufige Begrenzung der gespeicherten Trackpunkte: erst Warnung, dann harter Stopp.",
   "",
-  "Konfigurierbar über `softLimitPoints` und `hardLimitPoints`; `0` bedeutet deaktiviert (/LF120/, /LF180/).",
+  "Konfigurierbar über `softLimitPoints` und `hardLimitPoints`; `0` bedeutet deaktiviert (/LF110/, /LF130/).",
   "Code: `SOFT_LIMIT_WARN`, `HARD_LIMIT_REACHED`.",
   "Ressourcen-Schutz in eingebetteten Systemen; projektspezifisch.",
 )
@@ -269,8 +268,8 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "Overflow-Modus (Punktbudget)",
   "Definiertes Verhalten bei Erreichen des Hard-Limits: Stopp der Aufzeichnung vs. Downsampling.",
   "",
-  "Konfigurationsabhängig /LF180/.",
-  "Enum-Kandidat: `STOP`, `DOWNSAMPLE` (Beispiel).",
+  "Konfigurationsabhängig /LF130/.",
+  "Enum: `STOP` (Hard-Limit erreicht → Aufzeichnung stoppt).",
   "Interne Spezifikation.",
 )
 
@@ -289,7 +288,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "Builder (Konfigurationsaufbau)",
   "Muster, mit dem man eine Konfiguration Schritt für Schritt baut statt mit einem langen Konstruktor.",
   "",
-  "Im Projekt über `SessionConfig.builder()`, beim Start werden die relevanten Parameter als `RecordingParameters` eingefroren (/LF410/).",
+  "Im Projekt über `SessionConfig.builder()`, beim Start werden die relevanten Parameter als `RecordingParameters` eingefroren (/LD020/).",
   "Beispiel: `SessionConfig.builder().segmentGapThreshold(java.time.Duration.ofMinutes(5)).build()`",
   "Design Patterns",
 )
@@ -327,7 +326,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "Path Traversal",
   "Sicherheitsproblem, bei dem ein Pfad absichtlich aus dem erlaubten Zielordner ausbricht (z.\ B. mit `..`).",
   "",
-  "Beim Export verpflichtend zu verhindern (/LF320/).",
+  "Beim Export verpflichtend zu verhindern (/LF250/).",
   "Umsetzung in `SafeFileSink`: Pfad normalisieren und gegen erlaubtes Basisverzeichnis prüfen.",
   "OWASP Path Traversal",
 )
@@ -336,7 +335,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "XXE (XML External Entity)",
   "Angriffsklasse beim XML-Parsing über externe Entities.",
   "",
-  "Die Komponente erzeugt XML selbst und escaped Inhalte (/LL130/); das XXE-Risiko liegt vor allem bei fremden Parsern, die diese XML später lesen.",
+  "Die Komponente erzeugt XML selbst und escaped Inhalte (/LL050/); das XXE-Risiko liegt vor allem bei fremden Parsern, die diese XML später lesen.",
   "Empfehlung: DTD/External-Entity-Verarbeitung im konsumierenden Parser deaktivieren.",
   "W3C XML Recommendation",
 )
@@ -347,7 +346,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "",
   "Wichtig für die Konsistenz bei Exporten.",
   "Temporäre Datei (`*.tmp`).",
-  "Anforderung /LF220/.",
+  "Anforderung /LF150/.",
 )
 
 === Begriffe zu Algorithmen
@@ -356,7 +355,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "Douglas–Peucker-Algorithmus",
   "Algorithmus zur Linienvereinfachung: Punkte mit geringer Abweichung von der Verbindungslinie werden rekursiv entfernt.",
   "",
-  "Im Projekt mit metrischer Toleranz in Metern und lokaler Tangentialebene als Näherung (/LF270/).",
+  "Im Projekt mit metrischer Toleranz in Metern und lokaler Tangentialebene als Näherung (/LF200/).",
   "Parameter im Code: `epsilonM`.",
   "D. Douglas, T. Peucker, Algorithms for the reduction of the number of points required to represent a digitized line or its caricature, 1973.",
 )
@@ -365,9 +364,9 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "Kollinearitätsreduktion",
   "Reduktion fast kollinearer Punktfolgen auf Start- und Endpunkt innerhalb eines Winkel-/Seitenbandes.",
   "",
-  "Explizit keine Garantie für enge Kurvenradien /LF260/.",
+  "Explizit keine Garantie für enge Kurvenradien /LF190/.",
   "Heuristikparameter: Toleranzband.",
-  "Klärungsgespräch Peter Bohl; /LF260/.",
+  "Klärungsgespräch Peter Bohl; /LF190/.",
 )
 
 === Begriffe zu Methodik und Qualitätssicherung
@@ -414,7 +413,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "",
   "Gilt für Kern-Pfade ohne bewusst randomisierte Algorithmen.",
   "—",
-  "/LL190/, /LF340/.",
+  "/LL070/.",
 )
 
 === Begriffe zu Werkzeugen und Frameworks
@@ -425,14 +424,14 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "",
   "Ziel-Kompatibilität: Java 11 (LTS); die Bibliothek wird als reines Source-Artefakt ohne ausführbares JAR ausgeliefert.",
   "Die JVM-Version des Host-Projekts muss ≥ 11 sein; niedrigere Versionen werden nicht unterstützt.",
-  "Systemvoraussetzungen; /LF000/",
+  "Systemvoraussetzungen; /LL030/",
 )
 
 #begriffskarte(
   "Maven",
   "Standardwerkzeug für Build, Testlauf und Abhängigkeitsverwaltung in Java-Projekten.",
   "",
-  "Im Projekt zentraler Einstieg für Build und Tests (`mvn test`, /LF450/).",
+  "Im Projekt zentraler Einstieg für Build und Tests (`mvn test`, /LL040/).",
   "Artefakte werden über `groupId:artifactId:version` aufgelöst.",
   "Apache Maven Project Dokumentation, Software Engineering Vorlesung",
 )
@@ -450,7 +449,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "SLF4J (Simple Logging Facade for Java)",
   "Einheitliche Logging-Schnittstelle, die konkrete Logger-Backends austauschbar macht.",
   "",
-  "Die Komponente bindet Logging über den Adapter `Slf4jLoggerAdapter` ein (/LL140/).",
+  "Die Komponente bindet Logging über den Adapter `Slf4jLoggerAdapter` ein (/LL060/).",
   "Typischer Einstieg: `LoggerFactory.getLogger(...)`.",
   "https://www.slf4j.org/",
 )
@@ -468,7 +467,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "JaCoCo",
   "Code-Coverage-Tool für Java, Integration über Maven-Plugin.",
   "",
-  "Messgröße für `/LL150/`.",
+  "Optionales Build-Artefakt (kein Abgabe-Gate).",
   "Report: `target/site/jacoco/index.html`.",
   "https://www.jacoco.org/jacoco/trunk/doc/",
 )
@@ -486,7 +485,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "ArchUnit",
   "Bibliothek zur Überprüfung architektonischer Regeln im JUnit-Test (z.\ B. keine AWT-Imports).",
   "",
-  "Optional zur Absicherung von `/LF430/`.",
+  "Optional zur Absicherung von `/LL030/`.",
   "Regel: `noClasses().that()...`",
   "https://www.archunit.org/",
 )
@@ -531,7 +530,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "What3Words (W3W)",
   "Dienst, der Koordinaten in ein Drei-Wort-Format umwandelt.",
   "",
-  "Optionaler Teil des Systems (/LF280/); Ergebnisse werden gecacht (/LF290/).",
+  "Optionaler Teil des Systems (/LF210/); Ergebnisse werden gecacht (/LF220/).",
   "",
   "what3words Limited, Peter Bohl",
 )

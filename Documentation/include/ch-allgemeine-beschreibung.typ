@@ -116,12 +116,12 @@ Die folgende Tabelle fasst die Hauptfunktionsgruppen der Bibliothek zusammen. Di
     [*Funktionsgruppe*],           [*Beschreibung*],                                                           [*Anforderungen*],
     [Session-Lebenszyklus],        [Start, laufende Aufzeichnung und Abbruch einer Peilungs-Session mit UUID-Identifikation.], [/LF010/–/LF090/],
     [Peilung und Kurs],            [Berechnung von geografischem Azimut, Entfernung (Haversine) und diskreter Himmelsrichtung; optionale Kursabweichung.], [/LF030/–/LF050/],
-    [GPS-Track-Aufzeichnung],      [Kontinuierlicher Rohspeicher validierter GPS-Fixes; Segmentierung bei Zeitlücken; zweistufiges Punktbudget.], [/LF100/–/LF180/],
-    [GPX-Export],                  [GPX-1.1-konformer Export des Tracks als String oder `byte[]`; optionales atomares Dateischreiben.], [/LF200/–/LF230/],
-    [Track-Optimierung],           [Austauschbare Strategie-Algorithmen: n-ter Punkt, Mindestabstand, Geraden-Heuristik, Douglas-Peucker.], [/LF240/–/LF270/],
-    [What3Words-Integration],      [Optionaler Reverse-Lookup von Koordinaten mit konfiguriertem Cache und TTL.], [/LF280/, /LF290/],
-    [Validierung und Sicherheit],  [Koordinaten- und Zeitstempelprüfung; Path-Traversal-Schutz; XML-Escaping.], [/LF300/–/LF350/],
-    [Betrieb und Qualität],        [Deterministische Testbarkeit via Clock-Injection; strukturiertes Logging; Build-Reproduzierbarkeit.], [/LF340/–/LF500/],
+    [GPS-Track-Aufzeichnung],      [Kontinuierlicher Rohspeicher validierter GPS-Fixes; Segmentierung bei Zeitlücken; zweistufiges Punktbudget.], [/LF100/–/LF130/],
+    [GPX-Export],                  [GPX-1.1-konformer Export als `byte[]`; optionales atomares Dateischreiben.], [/LF140/–/LF160/],
+    [Track-Optimierung],           [Austauschbare Strategie-Algorithmen: n-ter Punkt, Mindestabstand, Geraden-Heuristik, Douglas-Peucker.], [/LF170/–/LF200/],
+    [What3Words-Integration],      [Optionaler Reverse-Lookup mit Cache via `W3wClientPort`.], [/LF210/, /LF220/],
+    [Validierung und Sicherheit],  [Koordinaten- und Zeitstempelprüfung; Path-Traversal-Schutz; XML-Escaping.], [/LF230/–/LF250/],
+    [Betrieb und Qualität],        [Deterministische Tests, strukturiertes Logging, reproduzierbarer Build.], [/LL010/–/LL080/],
   ))
 )
 
@@ -191,7 +191,7 @@ Der primäre Akteur ist die *Host-Anwendung*. Sie ruft die öffentliche Java-API
 - Bereitstellung von GNSS-Fixes (lat, lon, Zeitstempel, optional HDOP, Geschwindigkeit, Elevation).
 - Steuerung des Session-Lebenszyklus (Start, Update, Complete/Abort).
 - Entscheidung über Speicherort und Dateiverwaltung beim GPX-Export.
-- Verwaltung des What3Words-API-Keys (sofern genutzt).
+- Injektion des What3Words-Clients via `BearingBootstrap` (sofern genutzt).
 - Registrierung von Listenern für Ereignisbenachrichtigungen.
 
 === Sekundärer Akteur: Externe Dienste
@@ -200,28 +200,14 @@ Als optionaler sekundärer Akteur fungiert der *What3Words-Dienst* (W3W): Er bea
 
 === Funktionale Anforderungen – Übersicht
 
-Die normativen Detail-Spezifikationen mit Aktivitätsdiagrammen stehen in *Kapitel 3.1*. Die folgende Tabelle fasst die Anforderungen auf Produktebene zusammen.
+Die normativen Detail-Spezifikationen stehen in *Kapitel 3.1* (`/LF010/` … `/LF250/`, lückenlos). Vollständiger Katalog:
+
+#import "requirement-catalog.typ": catalog-lf-table
 
 #figure(
-  caption: [Übersicht funktionaler Anforderungen der Java-Peilungskomponente (Traceability zu Kap. 3.1).],
+  caption: [Funktionaler Anforderungskatalog /LF010/ … /LF250/.],
   kind: table,
-  align(left, table(
-    columns: (2cm, 2.8cm, 1fr, 2.6cm),
-    stroke: tbl-stroke, inset: 5pt,
-    [*`/LF` / `/LL`*], [*Name*], [*Kurzbeschreibung*], [*Verwandte Anforderungen*],
-    [/LF010/], [Session starten],     [Ziel setzen, Konfiguration validieren, Zustand ACTIVE.],          [/LF400/],
-    [/LF030/], [Positionsupdate],     [Validieren, Track aktualisieren, Snapshot ableitbar.],             [/LF100/],
-    [/LF050/], [Peilungswerte lesen], [Azimut, Distanz, Ordinalrichtung, optionaler Kursfehler.],         [–],
-    [/LF060/], [Regulär beenden],     [Zustand COMPLETED, GPX erzeugen.],                                [/LF200/],
-    [/LF070/], [Abbrechen],           [Zustand ABORTED, GPX-Daten ohne Pflichtdatei.],                   [/LF200/, /LF230/],
-    [/LF200/], [Optimieren + Export], [Strategiewahl, Serialisierung, optionales Dateischreiben.],        [/LF240/–/LF270/, /LF490/],
-    [/LF280/], [W3W auflösen],        [Optionaler Reverse-Lookup mit Cache.],                            [/LF290/],
-    [/LF280/], [W3W-Key fehlt],       [Fallback-String, kein Netzwerkaufruf.],                           [Variante Kap. 3.1],
-    [/LF280/], [Netzwerk-Timeout W3W],[WARN-Log, Fallback ohne Crash.],                                  [Variante Kap. 3.1],
-    [/LF230/], [GPX als Bytes],       [`byte[]` UTF-8 ohne BOM.],                                        [/LF060/, /LF070/],
-    [/LF080/], [Listener wirft],      [Exception gefangen, Session bleibt konsistent.],                  [/LF010/–/LF070/],
-    [/LL160/], [Reset nach Ende],     [IDLE erreichbar nach COMPLETED/ABORTED.],                          [/LF010/],
-  ))
+  catalog-lf-table,
 )
 
 #pagebreak()

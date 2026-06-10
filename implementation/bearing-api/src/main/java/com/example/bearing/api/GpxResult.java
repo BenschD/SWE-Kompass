@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * GPX-Export inkl. Statistik ({@code /LF230/}, {@code /LF500/}).
+ * GPX-Export inkl. Statistik ({@code /LF160/}, {@code /LF140/}).
  */
 public final class GpxResult {
 

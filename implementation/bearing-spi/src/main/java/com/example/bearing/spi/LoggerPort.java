@@ -3,7 +3,7 @@ package com.example.bearing.spi;
 import java.util.UUID;
 
 /**
- * Strukturierte Protokollierung ({@code /LF420/}, {@code /LL140/}).
+ * Strukturierte Protokollierung ({@code /LL060/}).
  */
 public interface LoggerPort {
 

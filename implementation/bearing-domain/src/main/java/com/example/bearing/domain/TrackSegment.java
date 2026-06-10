@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/** GPX-kompatibles Segment ({@code /LF170/}). */
+/** GPX-kompatibles Segment ({@code /LD030/}, {@code /LF120/}). */
 public final class TrackSegment {
 
     private final List<GpsPoint> points;

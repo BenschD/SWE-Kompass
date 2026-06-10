@@ -4,7 +4,7 @@ import com.example.bearing.domain.GpsPoint;
 import java.util.ArrayList;
 import java.util.List;
 
-/** {@code /LF240/} */
+/** {@code /LF170/} */
 public final class NthPointOptimizer implements TrackOptimizer {
 
     private final int everyN;

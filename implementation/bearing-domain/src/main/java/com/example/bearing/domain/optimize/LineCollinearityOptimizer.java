@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Reduziert fast kollineare Ketten ({@code /LF260/}): wenn {@code |AB|+|BC|≈|AC|} innerhalb Toleranz,
+ * Reduziert fast kollineare Ketten ({@code /LF190/}): wenn {@code |AB|+|BC|≈|AC|} innerhalb Toleranz,
  * wird der Zwischenpunkt verworfen.
  */
 public final class LineCollinearityOptimizer implements TrackOptimizer {

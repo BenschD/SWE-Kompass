@@ -4,7 +4,7 @@ import java.util.UUID;
 
 /**
  * Observer für Session-Ereignisse ({@code /LF080/}). Implementierungen sollten kurz sein; bei
- * Exceptions bleibt die Session konsistent (Host-Thread, {@code /LF350/}).
+ * Exceptions bleibt die Session konsistent (Host-Thread, {@code /LF080/}).
  */
 public interface BearingListener {
 

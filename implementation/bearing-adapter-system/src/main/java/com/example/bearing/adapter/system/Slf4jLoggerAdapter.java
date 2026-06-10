@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** SLF4J-Adapter ({@code /LL140/}). */
+/** SLF4J-Adapter ({@code /LL060/}). */
 public final class Slf4jLoggerAdapter implements LoggerPort {
 
     private final Logger log;

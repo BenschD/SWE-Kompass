@@ -17,7 +17,7 @@ import java.time.Duration;
 import java.util.Optional;
 
 /**
- * Fabrikmethoden für eine lauffähige Session ({@code /LF450/}).
+ * Fabrikmethoden für eine lauffähige Session.
  */
 public final class BearingBootstrap {
 
@@ -47,7 +47,7 @@ public final class BearingBootstrap {
     }
 
     /**
-     * W3W-HTTP-Client nur mit gültigem Key ({@code /LF280/}).
+     * W3W-HTTP-Client nur mit gültigem Key ({@code /LF210/}).
      *
      * @param apiKey API-Key
      * @param clock  Clock für Cache-TTL

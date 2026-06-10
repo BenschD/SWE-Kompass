@@ -1,6 +1,6 @@
 # Java-Peilungskomponente (Implementierung)
 
-Maven-Multi-Modul-Projekt gemäß Vorschrieb unter `[../Vorschrieb/](../Vorschrieb/)`.
+Maven-Multi-Modul-Projekt gemäß Spezifikation unter `[../Documentation/](../Documentation/)` (Master-Katalog: `include/requirement-catalog.typ`).
 
 ## Module
 
@@ -49,7 +49,7 @@ Linux/macOS: `./run-all-capabilities.sh` (Maven im `PATH`).
 
 ## Traceability
 
-Siehe [TRACEABILITY.md](TRACEABILITY.md).
+Siehe [TRACEABILITY.md](TRACEABILITY.md). Verbindliche Tests: `/TC010/` … `/TC150/` (`tc010_*` … `tc150_*` in `BearingSessionTest`, `TrackAggregatorTest`, `GpxXmlWriterTest`, `BearingCalculatorReferenceTest`).
 
 ## Profil `w3w`
 

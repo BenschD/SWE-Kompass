@@ -42,6 +42,11 @@
   ]
 }
 
+/// Einzelner Content-Block oder Tupel → immer iterierbares Array.
+#let _coerce-steps(xs) = {
+  if type(xs) == array { xs } else { (xs,) }
+}
+
 #let _lf-arrow(label: none) = {
   v(1pt)
   if label != none {
@@ -53,7 +58,7 @@
 }
 
 #let _lf-step-chain(steps) = {
-  for step in steps {
+  for step in _coerce-steps(steps) {
     _lf-arrow()
     _lf-rect(step)
   }
@@ -134,18 +139,20 @@
   steps-after: (),
   branch-fail: none,
 ) = {
+  let steps-n = _coerce-steps(steps)
+  let after-n = _coerce-steps(steps-after)
   v(0.6em)
   figure(
     caption: [Aktivitätsdiagramm #id],
     kind: image,
     align(center)[
       #set text(size: 8pt)
-      #if decision != none and steps-after.len() > 0 and branch-fail != none {
-        _lf-mid-decision(steps, decision, steps-after, error-label, branch-fail)
+      #if decision != none and after-n.len() > 0 and branch-fail != none {
+        _lf-mid-decision(steps-n, decision, after-n, error-label, branch-fail)
       } else if decision != none {
-        _lf-end-decision(steps, decision, error-label)
+        _lf-end-decision(steps-n, decision, error-label)
       } else {
-        _lf-linear(steps)
+        _lf-linear(steps-n)
       }
     ],
   )
@@ -161,9 +168,11 @@
 #let lf-sonstiges(systemgrenzen: none, speziell: none, bemerkungen: none) = {
   let sep = [#linebreak(), #linebreak()]
   let parts = (
-    ..if systemgrenzen != none { ([*Systemgrenzen:* #systemgrenzen],) } else { () },
-    ..if speziell != none { ([*Spezielle Anforderungen:* #speziell],) } else { () },
-    ..if bemerkungen != none { ([*Hinweise:* #bemerkungen],) } else { () },
+    if systemgrenzen != none { ([*Systemgrenzen:* #systemgrenzen],) } else { () }
+  ) + (
+    if speziell != none { ([*Spezielle Anforderungen:* #speziell],) } else { () }
+  ) + (
+    if bemerkungen != none { ([*Hinweise:* #bemerkungen],) } else { () }
   )
   if parts.len() == 0 { none } else { parts.join(sep) }
 }

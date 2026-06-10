@@ -1,6 +1,6 @@
 package com.example.bearing.api;
 
-/** Maschinenlesbare Fehlercodes ({@code /LF090/}). */
+/** Maschinenlesbare Fehlercodes ({@code /LF230/}, {@code /LF240/}). */
 public enum ErrorCode {
     COORD_RANGE,
     TIMESTAMP_INVALID,

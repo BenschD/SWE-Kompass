@@ -3,7 +3,7 @@ package com.example.bearing.spi;
 import java.nio.file.Path;
 
 /**
- * Atomares Schreiben ({@code /LF220/}) mit Pfadprüfung ({@code /LF320/}).
+ * Atomares Schreiben ({@code /LF150/}) mit Pfadprüfung ({@code /LF250/}).
  */
 public interface FileSinkPort {
 

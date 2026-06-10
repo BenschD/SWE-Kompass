@@ -4,7 +4,7 @@ import java.time.Clock;
 import java.time.Instant;
 
 /**
- * Abstraktion der Systemzeit für deterministische Tests ({@code /LF340/}, {@code /LL170/}).
+ * Abstraktion der Systemzeit für deterministische Tests ({@code /LL070/}).
  */
 public interface ClockPort {
 

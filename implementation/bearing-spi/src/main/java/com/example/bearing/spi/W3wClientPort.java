@@ -1,7 +1,7 @@
 package com.example.bearing.spi;
 
 /**
- * Optionales Reverse-Geocoding zu What3Words ({@code /LF280/}).
+ * Optionales Reverse-Geocoding zu What3Words ({@code /LF210/}).
  */
 public interface W3wClientPort {
 

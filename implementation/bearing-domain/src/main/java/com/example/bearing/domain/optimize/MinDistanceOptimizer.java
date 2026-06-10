@@ -5,7 +5,7 @@ import com.example.bearing.domain.GpsPoint;
 import java.util.ArrayList;
 import java.util.List;
 
-/** {@code /LF250/} */
+/** {@code /LF180/} */
 public final class MinDistanceOptimizer implements TrackOptimizer {
 
     private final double minDistanceM;

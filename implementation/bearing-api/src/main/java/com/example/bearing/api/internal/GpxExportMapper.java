@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/** Mappt Domänen-Track auf GPX-Transportmodell ({@code /LF490/}). */
+/** Mappt Domänen-Track auf GPX-Transportmodell ({@code /LF140/}). */
 public final class GpxExportMapper {
 
     private GpxExportMapper() {}

@@ -2,7 +2,7 @@ package com.example.bearing.adapter.system;
 
 import com.example.bearing.spi.W3wClientPort;
 
-/** Fallback ohne Netz ({@code /LF280/}). */
+/** Fallback ohne Netz ({@code /LF210/}). */
 public final class NoopW3wClient implements W3wClientPort {
 
     @Override

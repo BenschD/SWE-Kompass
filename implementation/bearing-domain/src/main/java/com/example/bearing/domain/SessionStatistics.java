@@ -2,7 +2,7 @@ package com.example.bearing.domain;
 
 import java.time.Duration;
 
-/** {@code /LF500/} */
+/** Session-Statistik für {@code /LD060/} ({@code GpxResult}). */
 public final class SessionStatistics {
 
     private final double totalDistanceM;

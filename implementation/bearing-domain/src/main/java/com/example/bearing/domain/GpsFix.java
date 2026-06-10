@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Eingabe-Positionsfix ({@code /LF030/}, {@code /LD130/}).
+ * Eingabe-Positionsfix ({@code /LF030/}, {@code /LD040/}).
  */
 public final class GpsFix {
 

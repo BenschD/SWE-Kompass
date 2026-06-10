@@ -9,7 +9,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 
 /**
- * Atomares Schreiben mit Basispfad-Prüfung ({@code /LF220/}, {@code /LF320/}).
+ * Atomares Schreiben mit Basispfad-Prüfung ({@code /LF150/}, {@code /LF250/}).
  */
 public final class SafeFileSink implements FileSinkPort {
 

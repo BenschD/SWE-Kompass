@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Immutable Session-Konfiguration ({@code /LD110/}, {@code /LF400/}). Punktbudget und Segmentierung
+ * Immutable Session-Konfiguration ({@code /LD020/}, {@code /LF010/}). Punktbudget und Segmentierung
  * gelten für den Roh-Track; {@link #optimizers()} sind ausschließlich für den GPX-Export und optional.
  */
 public final class SessionConfig {
@@ -27,7 +27,6 @@ public final class SessionConfig {
     private final Optional<Path> abortPersistPath;
     private final boolean listenerSerialized;
     private final List<TrackOptimizer> optimizers;
-    private final Optional<String> w3wApiKey;
 
     private SessionConfig(Builder b) {
         this.softLimitPoints = b.softLimitPoints;
@@ -41,10 +40,9 @@ public final class SessionConfig {
         this.abortPersistPath = b.abortPersistPath;
         this.listenerSerialized = b.listenerSerialized;
         this.optimizers = List.copyOf(b.optimizers);
-        this.w3wApiKey = b.w3wApiKey;
     }
 
-    /** Erzeugt eingefrorene Aufzeichnungsparameter ({@code /LF410/}). */
+    /** Erzeugt eingefrorene Aufzeichnungsparameter ({@code /LD020/}). */
     public RecordingParameters toRecordingParameters() {
         return new RecordingParameters(softLimitPoints, hardLimitPoints, overflowMode, segmentGapThreshold);
     }
@@ -93,10 +91,6 @@ public final class SessionConfig {
         return optimizers;
     }
 
-    public Optional<String> w3wApiKey() {
-        return w3wApiKey;
-    }
-
     public static Builder builder() {
         return new Builder();
     }
@@ -118,7 +112,6 @@ public final class SessionConfig {
         private Optional<Path> abortPersistPath = Optional.empty();
         private boolean listenerSerialized;
         private final List<TrackOptimizer> optimizers = new ArrayList<>();
-        private Optional<String> w3wApiKey = Optional.empty();
 
         public Builder softLimitPoints(int v) {
             this.softLimitPoints = v;
@@ -172,11 +165,6 @@ public final class SessionConfig {
 
         public Builder addOptimizer(TrackOptimizer o) {
             this.optimizers.add(Objects.requireNonNull(o));
-            return this;
-        }
-
-        public Builder w3wApiKey(String key) {
-            this.w3wApiKey = Optional.ofNullable(key);
             return this;
         }
 

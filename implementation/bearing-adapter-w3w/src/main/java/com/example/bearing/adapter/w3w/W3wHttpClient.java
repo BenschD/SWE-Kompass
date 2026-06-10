@@ -17,7 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * What3Words Reverse-Lookup mit TTL-Cache ({@code /LF280/}, {@code /LF290/}). Nur JDK-HTTP.
+ * What3Words Reverse-Lookup mit TTL-Cache ({@code /LF210/}, {@code /LF220/}). Nur JDK-HTTP.
  */
 public final class W3wHttpClient implements W3wClientPort {
 

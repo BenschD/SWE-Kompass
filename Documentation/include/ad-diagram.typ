@@ -166,7 +166,7 @@
   v(1pt)
 }
 
-/// Fertiges Zustandsdiagramm des Session-Lebenszyklus (/LF010/, /LF060/, /LF070/, /LL160/).
+/// Fertiges Zustandsdiagramm des Session-Lebenszyklus (/LF010/, /LF060/, /LF070/, /LF090/).
 #let zustandsdiagramm-session(caption: [Zustandsdiagramm des Session-Lebenszyklus.]) = {
   v(0.4em)
   figure(
@@ -180,7 +180,7 @@
           box(circle(radius: 5pt, fill: black)),
           text(size: 14pt)[\u{2193}],
           _st-state[IDLE],
-          _st-trans[startSession()],
+          _st-trans[start()],
           grid(
             columns: (1fr, auto, 1fr),
             align: (right + horizon, center + horizon, left + horizon),

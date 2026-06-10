@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
- * Standardimplementierung ({@code /LF020/}-{@code /LF500/}). Sammelt validierte Fixes im Rohtrack;
+ * Standardimplementierung ({@code /LF010/}–{@code /LF250/}). Sammelt validierte Fixes im Rohtrack;
  * vor GPX-Export optional {@link SessionConfig#optimizers()}.
  */
 public final class DefaultBearingSession implements BearingSession {

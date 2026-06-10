@@ -7,9 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Lebenszyklus einer Peilungssession ({@code /LF010/}–{@code /LF070/}).
- *
- * <p>Threading: Standard ist ein einzelner Host-Thread ({@code /LF350/}).
+ * Lebenszyklus einer Peilungssession ({@code /LF010/}–{@code /LF090/}).
  */
 public interface BearingSession {
 
@@ -30,11 +28,12 @@ public interface BearingSession {
     /**
      * @param fix GNSS-Fix
      */
-    void onPositionUpdate(GpsFix fix);
+    void onPositionUpdate(GpsFix fix); // /LF030/
 
     /**
      * @param courseDeg Kurs geografisch Nord 0..360
      */
+    /** @param courseDeg Kurs 0–360° ({@code /LF040/}) */
     void onCourseUpdate(double courseDeg);
 
     /**
@@ -56,9 +55,9 @@ public interface BearingSession {
      */
     GpxResult abort();
 
-    /** Optional W3W ({@code /LF280/}). */
+    /** Optional W3W ({@code /LF210/}). */
     Optional<String> resolveWhat3Words(double latitude, double longitude);
 
-    /** Wiederanlauf ({@code /LL160/}). */
+    /** Wiederanlauf ({@code /LF090/}). */
     void reset();
 }

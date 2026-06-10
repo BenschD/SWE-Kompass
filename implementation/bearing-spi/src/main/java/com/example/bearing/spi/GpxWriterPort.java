@@ -3,7 +3,7 @@ package com.example.bearing.spi;
 import com.example.bearing.spi.model.GpxDocument;
 
 /**
- * Serialisiert ein fertig aufbereitetes GPX-Dokument ({@code /LF490/} — Trennung Post-Processing / GPX).
+ * Serialisiert ein fertig aufbereitetes GPX-Dokument ({@code /LF140/}).
  */
 public interface GpxWriterPort {
 

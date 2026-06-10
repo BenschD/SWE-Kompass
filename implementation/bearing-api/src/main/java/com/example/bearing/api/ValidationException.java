@@ -1,7 +1,7 @@
 package com.example.bearing.api;
 
 /**
- * Semantische Validierungsfehler ({@code /LF090/}, {@code /LF310/}). Als {@link RuntimeException}, damit Host-Code
+ * Semantische Validierungsfehler ({@code /LF230/}, {@code /LF240/}). Als {@link RuntimeException}, damit Host-Code
  * nicht zwingend deklarieren muss (optional weiter mit try/catch behandelbar).
  */
 public final class ValidationException extends RuntimeException {

@@ -3,7 +3,7 @@ package com.example.bearing.domain;
 import java.util.Objects;
 
 /**
- * WGS84-Koordinate ({@code /LF300/}).
+ * WGS84-Koordinate ({@code /LF230/} Validierung).
  */
 public final class GeoCoordinate {
 

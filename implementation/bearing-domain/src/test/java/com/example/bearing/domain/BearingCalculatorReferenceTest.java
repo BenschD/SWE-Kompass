@@ -4,13 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-/** {@code /LL020/} — Plausibilitäts- und Grenzwerttests für Haversine/Azimut. */
+/** /TC140/ — {@code /LL020/} Haversine/Azimut-Referenz. */
 class BearingCalculatorReferenceTest {
 
     private final BearingCalculator calc = new BearingCalculator();
 
     @Test
-    void stuttgartLikePoint_distanceAndOrdinal() {
+    void tc140_azimuthReference() {
         double lat1 = 48.7758459;
         double lon1 = 9.1829326;
         double lat2 = 48.784;

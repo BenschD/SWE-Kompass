@@ -4,6 +4,7 @@
 #import "macros.typ": diagramm-box
 #import "ad-diagram.typ": ad-diagramm
 #import "ch-lf-spezifikationen.typ": ch-lf-spezifikationen
+#import "requirement-catalog.typ": catalog-ll-table, catalog-ld-table, catalog-tc-table, catalog-api-table
 
 #let _black  = rgb("#1a1a1a")
 #let _white  = rgb("#ffffff")
@@ -76,7 +77,7 @@
 #let ch-spezifische-anforderungen-kapitel = [
 #set par(justify: true)
 
-Dieses Kapitel bildet den normativen Kern des Dokuments. Die funktionalen Anforderungen sind nach SOPHIST/IEEE-830 formuliert: jede `/LF…/`- bzw. `/LL…/`-Spezifikation enthält Allgemeines, Funktionsbedingungen und Funktionsablauf mit zugehörigem Aktivitätsdiagramm. Ergänzt wird das Kapitel durch nicht-funktionale Anforderungen (3.2), externe Schnittstellen (3.3), Performance-Anforderungen (3.4) und das Qualitätsmodell nach ISO/IEC 25010 (3.5).
+Dieses Kapitel bildet den normativen Kern des Dokuments. Funktionale Anforderungen `/LF010/` … `/LF250/` und nicht-funktionale `/LL010/` … `/LL080/` sind nach SOPHIST/IEEE-830 formuliert. Ergänzt werden externe Schnittstellen (3.3), Produktdaten, Testfälle `/TC010/` … `/TC150/` und das Qualitätsmodell nach ISO/IEC 25010 (3.4).
 
 // ═════════════════════════════════════════════════════════════════════════════
 == Funktionale Anforderungen
@@ -121,52 +122,37 @@ Primär- und Sekundärakteure der Java-Peilungskomponente:
 == Nicht-funktionale Anforderungen
 // ═════════════════════════════════════════════════════════════════════════════
 
-Nicht-funktionale Anforderungen beschreiben *wie* das System seine Aufgaben erfüllt. Sie sind durch `/LL…/`-Bezeichner referenzierbar und als messbare Qualitätsmerkmale formuliert.
+Nicht-funktionale Anforderungen beschreiben *wie* das System seine Aufgaben erfüllt (`/LL010/` … `/LL080/`).
 
-#ll-card("/LL010/", "Eingabevalidierung", "Qualitätsrichtlinie", "/LF030/, /LF010/",
-  [Ungültige Eingaben (null, WGS84-Bereich verletzt, Zeitstempel außerhalb Toleranz) dürfen keine undefinierten Zustände erzeugen. Alle Fehlerpfade müssen durch dedizierte Testfälle abgesichert sein; 100 % der Exception-Pfade in Validierungsklassen müssen durch Tests erreichbar sein.])
+#figure(
+  caption: [Nicht-funktionale Anforderungen /LL010/ … /LL080/.],
+  kind: table,
+  catalog-ll-table,
+)
+
+#ll-card("/LL010/", "Eingabevalidierung", "Qualitätsrichtlinie", "/LF030/, /LF230/, /LF240/",
+  [Kritische Fehlerpfade (ungültige Koordinaten, Zeitstempel) erzeugen definierte `ValidationException` und sind durch /TC020/, /TC030/ abgesichert.])
 
 #ll-card("/LL020/", "Genauigkeit der Peilungsberechnung", "Fachanforderung", "/LF030/, /LF050/",
-  [Für Distanzen > 10 m darf der berechnete Azimut maximal ±1° von einer unabhängigen Referenz (Haversine-Formel) abweichen. Überprüfung für mindestens drei Referenzszenarien: Äquator, Polnähe (φ > 80°), Stuttgart (48,77°N/9,18°E).])
+  [Azimut-Abweichung ≤ ±1° vs. Haversine-Referenz für D > 10 m; Nachweis /TC140/.])
 
-#ll-card("/LL030/", "Performance: Peilungszyklus", "Echtzeit-Anforderung", "/LF030/",
-  [Vollständiger Update-Zyklus (`onPositionUpdate` → Azimut/Distanz berechnen) soll auf Referenz-Laptop typisch < 1 ms, Worst-Case (ohne GC) < 100 ms betragen. Überschreitung muss im Test-Report dokumentiert werden.])
+#ll-card("/LL030/", "Portabilität", "Projektauftrag", "–",
+  [Java 11+, keine UI-Framework-Abhängigkeiten; plattformunabhängige Pfade und APIs.])
 
-#ll-card("/LL040/", "Performance: GPX-Export", "Performanceanforderung", "/LF200/",
-  [GPX-Export für 10.000 Trackpunkte ohne Optimierung soll auf Referenz-Laptop in unter 2 Sekunden erfolgen. Messung per JMH- oder `@Timeout`-Test in `target/benchmark-report.txt`.])
+#ll-card("/LL040/", "Build-Reproduzierbarkeit", "Projektauftrag", "–",
+  [`mvn clean test` auf frisch geklontem Repository erfolgreich; Abhängigkeiten über Maven Central.])
 
-#ll-card("/LL050/", "Speicherverbrauch", "Ressourcenanforderung", "/LF030/",
-  [Heap-Zuwachs der Bibliothek für 10.000 Punkte (alle optionalen Felder) soll typisch < 50 MB betragen. Validierung durch JVM-Heap-Snapshot-Test.])
+#ll-card("/LL050/", "XML-Escaping", "Sicherheitsrichtlinie", "/LF140/",
+  [Nutzerstrings in GPX werden escaped (`XmlEscaper`); Nachweis über /TC100/ und GPX-Writer-Tests.])
 
-#ll-card("/LL100/", "Javadoc-Vollständigkeit", "Vorlesung SWE", "–",
-  [Gesamte öffentliche API (alle public-/protected-Klassen und Methoden) muss vollständig mit Javadoc dokumentiert sein. Checkstyle-Plugin im Maven-Build erzwingt dies; fehlende Javadoc führen zum Build-Fehler.])
+#ll-card("/LL060/", "Strukturiertes Logging", "Betriebsanforderung", "/LF080/",
+  [WARN/ERROR via SLF4J; `sessionId` in der Log-Nachricht (`Slf4jLoggerAdapter`).])
 
-#ll-card("/LL110/", "Portabilität", "Projektauftrag", "–",
-  [Keine plattformspezifischen Pfade, Zeilentrennzeichen oder `sun.*`-APIs. Kompilierbar und ausführbar auf Windows 10+, macOS 12+ und Ubuntu 22.04 ohne Anpassungen. CI-Matrix auf mindestens zwei Plattformen empfohlen.])
+#ll-card("/LL070/", "Test-Determinismus", "Testbarkeitsanforderung", "–",
+  [Zeitabhängige Tests nutzen `ClockPort`-Mocks; kein `Thread.sleep()` im Testcode.])
 
-#ll-card("/LL120/", "Build-Reproduzierbarkeit", "Projektauftrag", "–",
-  [Maven-Build auf frisch geklontem Repository mit `mvn clean test` in unter 5 Minuten erfolgreich. Alle Abhängigkeiten versioniert und über Maven Central auflösbar. Keine SNAPSHOT-Abhängigkeiten im Release.])
-
-#ll-card("/LL130/", "Sicherheit: XML-Escaping", "Sicherheitsrichtlinie", "/LF200/",
-  [Alle Nutzerstrings in XML-Ausgaben müssen escaped werden (`&→&amp;`, `<→&lt;`, `>→&gt;`, `"→&quot;`). XXE-Schutz via `FEATURE_SECURE_PROCESSING = true`. Verifikation durch Integrationstest mit Sonderzeichen.])
-
-#ll-card("/LL140/", "Beobachtbarkeit via SLF4J", "Betriebsanforderung", "–",
-  [Alle WARN- und ERROR-Ereignisse via SLF4J protokolliert. Jeder Eintrag auf WARN+ enthält `sessionId` als MDC-Feld. MDC muss nach jedem Aufruf bereinigt werden (Thread-Pool-Schutz).])
-
-#ll-card("/LL150/", "Testabdeckung", "Vorlesung SWE", "/LL010/",
-  [Kernmodule `bearing-core`, `gps-tracker`, `gpx-exporter`: Zeilenabdeckung ≥ 85 % (JaCoCo). Kritische Klassen `BearingSession`, `BearingCalculator`: ≥ 90 %. Unterschreitung führt zum Build-Fehler (`jacoco:check`).])
-
-#ll-card("/LL160/", "Session-Reset nach Abschluss", "Betriebsanforderung", "/LF010/, /LF060/, /LF070/",
-  [Nach `complete()` oder `abort()` und anschließendem `reset()` muss Zustand `IDLE` erreichbar sein, ohne JVM-Neustart. Verifikation durch Integrationstest: Session beenden → Reset → neuer Start mit neuer UUID.])
-
-#ll-card("/LL170/", "Determinismus der Tests", "Testbarkeitsanforderung", "–",
-  [`ClockPort`-Mocks mit fixer Zeit in allen zeitabhängigen Tests. `Thread.sleep()` und `System.currentTimeMillis()` im Testcode verboten. Testbaum ist idempotent (kein Abhängigkeit von Dateisystemresten).])
-
-#ll-card("/LL190/", "Determinismus bei gleichen Eingaben", "Qualitätsanforderung", "–",
-  [Identische Eingabesequenzen + `ClockPort`-Mock + selbe Konfiguration müssen stets byte-identischen GPX-String erzeugen. Verifikation durch Reproduzierbarkeitstests mit mindestens drei Durchläufen.])
-
-#ll-card("/LL200/", "Abhängigkeitslizenzierung", "Rechtliche Anforderung", "–",
-  [Standard-Build: nur permissiv lizenzierte Bibliotheken (Apache 2.0, MIT, BSD 2/3). W3W-Client nur in Maven-Profil `w3w`. Konformität via `license-maven-plugin:check`.])
+#ll-card("/LL080/", "Javadoc der öffentlichen API", "Vorlesung SWE", "–",
+  [Öffentliche API-Klassen und -Methoden sind mit Javadoc dokumentiert (ohne Build-Gate).])
 
 #pagebreak()
 
@@ -181,41 +167,25 @@ Die Bibliothek besitzt keine Benutzeroberfläche; ihre einzige Schnittstelle nac
 Alle Aufrufe laufen über eine einzige Fassade. Sie spiegelt den Session-Lebenszyklus wider: Eine Session wird gestartet, mit Positions- und Kursdaten versorgt, abgefragt und schließlich regulär beendet oder abgebrochen. Jede Methode ist einer funktionalen Anforderung zugeordnet, was die Spalte _LF_ festhält.
 
 #figure(
-  caption: [Vollständige öffentliche API-Methoden der Bibliothek.],
+  caption: [Öffentliche API-Methoden der Bibliothek (`BearingSession` / `DefaultBearingSession`).],
   kind: table,
-  align(left, table(
-    columns: (5.5cm, 1fr, 1.8cm),
-    stroke: _tbl, inset: _ins,
-    [*Signatur*], [*Beschreibung*], [*LF*],
-    [`SessionId startSession(GeoCoordinate, SessionConfig)`], [Neue Peilung starten; UUID zurückgeben.], [/LF010/],
-    [`void onPositionUpdate(GpsFix)`],       [GPS-Fix verarbeiten; Track + Peilung aktualisieren.], [/LF030/],
-    [`void onHeadingUpdate(double)`],        [Kurs aktualisieren (optional, 0–360°).],              [/LF030/],
-    [`Optional<BearingSnapshot> getSnapshot()`], [Aktuellen Schnappschuss abfragen.],               [/LF050/],
-    [`GpxResult complete()`],                [Session regulär beenden; GPX erzeugen.],              [/LF060/],
-    [`GpxResult abort()`],                   [Session abbrechen; GPX erzeugen.],                   [/LF070/],
-    [`void reset()`],                        [Auf IDLE zurücksetzen.],                              [/LL160/],
-    [`String resolveW3w(GeoCoordinate)`],    [W3W-Adresse auflösen (optional).],                   [/LF280/],
-    [`void addListener(BearingListener)`],   [Listener registrieren.],                              [–],
-    [`void removeListener(BearingListener)`],[Listener deregistrieren.],                            [–],
-  ))
+  catalog-api-table,
 )
 
 === Exception-Hierarchie
 
-Fehler meldet die Bibliothek über ungeprüfte Ausnahmen (`RuntimeException`), damit die API frei von erzwungenen `try`-Blöcken bleibt. Alle fachlichen Fehler erben von der Basisklasse `BearingException` und tragen einen maschinenlesbaren `errorCode`, sodass eine Host-Anwendung gezielt auf einzelne Fälle reagieren kann, ohne Fehlertexte auszuwerten. Die `SecurityException` steht bewusst daneben: Sie signalisiert einen abgewehrten Path-Traversal-Versuch beim Dateischreiben.
+Fehler meldet die Bibliothek über ungeprüfte Ausnahmen (`RuntimeException`). Validierungsfehler nutzen `ValidationException` mit `ErrorCode`-Enum (`COORD_RANGE`, `TIMESTAMP_INVALID`). Zustandsfehler (z.\ B. Doppelstart /LF020/, Snapshot ohne Fix /LF050/) nutzen die JDK-`IllegalStateException` — nicht `ValidationException`. Path-Traversal: `SecurityException` (/LF250/). GPX-Serialisierungsfehler (/LF140/): `RuntimeException` aus dem Writer.
 
 #diagramm-box("Exception-Hierarchie der Bibliothek")[
   `RuntimeException` (JDK)\
-  ├── `SecurityException` _(Path-Traversal bei Dateipersistenz; /LF200/)_\
-  └── `BearingException` _(Basisklasse; enthält `errorCode: String`, vollständig in Javadoc dokumentiert)_\
-  #h(1.2cm) ├── `ValidationException` _(Codes: COORD\_RANGE · TIMESTAMP\_INVALID · INVALID\_CONFIG · INVALID\_FIELD\_VALUE)_\
-  #h(1.2cm) ├── `BearingStateException` _(Codes: ALREADY\_ACTIVE · SESSION\_ENDED · SESSION\_STILL\_ACTIVE)_\
-  #h(1.2cm) └── `BearingIOException` _(Codes: IO\_WRITE\_ERROR)_
+  ├── `SecurityException` _(Path-Traversal; /LF250/)_\
+  ├── `IllegalStateException` _(Session-Zustand; /LF020/, /LF030/, /LF040/, /LF050/, /LF060/, /LF070/)_\
+  └── `ValidationException` _(Codes: `COORD_RANGE` · `TIMESTAMP_INVALID`; /LF230/, /LF240/)_
 ]
 
 === GPX 1.1-Ausgabeformat
 
-Der Export folgt dem GPX-1.1-Schema von Topografix. Verbindlich sind der korrekte Namespace, UTF-8 ohne BOM sowie Zeitstempel als ISO-8601 in UTC (Suffix `Z`). Das folgende Beispiel zeigt den strukturellen Aufbau eines erzeugten Dokuments: Metadaten mit Namen, Startzeit und Bounding-Box, gefolgt von einem oder mehreren Track-Segmenten mit den einzelnen Trackpunkten.
+Der Export folgt dem GPX-1.1-Schema von Topografix (/LF140/, /LF160/). Verbindlich sind Namespace, UTF-8 ohne BOM und UTC-Zeitstempel (`Z`). Metadaten enthalten Name und Zeitspanne; `<bounds>` ist optional.
 
 #diagramm-box("GPX-1.1-Schemastruktur (normativ)")[
   ```xml
@@ -228,7 +198,6 @@ Der Export folgt dem GPX-1.1-Schema von Topografix. Verbindlich sind der korrekt
     <metadata>
       <name>Peilung Stuttgart – Schlossplatz</name>
       <time>2026-06-12T10:00:00Z</time>
-      <bounds minlat="48.775" minlon="9.182" maxlat="48.783" maxlon="9.191"/>
     </metadata>
     <trk>
       <trkseg>
@@ -244,27 +213,6 @@ Der Export folgt dem GPX-1.1-Schema von Topografix. Verbindlich sind der korrekt
 ]
 
 #pagebreak()
-
-// ═════════════════════════════════════════════════════════════════════════════
-== Anforderungen an die Performance
-// ═════════════════════════════════════════════════════════════════════════════
-
-=== Quantitative Leistungskennwerte
-
-#figure(
-  caption: [Quantitative Performance-Anforderungen mit Messmethode.],
-  kind: table,
-  align(left, table(
-    columns: (4cm, 1fr, 3cm),
-    stroke: _tbl, inset: _ins,
-    [*Kennwert*], [*Anforderung / Grenzwert*], [*Messmethode*],
-    [Peilungszyklus (Worst-Case)], [< 100 ms ohne GC; typisch < 1 ms.], [JMH / `@Timeout`-Test],
-    [GPX-Export (10k Punkte)],    [< 2 s ohne Optimierung.], [JMH-Benchmark],
-    [Heap-Zuwachs (10k Punkte)],  [Typisch < 50 MB.], [JVM-Heap-Snapshot],
-    [W3W Cache-Roundtrip],        [< 1 ms bei Cache-Treffer.], [Unit-Test mit Mock],
-    [Build (`mvn clean test`)],   [< 5 Minuten auf Referenz-CI.], [CI-Laufzeit-Tracking],
-  ))
-)
 
 === AD-01: Aktivitätsdiagramm `onPositionUpdate`
 
@@ -286,15 +234,15 @@ Dieses Diagramm zeigt den vollständigen Ablauf eines Positionsupdates (/LF030/)
 
 === AD-02: Aktivitätsdiagramm GPX-Export
 
-Dieses Diagramm zeigt den Exportvorgang (/LF200/). Der Rohtrack wird zunächst als unveränderlicher Snapshot festgehalten, damit der laufende Speicher unangetastet bleibt. Sind Optimierer konfiguriert, durchläuft der Track die Optimierer-Kette; andernfalls wandern die Rohpunkte unverändert weiter. Anschließend entstehen Metadaten und das fertige XML.
+Dieses Diagramm zeigt den Exportvorgang (/LF140/). Der Rohtrack wird zunächst als unveränderlicher Snapshot festgehalten. Sind Optimierer konfiguriert (/LF170/–/LF200/), durchläuft der Track die Optimierer-Kette; anschließend entstehen Metadaten und XML (/LF160/).
 
 #ad-diagramm(
-  caption: [AD-02: Ablauf des GPX-Exports (/LF200/) mit optionaler Optimierer-Kette.],
+  caption: [AD-02: Ablauf des GPX-Exports (/LF140/) mit optionaler Optimierer-Kette.],
   (start: [Export angestoßen\ (`complete()` / `abort()`)]),
   (aktion: [unveränderlichen Snapshot des Rohtracks erstellen]),
   (frage: [Optimierer\ konfiguriert?], zweig: [Rohpunkte unverändert\ übernehmen], raus: [nein], weiter: [ja]),
   (aktion: [Optimierer-Kette anwenden (n-ter Punkt, Mindestabstand, Geraden-Heuristik, Douglas-Peucker)]),
-  (aktion: [Metadaten anreichern (Name, Zeit, Bounds)]),
+  (aktion: [Metadaten anreichern (Name, Zeit)]),
   (aktion: [XML erzeugen, Sonderzeichen escapen]),
   (aktion: [`String` und `byte[]` (UTF-8, ohne BOM) bereitstellen]),
   (ende: [Ende]),
@@ -307,14 +255,14 @@ Dieses Diagramm zeigt den Exportvorgang (/LF200/). Der Rohtrack wird zunächst a
 Dieses Diagramm zeigt den Start einer Session (/LF010/). Zwei Vorbedingungen werden geprüft: Es darf keine Session laufen, und Zielkoordinate sowie Konfiguration müssen gültig sein. Erst danach vergibt das System eine UUID, friert die Konfiguration ein und wechselt in den Zustand `ACTIVE`.
 
 #ad-diagramm(
-  caption: [AD-03: Ablauf von `startSession` (/LF010/) mit Zustands- und Eingabeprüfung.],
-  (start: [`startSession(target, config)`]),
-  (frage: [Bereits eine\ Session aktiv?], abbruch: [`BearingStateException`\ (`ALREADY_ACTIVE`)], raus: [ja], weiter: [nein]),
+  caption: [AD-03: Ablauf von `start(config, target)` (/LF010/) mit Zustands- und Eingabeprüfung.],
+  (start: [`start(config, target)`]),
+  (frage: [Bereits eine\ Session aktiv?], abbruch: [`IllegalStateException`], raus: [ja], weiter: [nein]),
   (frage: [Ziel + Konfig\ gültig?], abbruch: [`ValidationException`], raus: [nein], weiter: [ja]),
   (aktion: [UUID erzeugen, `startedAt` setzen]),
   (aktion: [`SessionConfig` einfrieren, Zustand `ACTIVE`]),
   (aktion: [`onSessionStarted` an Listener]),
-  (aktion: [`sessionId` zurückgeben]),
+  (aktion: [`id()` liefert UUID]),
   (ende: [Ende]),
 )
 
@@ -392,40 +340,37 @@ ISO/IEC 25010 beschreibt Produktqualität anhand von acht Hauptmerkmalen mit ihr
 
 Die Produktdaten beschreiben die zentralen Datenstrukturen der Bibliothek mit ihren Feldern, Typen und Wertebereichen. Sie bilden die Brücke zwischen den funktionalen Anforderungen und der späteren Implementierung: Jede `/LD…/`-Karte verweist auf die Anforderungen, in denen die Struktur entsteht oder verwendet wird.
 
-#ld-card("/LD100/", "Peilungs-Session", "/LF010/, /LF060/, /LF070/", [
+#figure(caption: [Produktdaten /LD010/ … /LD060/.], kind: table, catalog-ld-table)
+
+#ld-card("/LD010/", "Peilungs-Session", "/LF010/, /LF060/, /LF070/, /LF090/", [
   #table(columns: (1fr, 1fr), stroke: 0.3pt + gray, inset: 5pt,
-    [sessionId], [UUID RFC 4122 v4, 36 Zeichen],
-    [status], [Enum: IDLE · ACTIVE · COMPLETED · ABORTED],
-    [target], [GeoCoordinate (WGS84, validiert)],
-    [startedAt], [Instant UTC (gesetzt bei Start)],
-    [endedAt], [Optional\<Instant\> (gesetzt bei complete/abort)],
-    [config], [SessionConfig (immutable, eingefroren)],
+    [sessionId], [UUID RFC 4122 v4],
+    [status], [IDLE · ACTIVE · COMPLETED · ABORTED],
+    [target], [GeoCoordinate (WGS84)],
+    [startedAt], [Instant UTC],
+    [config], [SessionConfig (eingefroren)],
   )
 ])
 
-#ld-card("/LD110/", "Konfiguration (SessionConfig)", "/LF010/", [
+#ld-card("/LD020/", "SessionConfig", "/LF010/, /LF110/, /LF130/, /LF120/", [
   #table(columns: (1fr, 1fr), stroke: 0.3pt + gray, inset: 5pt,
-    [softLimitPoints], [int ≥ 0 (0 = deaktiviert)],
-    [hardLimitPoints], [int ≥ softLimit (0 = deaktiviert)],
-    [overflowMode], [Enum: STOP · DOWNSAMPLE],
-    [segmentGapThreshold], [Duration > 0 (Standard: PT5M)],
-    [maxFixAge], [Duration > 0 (Standard: PT24H)],
-    [persistOnAbort], [boolean (Standard: false)],
-    [w3wApiKey], [Optional\<String\>],
-    [w3wCacheTtl], [Duration (Standard: PT1H)],
-    [optimizers], [List\<TrackOptimizer\>],
+    [softLimitPoints], [int ≥ 0],
+    [hardLimitPoints], [int ≥ 0; Hard-Limit /LF130/ STOP],
+    [segmentGapThreshold], [Duration (Standard: PT5M)],
+    [maxFixAge], [Duration (Standard: PT24H)],
+    [persistOnAbort], [boolean],
+    [optimizers], [List\<TrackOptimizer\> (/LF170/–/LF200/)],
   )
 ])
 
-#ld-card("/LD120/", "GPS-Track", "/LF030/, /LF200/", [
+#ld-card("/LD030/", "GPS-Track / Segment", "/LF100/, /LF120/, /LF140/", [
   #table(columns: (1fr, 1fr), stroke: 0.3pt + gray, inset: 5pt,
-    [segments], [List\<TrackSegment\> (mind. 1)],
-    [totalPoints], [int (abgeleitete Kennzahl)],
-    [bounds], [Optional\<GeoBounds\> (min/max lat/lon)],
+    [segments], [List\<TrackSegment\>],
+    [totalPoints], [int (abgeleitet)],
   )
 ])
 
-#ld-card("/LD130/", "GPS-Punkt (GpsPoint)", "/LF030/", [
+#ld-card("/LD040/", "GpsPoint / GpsFix", "/LF030/, /LF230/, /LF240/", [
   #table(columns: (1fr, 1fr), stroke: 0.3pt + gray, inset: 5pt,
     [lat], [double ∈ [−90,0, +90,0]],
     [lon], [double ∈ [−180,0, +180,0]],
@@ -436,7 +381,7 @@ Die Produktdaten beschreiben die zentralen Datenstrukturen der Bibliothek mit ih
   )
 ])
 
-#ld-card("/LD140/", "Peilungs-Snapshot", "/LF050/", [
+#ld-card("/LD050/", "BearingSnapshot", "/LF050/", [
   #table(columns: (1fr, 1fr), stroke: 0.3pt + gray, inset: 5pt,
     [azimuthDeg], [double ∈ [0,0°, 360,0°)],
     [distanceM], [double ≥ 0],
@@ -445,71 +390,23 @@ Die Produktdaten beschreiben die zentralen Datenstrukturen der Bibliothek mit ih
   )
 ])
 
-#ld-card("/LD150/", "GPX-Dokument (GpxResult)", "/LF200/", [
+#ld-card("/LD060/", "GpxResult", "/LF140/, /LF160/", [
   #table(columns: (1fr, 1fr), stroke: 0.3pt + gray, inset: 5pt,
-    [gpxString], [String UTF-8 (valides GPX 1.1)],
     [gpxBytes], [byte[] UTF-8, kein BOM],
-    [optimizationResult], [OptimizationResult (Statistik)],
-    [stats], [SessionStats],
-  )
-])
-
-#ld-card("/LD160/", "W3W-Cache-Eintrag", "/LF280/", [
-  #table(columns: (1fr, 1fr), stroke: 0.3pt + gray, inset: 5pt,
-    [lat], [double (gerundet 6 Dezimalstellen)],
-    [lon], [double (gerundet 6 Dezimalstellen)],
-    [words], [String (3 Wörter, Punkt-getrennt)],
-    [resolvedAt], [Instant UTC],
-    [ttl], [Duration (aus SessionConfig)],
+    [statistics], [SessionStatistics],
+    [appliedOptimizers], [List\<String\>],
   )
 ])
 
 === Testfälle (Traceability)
 
-Die folgende Tabelle listet die geplanten Testfälle mit ihrem erwarteten Ergebnis und verknüpft jeden mit der Anforderung, die er absichert. Sie deckt sowohl die normalen Abläufe (Happy Path) als auch die Fehler- und Grenzfälle ab — etwa ungültige Koordinaten, erreichte Limits oder den abgewehrten Path-Traversal-Versuch.
+Verbindliche Testfälle `/TC010/` … `/TC150/` mit JUnit-Methodennamen (siehe `implementation/TRACEABILITY.md`).
 
-#{
-  show figure: set block(breakable: true)
-  figure(
-    caption: [Testfälle mit Traceability zu funktionalen und nicht-funktionalen Anforderungen.],
-    kind: table,
-    table(
-    columns: (1.6cm, 1fr, 4.5cm, 2cm),
-    stroke: _card-stroke,
-    inset: _card-ins,
-    align: (x, y) => if x == 0 { center + horizon } else { left + top },
-    table.header(
-      _trace-hdr([*TC-ID*]),
-      _trace-hdr([*Beschreibung*]),
-      _trace-hdr([*Erwartetes Ergebnis*]),
-      _trace-hdr([*LF / LL*]),
-    ),
-    [TC-010], [Doppelter `startSession()`-Aufruf.], [`BearingStateException(ALREADY_ACTIVE)`.], [/LF010/],
-    [TC-020], [`GpsFix` mit `lat = 91°`.], [`ValidationException(COORD_RANGE)`.], [/LF030/],
-    [TC-025], [Zeitstempel +2h in der Zukunft.], [`ValidationException(TIMESTAMP_INVALID)`.], [/LF030/],
-    [TC-030], [Update nach `complete()`.], [`BearingStateException(SESSION_ENDED)`.], [/LF060/],
-    [TC-040], [Snapshot ohne Fix.], [`Optional.empty()`.], [/LF050/],
-    [TC-050], [Soft-Limit (n=100).], [`onSoftLimitReached`; Aufzeichnung läuft.], [/LF030/],
-    [TC-060], [Hard-Limit STOP (n=200).], [`onHardLimitReached`; kein weiterer Punkt.], [/LF030/],
-    [TC-070], [`abort()` ohne persist.], [GPX-String ≠ leer; keine Datei.], [/LF070/],
-    [TC-080], [`abort()` mit persist.], [Datei atomar geschrieben; valide.], [/LF070/],
-    [TC-090], [Pfad `../../etc/passwd`.], [`SecurityException`.], [/LF200/],
-    [TC-100], [GPX-Namespace in Ausgabe.], [`xmlns="http://www.topografix.com/GPX/1/1"`.], [/LF200/],
-    [TC-110], [n-Optimizer n=10, 100 Punkte.], [11 Punkte (Start/Ende + 9 dazwischen).], [/LF200/],
-    [TC-120], [Kollinear: 3 Punkte auf Linie.], [2 Punkte nach Optimierung.], [/LF200/],
-    [TC-130], [Douglas-Peucker ε = 100 m.], [Starke Reduktion; kein Fehler.], [/LF200/],
-    [TC-140], [W3W-API Timeout.], [Fallback; WARN-Log mit sessionId.], [/LF280/],
-    [TC-150], [W3W-Cache-Treffer (2. Aufruf).], [Kein Netzwerkaufruf beim 2. Mal.], [/LF280/],
-    [TC-160], [Clock-Mock; zwei identische Läufe.], [Byte-identischer GPX-String.], [/LL190/],
-    [TC-170], [Listener wirft RuntimeException.], [Exception gefangen; nächster Listener weiter.], [/LF080/],
-    [TC-180], [`reset()` → neuer Start.], [Neue UUID; Session ACTIVE.], [/LL160/],
-    [TC-190], [Sonderzeichen `<>&"` im Namen.], [GPX enthält korrekte XML-Entities.], [/LL130/],
-    [TC-200], [Start Happy Path.], [UUID vorhanden; `onSessionStarted` gefeuert.], [/LF010/],
-    [TC-210], [Azimut Stuttgart→München vs. Referenz.], [Abweichung ≤ ±1°.], [/LL020/],
-    [TC-220], [Zeitlücke 6 min (Threshold 5 min).], [Zwei `<trkseg>` im GPX.], [/LF030/],
-    ),
-  )
-}
+#figure(
+  caption: [Testfälle mit Traceability zu /LF…/ und /LL…/.],
+  kind: table,
+  catalog-tc-table,
+)
 
 #pagebreak()
 
@@ -534,14 +431,14 @@ Die Fehlermöglichkeits- und Einflussanalyse (FMEA) betrachtet systematisch, was
       _trace-hdr([*E*]),
       _trace-hdr([*Gegenmaßnahme*]),
     ),
-    [Ungültige Koordinate],    [Falsche Peilung oder Exception.],  [M], [K], [`ValidationException`; /LF030/ Schritt 2.],
-    [Ungültiger Zeitstempel],  [Falsche Segmentierung.],           [M], [M], [Zeitvalidierung; /LF030/ Schritt 2.],
-    [Speicheroverflow],        [OutOfMemoryError der JVM.],        [G], [K], [Hard-Limit /LF030/ Schritt 3 (Alt. 5a).],
-    [XML-Injection],           [Ungültige GPX-Datei.],             [G], [M], [XmlEscaper; /LF200/ Schritt 4.],
-    [Path Traversal],          [Kritische Datei überschrieben.],   [G], [M], [Pfadnormalisierung; /LF200/ Schritt 5.],
-    [W3W-Ausfall],             [Fehlende W3W-Adresse.],            [G], [G], [Fallback + Cache; /LF280/.],
-    [Listener wirft],          [Benachrichtigungsschleife abbricht.],[M],[K], [Isolation-Garantie; /LF080/.],
-    [Clock nicht injiziert],   [Nicht-deterministische Tests.],    [S], [G], [`ClockPort`-Injection; /LL170/.],
+    [Ungültige Koordinate],    [Falsche Peilung oder Exception.],  [M], [K], [`ValidationException`; /LF230/.],
+    [Ungültiger Zeitstempel],  [Falsche Segmentierung.],           [M], [M], [/LF240/.],
+    [Speicheroverflow],        [OutOfMemoryError der JVM.],        [G], [K], [Hard-Limit /LF130/.],
+    [XML-Injection],           [Ungültige GPX-Datei.],             [G], [M], [XmlEscaper; /LF140/, /LL050/.],
+    [Path Traversal],          [Kritische Datei überschrieben.],   [G], [M], [/LF250/.],
+    [W3W-Ausfall],             [Fehlende W3W-Adresse.],            [G], [G], [Fallback; /LF210/, /LF220/.],
+    [Listener wirft],          [Benachrichtigungsschleife abbricht.],[M],[K], [/LF080/, /TC120/.],
+    [Clock nicht injiziert],   [Nicht-deterministische Tests.],    [S], [G], [`ClockPort`; /LL070/.],
     ),
   )
 }

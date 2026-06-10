@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.format.DateTimeFormatter;
 
 /**
- * GPX 1.1 Serialisierung ({@code /LF200/}).
+ * GPX 1.1 Serialisierung ({@code /LF140/}).
  */
 public final class GpxXmlWriter implements GpxWriterPort {
 

@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Roh-Track: jeder validierte {@link GpsFix} wird gespeichert (bis auf Speicher-Grenzen und
- * Overflow-Policy). Segmentierung bei Zeitlücken ({@code /LF170/}).
+ * Roh-Track: jeder validierte {@link GpsFix} wird gespeichert ({@code /LF100/}; Soft-Limit {@code /LF110/};
+ * Hard-Limit STOP {@code /LF130/}). Segmentierung bei Zeitlücken ({@code /LF120/}).
  */
 public final class TrackAggregator {
 
@@ -36,13 +36,10 @@ public final class TrackAggregator {
         EnumSet<TrackAcceptResult.Flag> flags = EnumSet.noneOf(TrackAcceptResult.Flag.class);
 
         if (params.hardLimitPoints() > 0 && storedCount >= params.hardLimitPoints()) {
-            if (params.overflowMode() == OverflowMode.STOP
-                    || params.overflowMode() == OverflowMode.DOWNSAMPLE) {
-                recordingStopped = true;
-                flags.add(TrackAcceptResult.Flag.HARD_LIMIT_REACHED);
-                flags.add(TrackAcceptResult.Flag.RECORDING_STOPPED);
-                return TrackAcceptResult.of(flags, Optional.empty());
-            }
+            recordingStopped = true;
+            flags.add(TrackAcceptResult.Flag.HARD_LIMIT_REACHED);
+            flags.add(TrackAcceptResult.Flag.RECORDING_STOPPED);
+            return TrackAcceptResult.of(flags, Optional.empty());
         }
 
         if (lastStoredPoint != null) {
