@@ -16,6 +16,8 @@ import com.example.bearing.domain.optimize.DouglasPeuckerOptimizer;
 import com.example.bearing.domain.optimize.LineCollinearityOptimizer;
 import com.example.bearing.domain.optimize.MinDistanceOptimizer;
 import com.example.bearing.domain.optimize.NthPointOptimizer;
+import com.example.bearing.domain.optimize.TrackOptimizer;
+import java.util.List;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import java.nio.charset.StandardCharsets;
@@ -209,26 +211,42 @@ public final class AllCapabilitiesDemo {
     }
 
     private static void runOptimizerPipeline() {
-        outHeader("5) Session: Optimierer-Pipeline (nth, mindist, Douglas-Peucker, Kollinearitaet)");
+        outHeader("5) Session: Optimierer einzeln und als Pipeline");
         Instant t0 = Instant.parse("2026-01-04T14:00:00Z");
+        int n = 96;
+        out("Demo-Track Rohpunkte (Sinus/Cosinus-Kruemmung)", n);
+
+        NthPointOptimizer nth = new NthPointOptimizer(5);
+        MinDistanceOptimizer minDist = new MinDistanceOptimizer(4.0);
+        DouglasPeuckerOptimizer dp = new DouglasPeuckerOptimizer(25.0);
+        LineCollinearityOptimizer line = new LineCollinearityOptimizer(4.0);
+
+        GpxResult raw = completeCurvedTrackWithOptimizers(t0, n, List.of());
+        out("Ohne Optimierer", "GPX <trkpt>: " + countTrkptTags(raw.asUtf8String()));
+
+        for (TrackOptimizer opt : List.of(nth, minDist, dp, line)) {
+            GpxResult r = completeCurvedTrackWithOptimizers(t0, n, List.of(opt));
+            out("Nur " + opt.name(), "GPX <trkpt>: " + countTrkptTags(r.asUtf8String()));
+        }
+
+        GpxResult pipeline = completeCurvedTrackWithOptimizers(t0, n, List.of(nth, minDist, dp, line));
+        out("Pipeline (alle vier)", "GPX <trkpt>: " + countTrkptTags(pipeline.asUtf8String()));
+        out("Rohdaten gespeicherte Punkte (Statistik)", pipeline.statistics().storedPointCount());
+        out("Angewandte Optimierer", pipeline.appliedOptimizers());
+    }
+
+    private static GpxResult completeCurvedTrackWithOptimizers(
+            Instant t0, int pointCount, List<TrackOptimizer> optimizers) {
         SettableClock clock = new SettableClock(t0);
         DefaultBearingSession s =
                 BearingBootstrap.newSession(new SystemClockAdapter(clock), Optional.empty(), new NoopW3wClient());
-        SessionConfig cfg =
-                SessionConfig.builder()
-                        .addOptimizer(new NthPointOptimizer(5))
-                        .addOptimizer(new MinDistanceOptimizer(4.0))
-                        .addOptimizer(new DouglasPeuckerOptimizer(25.0))
-                        .addOptimizer(new LineCollinearityOptimizer(4.0))
-                        .build();
-        s.start(cfg, new GeoCoordinate(48.79, 9.19));
-        int n = 96;
-        out("Demo-Track Rohpunkte (Sinus/Cosinus-Kruemmung)", n);
-        feedCurvedTrack(s, clock, t0, n, 2L, 48.768, 9.165);
-        GpxResult r = s.complete();
-        out("Rohdaten gespeicherte Punkte (Statistik)", r.statistics().storedPointCount());
-        out("GPX <trkpt> nach Pipeline", countTrkptTags(r.asUtf8String()));
-        out("Angewandte Optimierer", r.appliedOptimizers());
+        SessionConfig.Builder cfgBuilder = SessionConfig.builder();
+        for (TrackOptimizer opt : optimizers) {
+            cfgBuilder.addOptimizer(opt);
+        }
+        s.start(cfgBuilder.build(), new GeoCoordinate(48.79, 9.19));
+        feedCurvedTrack(s, clock, t0, pointCount, 2L, 48.768, 9.165);
+        return s.complete();
     }
 
     private static void runPersistOnCompleteJimfs() {
