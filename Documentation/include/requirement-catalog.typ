@@ -30,11 +30,11 @@
   [/LF180/], [Optimierung Mindestabstand], [`MinDistanceOptimizer`],
   [/LF190/], [Optimierung Geraden-Heuristik], [`LineCollinearityOptimizer`],
   [/LF200/], [Optimierung Douglas-Peucker], [`DouglasPeuckerOptimizer`],
-  [/LF210/], [What3Words auflösen], [`W3wHttpClient` / `NoopW3wClient`],
-  [/LF220/], [What3Words cachen], [`W3wHttpClient` LRU/TTL],
+  [/LF210/], [What3Words auflösen], [`W3wHttpClient` / \ `NoopW3wClient`],
+  [/LF220/], [What3Words cachen], [`W3wHttpClient` \ LRU/TTL],
   [/LF230/], [Koordinaten validieren], [`ValidationException COORD_RANGE`],
   [/LF240/], [Zeitstempel validieren], [`ValidationException TIMESTAMP_INVALID`],
-  [/LF250/], [Path-Traversal verhindern], [`SafeFileSink` → `SecurityException`],
+  [/LF250/], [Path-Traversal verhindern], [`SafeFileSink` → \ `SecurityException`],
 )
 
 #let catalog-ll-table = table(

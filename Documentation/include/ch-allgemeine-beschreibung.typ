@@ -6,7 +6,7 @@
 #let ch-allgemeine-beschreibung-kapitel = [
 #set par(justify: true)
 
-Dieses Kapitel betrachtet die Java-Peilungskomponente aus der Übersicht: wie sie sich in ihr technisches Umfeld einfügt, welche Hauptfunktionen sie bietet, welche Stakeholder und Benutzerprofile eine Rolle spielen und welche systemweiten Einschränkungen, Annahmen und Abhängigkeiten gelten. Es entspricht dem Abschnitt „General Description" der IEEE-830-Vorlage.
+Dieses Kapitel betrachtet die Java-Peilungskomponente aus der Übersicht und beschäftigt sich damit, wie sie sich in das technische Umfeld einfügt, welche Hauptfunktionen sie bietet, welche Benutzerprofile eine Rolle spielen und welche systemweiten Einschränkungen, Annahmen und Abhängigkeiten gelten.
 
 // ─────────────────────────────────────────────────────────────────────────────
 == Einbettung
@@ -14,11 +14,11 @@ Dieses Kapitel betrachtet die Java-Peilungskomponente aus der Übersicht: wie si
 
 === Systemsicht und Systemgrenze
 
-Die Java-Peilungskomponente ist eine reine Bibliothek ohne eigene Benutzeroberfläche. Sie wird in den Prozess einer *Host-Anwendung* eingebettet und läuft in deren JVM. Es existiert kein eigener Prozess, kein eigenständiger Server und kein Nachrichtensystem.
+Die Java-Peilungskomponente ist eine reine Bibliothek ohne eigene Benutzeroberfläche. Sie wird in den Prozess einer Host-Anwendung eingebettet und läuft in deren JVM. Es existiert kein eigener Prozess, kein eigenständiger Server und kein Nachrichtensystem.
 
 Die Systemgrenze umschließt ausschließlich die Java-Peilungskomponente. Sensordaten (GNSS, Kompass) werden nicht direkt gelesen. Die Host-Anwendung ist verantwortlich für Sensorfusion und Gerätezugriff und übergibt fertige Messwerte über die öffentliche API.
 
-Externe Kommunikation findet ausschließlich über zwei optionale Kanäle statt: HTTPS zur W3W-API und Dateisystemzugriffe für den GPX-Export. Beide Kanäle sind abschaltbar; die Kernfunktion (Peilung, Track-Aufzeichnung) läuft ohne Netzwerkverbindung.
+Externe Kommunikation findet ausschließlich über zwei optionale Kanäle statt: HTTPS zur W3W-API und Dateisystemzugriffe für den GPX-Export. Beide Kanäle sind abschaltbar und die Kernfunktion (Peilung, Track-Aufzeichnung) läuft ohne Netzwerkverbindung.
 
 #figure(
   caption: [Externe Schnittstellen der Bibliothek und ihre Kommunikationsrichtungen.],
@@ -27,10 +27,10 @@ Externe Kommunikation findet ausschließlich über zwei optionale Kanäle statt:
     columns: (4.0cm, 2.9cm, 1fr),
     stroke: tbl-stroke, inset: tbl-inset,
     [*Externe Schnittstelle*], [*Richtung*], [*Zweck*],
-    [Host-Anwendung],  [eingehend],          [Steuerung des Session-Lebenszyklus; Übergabe von Positions- und Kursdaten],
-    [Listener / Result],[ausgehend],         [Snapshots, Statuswechsel, Fehlerereignisse; GPX-Rückgabe an den Host],
+    [Host-Anwendung],  [eingehend],          [Steuerung des Session-Lebenszyklussowie die Übergabe von Positions- und Kursdaten],
+    [Listener / Result],[ausgehend],         [Snapshots, Statuswechsel, Fehlerereignisse und GPX-Rückgabe an den Host],
     [Dateisystem],     [ausgehend, optional],[GPX-Persistenz nur bei expliziter Konfiguration durch den Host],
-    [W3W-HTTP],        [ausgehend, optional],[Reverse-Lookup mit lokalem Cache; ohne Netzwerk vollständig deaktivierbar],
+    [W3W-HTTP],        [ausgehend, optional],[Reverse-Lookup mit lokalem Cache, ist ohne Netzwerk vollständig deaktivierbar],
   ))
 )
 
@@ -48,7 +48,7 @@ Das System ist vertikal in vier Subsysteme gegliedert, die als streng gerichtete
     [API / Application Service],[Use-Case-Orchestrierung; Session-Verwaltung; Fehlerbehandlung],   [Session starten, beenden und abbrechen; konsistenten Zustandsschnappschuss liefern],
     [Domain Core],              [Fachlogik ohne I/O-Abhängigkeiten],                              [Azimut, Distanz, Ordinalrichtung; Rohspeicher, Validierung, Segmentierung, Export-Optimierer],
     [Ports],                    [Abstraktion technischer Abhängigkeiten],                          [Stabile Schnittstellen für GPX, Zeitgeber, Dateisystem, Logging und W3W],
-    [Infrastruktur / Adapter],  [Konkrete Implementierung der Ports],                             [XML-Serialisierung, Datei-I/O, HTTP-Client, Systemuhr, Logging-Backend],
+    [Infrastruktur / \ Adapter],  [Konkrete Implementierung der Ports],                             [XML-Serialisierung, Datei-I/O, HTTP-Client, Systemuhr, Logging-Backend],
   ))
 )
 
@@ -69,7 +69,7 @@ Das System ist vertikal in vier Subsysteme gegliedert, die als streng gerichtete
   ↓ nur über Port-Interfaces
 
   *Port-Schicht*\
-  Technologieunabhängige Verträge. Die Domain formuliert, was sie braucht (z.\ B. „schreibe GPX"), aber nicht wie. Dies ermöglicht Mocking im Test ohne reale Abhängigkeiten.
+  Technologieunabhängige Verträge. Die Domain formuliert, was sie braucht (z.B. „schreibe GPX"), aber nicht wie. Dies ermöglicht Mocking im Test ohne reale Abhängigkeiten.
 
   ↓ implementiert durch
 
@@ -114,17 +114,17 @@ Die folgende Tabelle fasst die Hauptfunktionsgruppen der Bibliothek zusammen. Di
     columns: (4cm, 1fr, 2.5cm),
     stroke: tbl-stroke, inset: tbl-inset,
     [*Funktionsgruppe*],           [*Beschreibung*],                                                           [*Anforderungen*],
-    [Session-Lebenszyklus],        [Start, laufende Aufzeichnung und Abbruch einer Peilungs-Session mit UUID-Identifikation.], [/LF010/-/LF090/],
+    [Session- \ Lebenszyklus],        [Start, laufende Aufzeichnung und Abbruch einer Peilungs-Session mit UUID-Identifikation.], [/LF010/-/LF090/],
     [Peilung und Kurs],            [Berechnung von geografischem Azimut, Entfernung (Haversine) und diskreter Himmelsrichtung; optionale Kursabweichung.], [/LF030/-/LF050/],
     [GPS-Track-Aufzeichnung],      [Kontinuierlicher Rohspeicher validierter GPS-Fixes; Segmentierung bei Zeitlücken; zweistufiges Punktbudget.], [/LF100/-/LF130/],
     [GPX-Export],                  [GPX-1.1-konformer Export als `byte[]`; optionales atomares Dateischreiben.], [/LF140/-/LF160/],
     [Track-Optimierung],           [Austauschbare Strategie-Algorithmen: n-ter Punkt, Mindestabstand, Geraden-Heuristik, Douglas-Peucker.], [/LF170/-/LF200/],
-    [What3Words-Integration],      [Optionaler Reverse-Lookup mit Cache via `W3wClientPort`.], [/LF210/, /LF220/],
-    [Validierung und Sicherheit],  [Koordinaten- und Zeitstempelprüfung; Path-Traversal-Schutz; XML-Escaping.], [/LF230/-/LF250/],
+    [What3Words- \ Integration],      [Optionaler Reverse-Lookup mit Cache via `W3wClientPort`.], [/LF210/, /LF220/],
+    [Validierung und \ Sicherheit],  [Koordinaten- und Zeitstempelprüfung; Path-Traversal-Schutz; XML-Escaping.], [/LF230/-/LF250/],
     [Betrieb und Qualität],        [Deterministische Tests, strukturiertes Logging, reproduzierbarer Build.], [/LL010/-/LL080/],
   ))
 )
-
+#pagebreak()
 *Weitere Entwurfsprinzipien:*
 
 #figure(
@@ -140,15 +140,15 @@ Die folgende Tabelle fasst die Hauptfunktionsgruppen der Bibliothek zusammen. Di
     [Module sind strikt nach fachlicher Verantwortung getrennt.],
     [Anpassungen am GPX-Format bleiben lokal auf den `bearing-adapter-gpx` begrenzt.],
 
-    [Schwache Kopplung],
+    [Schwache \ Kopplung],
     [Komponenten kommunizieren ausschließlich über APIs statt über konkrete Implementierungen.],
     [Unterkomponenten lassen sich flexibler austauschen, was Mocking für Unit-Tests vereinfacht.],
 
-    [Information Hiding],
+    [Information \ Hiding],
     [Domänen-Logik wird hinter einer Fassade gekapselt. Daten fließen als unveränderliche Value Objects.],
     [Die interne Struktur ist geschützt; externe Aufrufer können den Systemzustand nicht schädigen.],
 
-    [Separation of Concerns],
+    [Separation \ of Concerns],
     [Saubere Trennung zwischen Kernlogik und Infrastruktur (Dateizugriff, Netzwerk-I/O).],
     [Fachlogik lässt sich ohne Infrastruktur-Overhead testen und umgekehrt.],
 
@@ -176,8 +176,8 @@ Als Bibliothek ohne eigene Benutzeroberfläche kennt die Peilungskomponente kein
     stroke: tbl-stroke,
     inset: tbl-inset,
     [*Rolle*], [*Erwartung / Interesse*], [*Einfluss*],
-    [Dozent / Prüfer],      [Nachweis der Vorlesungsinhalte, lauffähiger Code, formal saubere Dokumentation nach IEEE-/SOPHIST-Standard.], [hoch],
-    [Studierendenteam],     [Wartbare, erweiterbare Architektur; klare Testbarkeit; nachvollziehbare Anforderungen.], [mittel],
+    [Dozent / \ Prüfer],      [Nachweis der Vorlesungsinhalte, lauffähiger Code, formal saubere Dokumentation nach IEEE-/SOPHIST-Standard.], [hoch],
+    [Studierendenteam],     [Wartbare, erweiterbare Architektur; klare Testbarkeit; nachvollziehbare Anforderungen.], [hoch],
     [Host-Entwickler/in],   [Stabile, vollständig dokumentierte API; klare Fehlersemantik über maschinenlesbare Exception-Codes.], [hoch],
     [Endnutzer/in (indirekt)],[Zuverlässige Peilungswerte und korrekte GPX-Ausgabe in der Host-Anwendung.], [mittel],
     [Betrieb],              [Strukturiertes Logging auf WARN-Level; keine stillen Fehler; deterministisches Verhalten.], [niedrig-mittel],
@@ -186,7 +186,7 @@ Als Bibliothek ohne eigene Benutzeroberfläche kennt die Peilungskomponente kein
 
 === Primärer Akteur: Host-Anwendung
 
-Der primäre Akteur ist die *Host-Anwendung*. Sie ruft die öffentliche Java-API der Bibliothek auf und übernimmt folgende Aufgaben:
+Der primäre Akteur ist die Host-Anwendung. Sie ruft die öffentliche Java-API der Bibliothek auf und übernimmt folgende Aufgaben:
 
 - Bereitstellung von GNSS-Fixes (lat, lon, Zeitstempel, optional HDOP, Geschwindigkeit, Elevation).
 - Steuerung des Session-Lebenszyklus (Start, Update, Complete/Abort).
@@ -196,11 +196,11 @@ Der primäre Akteur ist die *Host-Anwendung*. Sie ruft die öffentliche Java-API
 
 === Sekundärer Akteur: Externe Dienste
 
-Als optionaler sekundärer Akteur fungiert der *What3Words-Dienst* (W3W): Er beantwortet HTTPS-Reverse-Lookup-Anfragen, die die Bibliothek über ihren konfigurierten HTTP-Adapter stellt. Die Bibliothek greift nie direkt auf GNSS-Hardware zu.
+Als optionaler sekundärer Akteur fungiert der What3Words-Dienst (W3W): Er beantwortet HTTPS-Reverse-Lookup-Anfragen, die die Bibliothek über ihren konfigurierten HTTP-Adapter stellt. Die Bibliothek greift nie direkt auf GNSS-Hardware zu.
 
 === Funktionale Anforderungen - Übersicht
 
-Die normativen Detail-Spezifikationen stehen in *Kapitel 3.1* (`/LF010/` … `/LF250/`, lückenlos). Vollständiger Katalog:
+Die normativen Detail-Spezifikationen stehen in Kapitel 3.1 (`/LF010/` … `/LF250/`, lückenlos). Vollständiger Katalog:
 
 #import "requirement-catalog.typ": catalog-lf-table
 
@@ -226,7 +226,7 @@ Kapitel 1.2 hat den Funktionsumfang bereits umrissen. Die folgende Auflistung h�
 - Konfigurierbare Aufzeichnung: Punktbudget (Soft-/Hard-Limit), Segmentierung bei Zeitlücken und Validierung der Eingaben (Koordinaten, Zeit). Wie oft Positionsupdates eintreffen, steuert der Host.
 - Export der Track-Daten als GPX 1.1, wahlweise als String oder Bytefolge.
 - Wählbare Optimierungsverfahren vor dem Export (n-ter Punkt, Mindestabstand, Geraden-Heuristik, Douglas-Peucker) sowie eine optionale What3Words-Auflösung mit lokalem Caching.
-- Qualitätssicherung durch automatisierte Unit-Tests der Kernfunktionen - insbesondere der geografischen Berechnungen, der Optimierungsalgorithmen und der GPX-Serialisierung.
+- Qualitätssicherung durch automatisierte Unit-Tests der Kernfunktionen vorallem der geografischen Berechnungen, der Optimierungsalgorithmen und der GPX-Serialisierung.
 
 === Außerhalb des Scopes
 - Optimierung der eingehenden Track-Daten während der laufenden Aufzeichnung.
@@ -242,8 +242,6 @@ Kapitel 1.2 hat den Funktionsumfang bereits umrissen. Die folgende Auflistung h�
 == Annahmen und Abhängigkeiten
 // ─────────────────────────────────────────────────────────────────────────────
 
-Dieses Kapitel beschreibt die Annahmen und externen Abhängigkeiten, auf denen die definierten Anforderungen basieren. Änderungen an diesen Faktoren können Auswirkungen auf Anforderungen, Schnittstellen und das Systemverhalten haben.
-
 === Annahmen
 
 #show figure: set block(breakable: true)
@@ -257,11 +255,13 @@ Dieses Kapitel beschreibt die Annahmen und externen Abhängigkeiten, auf denen d
     [A1], [Der Host liefert fertige Positions- und Kursdaten über die öffentliche API; die Bibliothek liest keine Sensoren und führt keine Sensorfusion aus.], [Systemgrenze und Funktionsumfang (Peilung und Track aus bereitgestellten Messwerten) bleiben definiert.], [Ohne valide Host-Daten sind Peilung und Aufzeichnung nicht sinnvoll nutzbar; dies liegt außerhalb der Verantwortung der Bibliothek.],
     [A2], [Nur der Host steuert die Aufruffrequenz; die Bibliothek dünnt den eingehenden Datenstrom nicht von sich aus aus.], [Roh-Trackfüllung, Punktbudget und Segmentierung folgen der vom Host gewählten Updatefrequenz.], [Andere Taktungsmodelle würden die dokumentierten Erwartungen verletzen und Anpassungen am SRS nach sich ziehen.],
     [A3], [Geografische Berechnungen und Eingaben beziehen sich auf WGS84-konforme Koordinaten, wie in der Spezifikation vorausgesetzt.], [Azimut, Distanz und Exportformate bleiben konsistent zur fachlichen Definition.], [Abweichende Bezugssysteme erfordern eine Überarbeitung der Anforderungen und Algorithmen.],
-    [A4], [Die Host-JVM unterstützt mindestens Java~11.], [Bytecode, APIs und Tooling der Bibliothek sind darauf ausgelegt.], [Ältere JVMs werden nicht unterstützt; ein Wechsel der Mindestversion wäre eine SRS-Änderung.],
+    [A4], [Die Host-JVM unterstützt mindestens Java~11.], [Bytecode, APIs und Tooling der Bibliothek sind darauf ausgelegt.], [Ältere JVMs werden nicht unterstützt; ein Wechsel der Mindestversion wäre eine System-Änderung.],
     [A5], [Integratoren und Tests können eine `Clock` injizieren, um zeitabhängiges Verhalten deterministisch abzusichern.], [Reproduzierbare Tests und nachvollziehbare Session-Zeitlogik.], [Ohne geeignete Zeitquelle können zeitbasierte Regeln in Tests schwer stabil gehalten werden.],
   ))
 )
+ 
 
+#pagebreak()
 === Abhängigkeiten
 
 #figure(
