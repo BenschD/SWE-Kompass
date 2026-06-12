@@ -569,15 +569,14 @@ Das folgende Glossar definiert die zentralen Fachbegriffe welche in diesem Dokum
 == Überblick
 // ─────────────────────────────────────────────────────────────────────────────
 
-Das Dokument folgt dem Aufbau nach IEEE 830 und gliedert sich in drei Hauptkapitel:
+Der Aufbau des Dokuments orientiert sich an IEEE 830 und gliedert sich in drei Hauptkapitel:
 
-*Kapitel 1 -- Einleitung* legt Zweck und Einsatzbereich der Bibliothek fest, vereinheitlicht die Terminologie im Glossar und gibt einen Überblick über den Dokumentaufbau.
+*Kapitel 1 -- Einleitung* definiert Zweck und Einsatzbereich der Bibliothek, legt mit dem Glossar eine einheitliche Terminologie fest und gibt einen Überblick über den Aufbau des Dokuments.
 
-*Kapitel 2 -- Allgemeine Beschreibung* zeigt, wie sich die Bibliothek in ihr Umfeld einfügt (System- und physische Sicht, externe Kommunikationspartner), benennt die Hauptfunktionen und hält systemweite Einschränkungen, Annahmen und Abhängigkeiten fest.
+*Kapitel 2 -- Allgemeine Beschreibung* ordnet die Bibliothek in ihr Umfeld ein: Es beschreibt die System- und die physische Sicht sowie die externen Kommunikationspartner, benennt die Hauptfunktionen und dokumentiert systemweite Einschränkungen, Annahmen und Abhängigkeiten.
 
-*Kapitel 3 -- Spezifische Anforderungen* bildet den normativen Kern: funktionale Spezifikationen (`/LF…/`) mit Aktivitätsdiagrammen (Kap. 3.1), nicht-funktionale Anforderungen (`/LL…/`), externe Schnittstellen, Performance-Anforderungen sowie das Qualitätsmodell nach ISO/IEC 25010.
+*Kapitel 3 -- Spezifische Anforderungen* bildet den normativen Kern des Dokuments. Es umfasst die funktionalen Spezifikationen (`/LF…/`) mit zugehörigen Aktivitätsdiagrammen (Kap. 3.1), die nicht-funktionalen Anforderungen (`/LL…/`), die externen Schnittstellen, die Performance-Anforderungen sowie das Qualitätsmodell nach ISO/IEC 25010.
 
-Der *Anhang* ergänzt das Ganze um Traceability-Matrizen, das objektorientierte Analyse- und Entwurfsmodell, Review-Checklisten, Normreferenzen, erweiterte Akzeptanzkriterien und algorithmische Hinweise.
-
+Der *Anhang* vervollständigt die Spezifikation um Traceability-Matrizen, das objektorientierte Analyse- und Entwurfsmodell, Review-Checklisten, Normreferenzen, erweiterte Akzeptanzkriterien sowie algorithmische Hinweise.
 #pagebreak()
 ]
