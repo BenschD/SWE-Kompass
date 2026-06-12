@@ -37,12 +37,11 @@ Ziel dieses Dokuments ist eine vollständige und prüfbare Spezifikation einer J
 
 === Problemstellung und fachlicher Hintergrund
 
-Als fachliche Referenz dient die iOS-Anwendung _Kompass Professional_. Sie demonstriert eine Peilungsfunktion: Die App zeigt an, in welcher Richtung und Entfernung ein Zielpunkt relativ zur aktuellen Position liegt, ohne Turn-by-Turn-Führung wie ein klassisches Navigationssystem. Dabei zeichnet sie einen GPS-Track auf, der sich als GPX exportieren lässt. Unter Peilung wird in dieser Arbeit demnach die Berechnung von Richtung und Entfernung von der aktuellen Position zu einem Ziel verstanden.
+Als fachliche Referenz dient die iOS-App _Kompass Professional_. Sie zeigt, wie eine Peilungsfunktion in der Praxis aussehen kann: Die App verrät, in welcher Richtung und Entfernung ein Zielpunkt von der eigenen Position aus liegt, sie führt aber nicht Schritt für Schritt dorthin, wie man es von einem Navigationssystem kennt. Nebenbei zeichnet sie den zurückgelegten Weg als GPS-Track auf, der sich als GPX-Datei exportieren lässt. Wenn in dieser Arbeit von Peilung die Rede ist, ist damit also die Berechnung von Richtung und Entfernung zwischen der aktuellen Position und einem Ziel gemeint.
 
-Problematisch ist dabei, dass die Peilungslogik der App fest mit ihrer Oberfläche und der Sensorhardware verzahnt ist und sich deshalb nicht eigenständig nutzen lässt. Genau hier setzt diese Arbeit an: Die Bibliothek soll Zielrichtung (Azimut), Entfernung und Ordinalrichtung aus WGS84-Koordinaten konsistent und reproduzierbar berechnen, unter klar definierten Eingangs- und Schnittstellenbedingungen. Die Verarbeitung läuft als Session mit Start, Laufzeit und Abbruch; auch nach einem Abbruch bleibt der bis dahin erfasste Track vollständig exportierbar.
+Die App hat allerdings einen Haken: Ihre Peilungslogik ist so eng mit der Oberfläche und der Sensorhardware verwoben, dass man sie nicht losgelöst davon verwenden kann. Genau an dieser Stelle setzt die vorliegende Arbeit an. Die zu entwickelnde Bibliothek soll Zielrichtung (Azimut), Entfernung und Ordinalrichtung aus WGS84-Koordinaten,konsistent, reproduzierbar und unter klar definierten Eingangs- und Schnittstellenbedingungen, berechnen. Die Verarbeitung ist als Session organisiert, mit Start, Laufzeit und Abbruch. Wird eine Session abgebrochen, geht nichts verloren: Der bis dahin aufgezeichnete Track lässt sich weiterhin vollständig exportieren.
 
-*Zielbild der Bibliothek:* Aus den vom Host gelieferten Positions- und Kursdaten ermittelt die Bibliothek die Peilungsgrößen und zeichnet parallel einen GPS-Track auf, der sich als GPX 1.1 exportieren lässt. Optional lassen sich Koordinaten zusätzlich als What3Words-Adresse auflösen.
-
+*Zielbild der Bibliothek:* Der Host liefert Positions- und Kursdaten, die Bibliothek berechnet daraus die Peilungsgrößen und zeichnet parallel einen GPS-Track auf, der als GPX 1.1 exportiert werden kann. Auf Wunsch lassen sich Koordinaten zusätzlich in eine What3Words-Adresse übersetzen.
 === Im Scope
 
 - Berechnung von Zielrichtung (Azimut), Entfernung und Ordinalrichtung auf WGS84-Basis, bei verfügbarem Kurswert auch der Kursabweichung.
@@ -67,7 +66,7 @@ Problematisch ist dabei, dass die Peilungslogik der App fest mit ihrer Oberfläc
 == Glossar
 // ─────────────────────────────────────────────────────────────────────────────
 
-Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einheitlich. Jede Begriffskarte folgt dabei demselben SOPHIST-Schema mit den Feldern Definition, Abgrenzung, Gültigkeit, Bezeichnung/Symbol und Quellverweis.
+Das folgende Glossar definiert die zentralen Fachbegriffe welche in diesem Dokument verwendet werden. Jede Begriffskarte folgt dabei demselben Schema mit den Feldern Definition, Abgrenzung, Gültigkeit, Bezeichnung/Symbol und Quellverweis.
 
 === Fachbegriffe Navigation und Geografie
 
@@ -85,7 +84,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "Horizontaler Winkel zwischen der geografischen Nordrichtung und der Großkreisrichtung zum Ziel.",
   "",
   "Gültig für Entfernungen > 0 m.",
-  "Symbol: α oder `azimuthDeg`; Einheit: ° (Grad).",
+  "Symbol: sym.alpha, Einheit: ° (Grad).",
   "Gängige Navigationsliteratur.",
 )
 
@@ -94,17 +93,17 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "Orientierung der lokalen Horizontalebene relativ zu geografisch Nord, typischerweise als Winkel 0°-360°.",
   "",
   "Gültig, wenn der Host verlässliche Kursinformation liefert.",
-  "Symbol: ψ oder `headingDeg`; Einheit: °.",
+  "Symbol: sym.psi, Einheit: °.",
   "Kreisel-/Kompassmesstechnik.",
 )
 
 #begriffskarte(
   "Kursabweichung (relative Bearing)",
-  "Winkel zwischen aktuellem Kurs und der Zielrichtung, zentriert typischerweise in [−180°, +180°].",
+  "Winkel zwischen aktuellem Kurs und der Zielrichtung, zentriert typischerweise in [-180°, +180°].",
   "",
   "",
-  "Symbol: Δ oder `bearingErrorDeg`; Einheit: °.",
-  "Berechnung in `BearingSnapshot` gemäß /LF050/ (optionaler Kurs aus /LF040/).",
+  "Symbol: sym.Delta, Einheit: °.",
+  "Berechnung in sym.Delta gemäß /LF050/ (optionaler Kurs aus /LF040/).",
 )
 
 #begriffskarte(
@@ -130,7 +129,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "Kürzeste Distanz zwischen zwei Ellipsoidpunkten entlang einer Großkreislinie auf der Kugelapproximation der Erde.",
   "",
   "Für kurze Distanzen < 20 km ist die sphärische Näherung üblicherweise ausreichend.",
-  "Symbol: d oder `distanceM`; Einheit: m.",
+  "Symbol: d, Einheit: m.",
   "Haversine-Formel als Referenznäherung.",
 )
 
@@ -139,7 +138,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "Sphärische Formel zur Berechnung der Zentriwinkelspanne und daraus der Großkreisdistanz aus zwei Breiten-/Längengraden.",
   "",
   "Gültig für Kugelradius R.",
-  "Implementationsreferenz: `greatCircleDistanceMeters(lat1,lon1,lat2,lon2)`.",
+  "Implementationsreferenz: lat1, lon1, lat2, lon2.",
   "Wikipedia: Haversine-Formel",
 )
 
@@ -147,14 +146,14 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "ECEF (Earth-Centered, Earth-Fixed)",
   "Rechtshändiges kartesisches Koordinatensystem mit Ursprung im Erdmittelpunkt (vereinfacht), Z-Achse durch den Nordpol.",
   "",
-  "Interne Hilfskonstruktion für Distanzen im Raum optional; öffentliche API bleibt WGS84 lat/lon.",
+  "Interne Hilfskonstruktion für Distanzen im Raum optional, öffentliche API bleibt WGS84 lat/lon.",
   "Koordinaten X, Y, Z in Metern.",
-  "ISO 19111; GNSS-Standardliteratur.",
+  "ISO 19111, GNSS-Standardliteratur.",
 )
 
 #begriffskarte(
   "EPSG:4326",
-  "Geographisches CRS: Achsenfolge Breite (φ), Länge (λ) in Grad auf WGS84-Ellipsoid.",
+  "Geographisches CRS: Achsenfolge Breite (sym.phi), Länge (sym.lambda) in Grad auf WGS84-Ellipsoid.",
   "",
   "Gültig für alle Eingaben dieser Bibliothek; andere EPSG-Codes nur nach expliziter Erweiterung.",
   "CRS-Code als Metadaten-Hinweis exportierbar.",
@@ -165,9 +164,9 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "Turn-by-Turn-Navigation",
   "Schrittweise Routenführung entlang von Kanten eines Straßengraphen mit Manöveranweisungen.",
   "",
-  "Explizit *nicht* Gegenstand der Peilungskomponente.",
+  "Explizit nicht Gegenstand der Peilungskomponente.",
   "-",
-  "Allgemeiner Sprachgebrauch; Abgrenzung Projektauftrag.",
+  "Allgemeiner Sprachgebrauch, Abgrenzung Projektauftrag.",
 )
 
 === Begriffe zu Datenformaten und Protokollen
@@ -183,7 +182,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
 
 #begriffskarte(
   "Trackpunkt",
-  "XML-Element innerhalb eines GPX-Tracks, das mindestens Breite, Länge und Zeit trägt.",
+  "XML-Element innerhalb eines GPX-Tracks, das mindestens Breite, Länge und Zeit beinhaltet.",
   "",
   "Gültig innerhalb eines Tracks.",
   "Attribute: `lat`, `lon`.",
@@ -194,7 +193,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "HDOP (Horizontal Dilution of Precision)",
   "Dimensionsloses Maß für die geometrische Güte der Satellitenkonstellation; niedriger ist typischerweise besser.",
   "",
-  "Optional im Datenmodell und in GPX; keine automatische Verwerfung beim Einlesen (/LF030/, /LD040/).",
+  "Optional im Datenmodell und in GPX (keine automatische Verwerfung beim Einlesen) (/LF030/, /LD040/).",
   "",
   "Herstellerdokumentation GNSS-Empfänger.",
 )
@@ -203,14 +202,14 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "UTC und `Instant`",
   "UTC ist die einheitliche Zeitbasis ohne Sommerzeit; `java.time.Instant` beschreibt einen exakten Zeitpunkt auf dieser Skala.",
   "",
-  "Interne Zeitstempel laufen durchgängig über `Instant`; Ausgabe nach GPX erfolgt als ISO-8601 in UTC.",
+  "Interne Zeitstempel laufen durchgängig über `Instant` (Ausgabe nach GPX erfolgt als ISO-8601 in UTC).",
   "Im Code: `ClockPort.instant()` und `DateTimeFormatter.ISO_INSTANT`.",
-  "ISO 8601; Java SE Date-Time-Package.",
+  "ISO 8601, Java SE Date-Time-Package.",
 )
 
 #begriffskarte(
   "UTF-8",
-  "Byte-Kodierung für Unicode-Zeichen; verbindlich für GPX-XML in diesem Projekt.",
+  "Byte-Kodierung für Unicode-Zeichen (verbindlich für GPX-XML in diesem Projekt).",
   "",
   "Alle serialisierten GPX-Dokumente.",
   "Kennung in XML-Deklaration optional, Bytes konsistent.",
@@ -250,7 +249,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "Trackoptimierung",
   "Austauschbare Algorithmen hinter gemeinsamer Schnittstelle zur Reduktion oder Vereinfachung von Trackpunkten.",
   "",
-  "Nur optional vor GPX-Export über `SessionConfig.addOptimizer` (leere Liste = unveränderter Rohtrack); /LF170/-/LF200/.",
+  "Nur optional vor GPX-Export über `SessionConfig.addOptimizer` (leere Liste = unveränderter Rohtrack), /LF170/-/LF200/.",
   "",
   "/LF170/-/LF200/",
 )
@@ -259,9 +258,9 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "Soft-Limit / Hard-Limit (Punktbudget)",
   "Zweistufige Begrenzung der gespeicherten Trackpunkte: erst Warnung, dann harter Stopp.",
   "",
-  "Konfigurierbar über `softLimitPoints` und `hardLimitPoints`; `0` bedeutet deaktiviert (/LF110/, /LF130/).",
+  "Konfigurierbar über `softLimitPoints` und `hardLimitPoints`, `0` bedeutet deaktiviert (/LF110/, /LF130/).",
   "Code: `SOFT_LIMIT_WARN`, `HARD_LIMIT_REACHED`.",
-  "Ressourcen-Schutz in eingebetteten Systemen; projektspezifisch.",
+  "Ressourcen-Schutz in eingebetteten Systemen (projektspezifisch).",
 )
 
 #begriffskarte(
@@ -269,7 +268,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "Definiertes Verhalten bei Erreichen des Hard-Limits: Stopp der Aufzeichnung vs. Downsampling.",
   "",
   "Konfigurationsabhängig /LF130/.",
-  "Enum: `STOP` (Hard-Limit erreicht → Aufzeichnung stoppt).",
+  "Enum: `STOP` (Hard-Limit erreicht sym.arrow.r Aufzeichnung stoppt).",
   "Interne Spezifikation.",
 )
 
@@ -295,7 +294,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
 
 #begriffskarte(
   "Immutability",
-  "Ein Objekt bleibt nach der Erzeugung unverändert; für Änderungen wird ein neues Objekt erstellt.",
+  "Ein Objekt bleibt nach der Erzeugung unverändert, für Änderungen wird ein neues Objekt erstellt.",
   "",
   "Trifft hier u.\ a. auf `SessionConfig` und `GpsPoint` zu.",
   "Hilft bei Nebenläufigkeit, weil Leser keine veränderbaren Zwischenzustände sehen.",
@@ -317,7 +316,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "",
   "Öffentliche API der Bibliothek.",
   "Feld: `String code`.",
-  "/LF090/; Best Practice API Design.",
+  "/LF090/, Best Practice API Design.",
 )
 
 === Begriffe zu Sicherheit
@@ -366,7 +365,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "",
   "Explizit keine Garantie für enge Kurvenradien /LF190/.",
   "Heuristikparameter: Toleranzband.",
-  "Klärungsgespräch Peter Bohl; /LF190/.",
+  "Klärungsgespräch Peter Bohl und /LF190/.",
 )
 
 === Begriffe zu Methodik und Qualitätssicherung
@@ -391,9 +390,11 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
 
 #begriffskarte(
   "Lastenheft vs. Pflichtenheft",
-  "Lastenheft: fachliche, wirtschaftliche und politische Zielsetzung aus Auftraggebersicht. Pflichtenheft: technische Umsetzungsvorgaben aus Entwicklersicht.",
+  "Lastenheft: fachliche, wirtschaftliche und politische Zielsetzung aus Auftraggebersicht. 
+  
+  Pflichtenheft: technische Umsetzungsvorgaben aus Entwicklersicht.",
   "",
-  "In dieser Arbeit: Kapitel „Allgemeine Beschreibung\" ≈ Lastenheft-Teile; Kapitel „Spezifische Anforderungen\" ≈ Pflichtenheft.",
+  "In dieser Arbeit: Kapitel „Allgemeine Beschreibung\" sym.approx Lastenheft-Teile und Kapitel „Spezifische Anforderungen\" sym.approx Pflichtenheft.",
   "IEEE 830-1998",
   "Software Engineering Vorlesung",
 )
@@ -420,10 +421,10 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
 
 #begriffskarte(
   "JVM (Java Virtual Machine)",
-  "Laufzeitumgebung, die Java-Bytecode plattformunabhängig ausführt; die Bibliothek setzt eine JVM voraus, stellt selbst jedoch keine bereit.",
+  "Laufzeitumgebung, die Java-Bytecode plattformunabhängig ausführt. Die Bibliothek setzt eine JVM voraus, stellt selbst jedoch keine bereit.",
   "",
-  "Ziel-Kompatibilität: Java 11 (LTS); die Bibliothek wird als reines Source-Artefakt ohne ausführbares JAR ausgeliefert.",
-  "Die JVM-Version des Host-Projekts muss ≥ 11 sein; niedrigere Versionen werden nicht unterstützt.",
+  "Ziel-Kompatibilität: Java 11 (LTS), die Bibliothek wird als reines Source-Artefakt ohne ausführbares JAR ausgeliefert.",
+  "Die JVM-Version des Host-Projekts muss ≥ 11 sein (niedrigere Versionen werden nicht unterstützt).",
   "Systemvoraussetzungen; /LL030/",
 )
 
@@ -442,7 +443,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "",
   "Standardbuild ohne Profil bleibt offline-fähig.",
   "Aktivierung: `mvn -Pw3w test` (konzeptionell).",
-  "Apache Maven Documentation - Profiles.",
+  "Apache Maven Documentation",
 )
 
 #begriffskarte(
@@ -476,7 +477,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "Checkstyle",
   "Werkzeug für statische Stil- und Strukturprüfungen im Java-Code.",
   "",
-  "Im Build integriert; die aktuelle Projektkonfiguration ist bewusst schlank gehalten.",
+  "Im Build integriert, die aktuelle Projektkonfiguration ist bewusst schlank gehalten.",
   "Konfiguration in `implementation/checkstyle.xml`.",
   "https://checkstyle.org/",
 )
@@ -530,7 +531,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe dieses Dokuments einhe
   "What3Words (W3W)",
   "Dienst, der Koordinaten in ein Drei-Wort-Format umwandelt.",
   "",
-  "Optionaler Teil des Systems (/LF210/); Ergebnisse werden gecacht (/LF220/).",
+  "Optionaler Teil des Systems (/LF210/), Ergebnisse werden gecacht (/LF220/).",
   "",
   "what3words Limited, Peter Bohl",
 )
