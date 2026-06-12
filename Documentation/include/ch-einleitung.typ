@@ -9,22 +9,22 @@ Dieses Kapitel klärt, welchen Zweck die Java-Peilungskomponente erfüllt, in we
 == Zweck
 // ─────────────────────────────────────────────────────────────────────────────
 
-Ziel dieses Dokuments ist eine vollständige und prüfbare Spezifikation einer Java-Bibliothek ohne Benutzeroberfläche, die Peilung, GPS-Track-Aufzeichnung und GPX-1.1-Export bereitstellt. Es richtet sich an zwei Gruppen: an Entwicklerinnen und Entwickler, die die Bibliothek in eigene Host-Anwendungen einbinden, und an Prüfende, die Anforderungen und Testabdeckung nachvollziehen. Jede Anforderung verweist auf konkrete Testfälle, sodass sich der Weg vom fachlichen Ziel bis zur Verifikation durchgehend belegen lässt.
+Ziel dieses Dokuments ist eine vollständige und prüfbare Spezifikation einer Java-Bibliothek ohne Benutzeroberfläche, welche die Peilung, die GPS-Track-Aufzeichnung und den GPX-1.1-Export bereitstellt. Die Einzelnen Anforderungen sind so formuliert, dass sie von einem Entwicklerteam umgesetzt und von einem Testteam überprüft werden können. Das Dokument dient als verbindliche Grundlage für die Entwicklung, die Qualitätssicherung und die Abnahme der Bibliothek.
 
 *Konkrete Ziele der Bibliothek:*
 
-- *Anforderungsanalyse und Spezifikation:* alle Anforderungen nach den SOPHIST-Regeln eindeutig und prüfbar formulieren funktional, nicht-funktional, an den Datenschnittstellen und als Randbedingungen, ergänzt um Qualitäts- und Risikobetrachtungen sowie ein objektorientiertes Analyse- und Entwurfsmodell.
+- *Anforderungsanalyse und Spezifikation:* Alle Anforderungen werden nach den SOPHIST-Regeln eindeutig und prüfbar formuliert. Dies umfasst funktionale und nicht-funktionale Anforderungen, Anforderungen an die Datenschnittstellen und Randbedingungen, ergänzt um Qualitäts- und Risikobetrachtungen sowie ein objektorientiertes Analyse- und Entwurfsmodell.
 
-- *Implementierung:* eine Java-Komponente ohne Benutzeroberfläche mit klaren Schnittstellen für Positions- und Kursdaten, konfigurierbarer Aufzeichnung, GPX-1.1-Export und optionaler What3Words-Anbindung.
+- *Implementierung:* Es soll eine Java-Komponente ohne Benutzeroberfläche mit klaren Schnittstellen für Positions- und Kursdaten, konfigurierbarer Aufzeichnung, GPX-1.1-Export und optionaler What3Words-Anbindungimplementiert werden.
 
-- *Qualitätssicherung:* nachvollziehbare Testfälle je fachlichem Modul, automatisiert über Maven ausführbar und mit reproduzierbaren Ergebnissen als Grundlage für die Abnahme.
+- *Qualitätssicherung:* Es sollen nachvollziehbare Testfälle je fachlichem Modul, automatisiert über Maven ausführbar und mit reproduzierbaren Ergebnissen als Grundlage für die Abnahme geschrieben werden.
 
 
-- *Lieferfähigkeit:* lauffähiger Quellcode; ohne ausführbares Fat-JAR als Hauptartefakt; automatisierte Tests startbar mit `mvn test`.
+- *Lieferfähigkeit:* Der Quellcode soll direkt ausführbar sein. Ist dies nicht der Fall müssen alle Schritte zum starten des Programmes dokumentiert werden. Zudem sollen automatisierte Tests startbar mit `mvn test` sein.
 
 *Erfolgskriterien dieses Projekts:*
 
-- Die Komponente ist ohne UI lauffähig; die 15 verbindlichen Testfälle `/TC010/` … `/TC150/` sind per `mvn test` ausführbar.
+- Die Komponente ist ohne UI lauffähig, die 15 verbindlichen Testfälle `/TC010/` … `/TC150/` sind per `mvn test` ausführbar.
 - Jede Anforderung `/LF010/` … `/LF250/` und `/LL010/` … `/LL080/` ist in der Traceability-Matrix (Anhang) einem `/TC/`, einer dokumentierten indirekten Abdeckung oder einem Konsolen-Demo-Nachweis zugeordnet.
 - GPX-Ausgaben enthalten den GPX-1.1-Namespace und valide Zeitstempel im UTC-ISO-8601-Format.
 - Keine Klassen aus UI-Frameworks werden referenziert.
