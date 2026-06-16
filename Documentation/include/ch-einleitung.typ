@@ -76,27 +76,24 @@ Das folgende Glossar definiert die zentralen Fachbegriffe welche in diesem Dokum
   "Keine Turn-by-Turn-Navigation.",
   "Gültig für WGS84-Koordinaten auf der Erdoberfläche.",
   "",
-  "Peter Bohl",
+  "Klärungsgespräch",
 )
-
 #begriffskarte(
   "Geografischer Azimut",
   "Horizontaler Winkel zwischen der geografischen Nordrichtung und der Großkreisrichtung zum Ziel.",
   "",
   "Gültig für Entfernungen > 0 m.",
   "Symbol: sym.alpha, Einheit: ° (Grad).",
-  "Gängige Navigationsliteratur.",
+  "B. Hofmann-Wellenhof u. a., Navigation, Springer, https://link.springer.com/book/10.1007/978-3-7091-6078-7",
 )
-
 #begriffskarte(
   "Kurs (Heading)",
   "Orientierung der lokalen Horizontalebene relativ zu geografisch Nord, typischerweise als Winkel 0°-360°.",
   "",
   "Gültig, wenn der Host verlässliche Kursinformation liefert.",
   "Symbol: sym.psi, Einheit: °.",
-  "Kreisel-/Kompassmesstechnik.",
+  "B. Hofmann-Wellenhof u. a., Navigation, Springer, https://link.springer.com/book/10.1007/978-3-7091-6078-7",
 )
-
 #begriffskarte(
   "Kursabweichung (relative Bearing)",
   "Winkel zwischen aktuellem Kurs und der Zielrichtung, zentriert typischerweise in [-180°, +180°].",
@@ -105,16 +102,14 @@ Das folgende Glossar definiert die zentralen Fachbegriffe welche in diesem Dokum
   "Symbol: sym.Delta, Einheit: °.",
   "Berechnung in sym.Delta gemäß /LF050/ (optionaler Kurs aus /LF040/).",
 )
-
 #begriffskarte(
   "Ordinalrichtung (Himmelsrichtung)",
   "Vereinfachte 8er-Kompassangabe statt eines exakten Gradwerts.",
   "",
   "Wird aus dem Azimut abgeleitet und für eine leicht verständliche Richtungsanzeige genutzt.",
   "Werte: N, NE, E, SE, S, SW, W, NW.",
-  "Kartographie; Anforderung /LF050/.",
+  "G. Hake u. a., Kartographie, https://books.google.com/books/about/Kartographie.html?id=MsggAAAAQBAJ und /LF050/",
 )
-
 #begriffskarte(
   "Geografische Koordinate",
   "Angabe eines Punktes auf der Erdoberfläche durch Breiten- und Längengrade.",
@@ -123,54 +118,47 @@ Das folgende Glossar definiert die zentralen Fachbegriffe welche in diesem Dokum
   "Notation: (lat, lon).",
   "ISO 19111",
 )
-
 #begriffskarte(
   "Großkreisentfernung",
   "Kürzeste Distanz zwischen zwei Ellipsoidpunkten entlang einer Großkreislinie auf der Kugelapproximation der Erde.",
   "",
   "Für kurze Distanzen < 20 km ist die sphärische Näherung üblicherweise ausreichend.",
   "Symbol: d, Einheit: m.",
-  "Haversine-Formel als Referenznäherung.",
+  "B. Hofmann-Wellenhof u. a., Navigation, Springer, https://link.springer.com/book/10.1007/978-3-7091-6078-7",
 )
-
 #begriffskarte(
   "Haversine-Formel",
   "Sphärische Formel zur Berechnung der Zentriwinkelspanne und daraus der Großkreisdistanz aus zwei Breiten-/Längengraden.",
   "",
   "Gültig für Kugelradius R.",
   "Implementationsreferenz: lat1, lon1, lat2, lon2.",
-  "Wikipedia: Haversine-Formel",
+  "B. Hofmann-Wellenhof u. a., Navigation, Springer, https://link.springer.com/book/10.1007/978-3-7091-6078-7",
 )
-
 #begriffskarte(
   "ECEF (Earth-Centered, Earth-Fixed)",
   "Rechtshändiges kartesisches Koordinatensystem mit Ursprung im Erdmittelpunkt (vereinfacht), Z-Achse durch den Nordpol.",
   "",
   "Interne Hilfskonstruktion für Distanzen im Raum optional, öffentliche API bleibt WGS84 lat/lon.",
   "Koordinaten X, Y, Z in Metern.",
-  "ISO 19111, GNSS-Standardliteratur.",
+  "ISO 19111 und B. Hofmann-Wellenhof u. a., Global Positioning System, Springer, https://link.springer.com/book/10.1007/978-3-7091-6199-9",
 )
-
 #begriffskarte(
   "EPSG:4326",
   "Geographisches CRS: Achsenfolge Breite (sym.phi), Länge (sym.lambda) in Grad auf WGS84-Ellipsoid.",
   "",
-  "Gültig für alle Eingaben dieser Bibliothek; andere EPSG-Codes nur nach expliziter Erweiterung.",
+  "Gültig für alle Eingaben dieser Bibliothek, andere EPSG-Codes nur nach expliziter Erweiterung.",
   "CRS-Code als Metadaten-Hinweis exportierbar.",
   "EPSG Geodetic Parameter Dataset.",
 )
-
 #begriffskarte(
   "Turn-by-Turn-Navigation",
   "Schrittweise Routenführung entlang von Kanten eines Straßengraphen mit Manöveranweisungen.",
   "",
   "Explizit nicht Gegenstand der Peilungskomponente.",
-  "-",
+  "",
   "Allgemeiner Sprachgebrauch, Abgrenzung Projektauftrag.",
 )
-
 === Begriffe zu Datenformaten und Protokollen
-
 #begriffskarte(
   "GPX (GPS Exchange Format)",
   "XML-basiertes Austauschformat für Wegpunkte, Routen und Tracks.",
@@ -179,7 +167,6 @@ Das folgende Glossar definiert die zentralen Fachbegriffe welche in diesem Dokum
   "",
   "Topografix GPX 1.1 Schema",
 )
-
 #begriffskarte(
   "Trackpunkt",
   "XML-Element innerhalb eines GPX-Tracks, das mindestens Breite, Länge und Zeit beinhaltet.",
@@ -188,25 +175,22 @@ Das folgende Glossar definiert die zentralen Fachbegriffe welche in diesem Dokum
   "Attribute: `lat`, `lon`.",
   "GPX 1.1 Spezifikation",
 )
-
 #begriffskarte(
   "HDOP (Horizontal Dilution of Precision)",
-  "Dimensionsloses Maß für die geometrische Güte der Satellitenkonstellation; niedriger ist typischerweise besser.",
+  "Dimensionsloses Maß für die geometrische Güte der Satellitenkonstellation, niedriger ist typischerweise besser.",
   "",
   "Optional im Datenmodell und in GPX (keine automatische Verwerfung beim Einlesen) (/LF030/, /LD040/).",
   "",
-  "Herstellerdokumentation GNSS-Empfänger.",
+  "B. Hofmann-Wellenhof u. a., Global Positioning System, Springer, https://link.springer.com/book/10.1007/978-3-7091-6199-9",
 )
-
 #begriffskarte(
   "UTC und `Instant`",
-  "UTC ist die einheitliche Zeitbasis ohne Sommerzeit; `java.time.Instant` beschreibt einen exakten Zeitpunkt auf dieser Skala.",
+  "UTC ist die einheitliche Zeitbasis ohne Sommerzeit, `java.time.Instant` beschreibt einen exakten Zeitpunkt auf dieser Skala.",
   "",
   "Interne Zeitstempel laufen durchgängig über `Instant` (Ausgabe nach GPX erfolgt als ISO-8601 in UTC).",
   "Im Code: `ClockPort.instant()` und `DateTimeFormatter.ISO_INSTANT`.",
   "ISO 8601, Java SE Date-Time-Package.",
 )
-
 #begriffskarte(
   "UTF-8",
   "Byte-Kodierung für Unicode-Zeichen (verbindlich für GPX-XML in diesem Projekt).",
@@ -215,27 +199,23 @@ Das folgende Glossar definiert die zentralen Fachbegriffe welche in diesem Dokum
   "Kennung in XML-Deklaration optional, Bytes konsistent.",
   "Unicode Standard Annex #15.",
 )
-
 === Begriffe zu Session und Systemverhalten
-
 #begriffskarte(
   "Session",
   "Eine Session ist eine zeitlich begrenzte Instanz zur Speicherung von Zustandsinformationen eines Benutzers oder Prozesses.",
   "Abzugrenzen ist die Session von einer einzelnen Anfrage sowie von persistenten Objekten, die dauerhaft gespeichert werden. Eine Session ist temporär und zustandsbehaftet.",
   "Die Gültigkeit einer Session erstreckt sich über die Dauer der Interaktion und endet durch Timeout.",
   "Session-ID",
-  "Lehrmaterial Softwareentwicklung",
+  "H. Balzert, Lehrbuch der Softwaretechnik, Springer, https://link.springer.com/book/10.1007/978-3-8274-2247-7",
 )
-
 #begriffskarte(
   "Abbruchverhalten (Abort)",
   "Vorzeitiges Beenden einer aktiven Session durch den Host, ohne die bis dahin erfassten Daten zu verlieren.",
   "",
-  "Session wechselt auf `ABORTED`; Rückgabe erfolgt als `GpxResult` (UTF-8-Bytes plus String-Zugriff) gemäß /LF070/ und /LF160/.",
+  "Session wechselt auf `Lifecycle.ABORTED`. Rückgabe erfolgt als `GpxResult` (UTF-8-Bytes plus String-Zugriff) gemäß /LF070/ und /LF160/.",
   "Persistenz beim Abort erfolgt nur bei aktivem `persistOnAbort`.",
-  "Klärungsgespräch; /LF070/",
+  "Klärungsgespräch, /LF070/",
 )
-
 #begriffskarte(
   "Observer / Listener",
   "Benachrichtigen registrierte Beobachter über Zustandsänderungen.",
@@ -244,83 +224,72 @@ Das folgende Glossar definiert die zentralen Fachbegriffe welche in diesem Dokum
   "Java-Pattern: `java.util.EventListener`-Familie.",
   "/LF080/",
 )
-
 #begriffskarte(
   "Trackoptimierung",
   "Austauschbare Algorithmen hinter gemeinsamer Schnittstelle zur Reduktion oder Vereinfachung von Trackpunkten.",
   "",
-  "Nur optional vor GPX-Export über `SessionConfig.addOptimizer` (leere Liste = unveränderter Rohtrack), /LF170/-/LF200/.",
+  "Nur optional vor GPX-Export über `SessionConfig.builder().addOptimizer(...)` mit Schnittstelle `TrackOptimizer` (leere Liste = unveränderter Rohtrack), /LF170/ bis /LF200/.",
   "",
-  "/LF170/-/LF200/",
+  "/LF170/ bis /LF200/",
 )
-
 #begriffskarte(
   "Soft-Limit / Hard-Limit (Punktbudget)",
   "Zweistufige Begrenzung der gespeicherten Trackpunkte: erst Warnung, dann harter Stopp.",
   "",
   "Konfigurierbar über `softLimitPoints` und `hardLimitPoints`, `0` bedeutet deaktiviert (/LF110/, /LF130/).",
-  "Code: `SOFT_LIMIT_WARN`, `HARD_LIMIT_REACHED`.",
+  "Code: `TrackAcceptResult.Flag.SOFT_LIMIT_WARN`, `TrackAcceptResult.Flag.HARD_LIMIT_REACHED`.",
   "Ressourcen-Schutz in eingebetteten Systemen (projektspezifisch).",
 )
-
 #begriffskarte(
   "Overflow-Modus (Punktbudget)",
   "Definiertes Verhalten bei Erreichen des Hard-Limits: Stopp der Aufzeichnung vs. Downsampling.",
   "",
   "Konfigurationsabhängig /LF130/.",
-  "Enum: `STOP` (Hard-Limit erreicht sym.arrow.r Aufzeichnung stoppt).",
+  "Enum: `OverflowMode.STOP` (Hard-Limit erreicht, Aufzeichnung stoppt).",
   "Interne Spezifikation.",
 )
-
 === Begriffe zu Entwurfsmustern und Architektur
-
 #begriffskarte(
   "API (Application Programming Interface)",
   "Programmierschnittstelle, über die externe Systeme mit der Peilungskomponente interagieren.",
   "",
   "Öffentliche Methoden der Bibliothek.",
   "",
-  "Software Engineering Standardbegriff",
+  "I. Sommerville, Software Engineering, https://books.google.com/books/about/Software_Engineering_Global_Edition.html?id=W_LjCwAAQBAJ",
 )
-
 #begriffskarte(
   "Builder (Konfigurationsaufbau)",
   "Muster, mit dem man eine Konfiguration Schritt für Schritt baut statt mit einem langen Konstruktor.",
   "",
   "Im Projekt über `SessionConfig.builder()`, beim Start werden die relevanten Parameter als `RecordingParameters` eingefroren (/LD020/).",
   "Beispiel: `SessionConfig.builder().segmentGapThreshold(java.time.Duration.ofMinutes(5)).build()`",
-  "Design Patterns",
+  "E. Gamma u. a., Design Patterns, https://books.google.com/books/about/Design_Patterns.html?id=6oHuKQe3TjQC",
 )
-
 #begriffskarte(
   "Immutability",
   "Ein Objekt bleibt nach der Erzeugung unverändert, für Änderungen wird ein neues Objekt erstellt.",
   "",
-  "Trifft hier u.\ a. auf `SessionConfig` und `GpsPoint` zu.",
+  "Trifft hier u. a. auf `SessionConfig` und `GpsPoint` zu.",
   "Hilft bei Nebenläufigkeit, weil Leser keine veränderbaren Zwischenzustände sehen.",
-  "Software Engineering Best Practices",
+  "J. Bloch, Effective Java, https://books.google.com/books/about/Effective_Java.html?id=piOyzYqeZGgC",
 )
-
 #begriffskarte(
   "Thread-Sicherheit",
   "Eigenschaft eines Systems, bei paralleler Ausführung durch mehrere Threads korrekt zu funktionieren.",
   "",
   "Relevant für Observer, Immutability und Eventverarbeitung.",
   "",
-  "Nebenläufigkeit in Softwaresystemen",
+  "B. Goetz u. a., Java Concurrency in Practice, https://books.google.com/books/about/Java_Concurrency_in_Practice.html?id=EK43StEVfJIC",
 )
-
 #begriffskarte(
   "Semantische Exception",
   "Fehlerklasse mit maschinenlesbarem `errorCode` und kontextualisierter Message.",
   "",
   "Öffentliche API der Bibliothek.",
-  "Feld: `String code`.",
-  "/LF090/, Best Practice API Design.",
+  "Klasse `ValidationException`, Feld `ErrorCode errorCode`, Zugriff über `errorCode()`.",
+  "/LF090/ und J. Bloch, Effective Java, https://books.google.com/books/about/Effective_Java.html?id=piOyzYqeZGgC",
 )
-
 === Begriffe zu Sicherheit
-
 #begriffskarte(
   "Path Traversal",
   "Sicherheitsproblem, bei dem ein Pfad absichtlich aus dem erlaubten Zielordner ausbricht (z.\ B. mit `..`).",
@@ -329,16 +298,14 @@ Das folgende Glossar definiert die zentralen Fachbegriffe welche in diesem Dokum
   "Umsetzung in `SafeFileSink`: Pfad normalisieren und gegen erlaubtes Basisverzeichnis prüfen.",
   "OWASP Path Traversal",
 )
-
 #begriffskarte(
   "XXE (XML External Entity)",
   "Angriffsklasse beim XML-Parsing über externe Entities.",
   "",
-  "Die Komponente erzeugt XML selbst und escaped Inhalte (/LL050/); das XXE-Risiko liegt vor allem bei fremden Parsern, die diese XML später lesen.",
+  "Die Komponente erzeugt XML selbst und escaped Inhalte (/LL050/), das XXE-Risiko liegt vor allem bei fremden Parsern, die diese XML später lesen.",
   "Empfehlung: DTD/External-Entity-Verarbeitung im konsumierenden Parser deaktivieren.",
   "W3C XML Recommendation",
 )
-
 #begriffskarte(
   "Atomares Schreiben",
   "Datei wird zuerst temporär geschrieben und dann in den Zielpfad verschoben, um halbfertige Dateien zu vermeiden.",
@@ -347,9 +314,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe welche in diesem Dokum
   "Temporäre Datei (`*.tmp`).",
   "Anforderung /LF150/.",
 )
-
 === Begriffe zu Algorithmen
-
 #begriffskarte(
   "Douglas-Peucker-Algorithmus",
   "Algorithmus zur Linienvereinfachung: Punkte mit geringer Abweichung von der Verbindungslinie werden rekursiv entfernt.",
@@ -358,18 +323,15 @@ Das folgende Glossar definiert die zentralen Fachbegriffe welche in diesem Dokum
   "Parameter im Code: `epsilonM`.",
   "D. Douglas, T. Peucker, Algorithms for the reduction of the number of points required to represent a digitized line or its caricature, 1973.",
 )
-
 #begriffskarte(
   "Kollinearitätsreduktion",
   "Reduktion fast kollinearer Punktfolgen auf Start- und Endpunkt innerhalb eines Winkel-/Seitenbandes.",
   "",
   "Explizit keine Garantie für enge Kurvenradien /LF190/.",
-  "Heuristikparameter: Toleranzband.",
-  "Klärungsgespräch Peter Bohl und /LF190/.",
+  "Heuristikparameter: `toleranceM` in `LineCollinearityOptimizer`.",
+  "Klärungsgespräch und /LF190/.",
 )
-
 === Begriffe zu Methodik und Qualitätssicherung
-
 #begriffskarte(
   "Anforderung",
   "Beschriebene Eigenschaft oder Fähigkeit, die ein System erfüllen muss oder soll.",
@@ -378,74 +340,65 @@ Das folgende Glossar definiert die zentralen Fachbegriffe welche in diesem Dokum
   "Typen: funktional, nicht-funktional.",
   "ISO/IEC/IEEE 29148.",
 )
-
 #begriffskarte(
   "SOPHIST-Regeln",
   "Regelsatz, um Anforderungen klar, überprüfbar und ohne Widersprüche zu formulieren.",
   "",
   "Dient als Qualitätsmaßstab für die Formulierung der `/LF…/`, `/LL…/` und `/LD…/`-Artefakte.",
   "Wird in Reviews als kompakte Checkliste eingesetzt.",
-  "Software Engineering Vorlesung, SOPHIST-Regeln",
+  "C. Rupp und die SOPHISTen, Requirements-Engineering und -Management, https://books.google.com/books/about/Requirements_Engineering_und_Management.html?id=pJKqBAAAQBAJ",
 )
-
 #begriffskarte(
   "Lastenheft vs. Pflichtenheft",
-  "Lastenheft: fachliche, wirtschaftliche und politische Zielsetzung aus Auftraggebersicht. 
-  
+  "Lastenheft: fachliche, wirtschaftliche und politische Zielsetzung aus Auftraggebersicht.
+
   Pflichtenheft: technische Umsetzungsvorgaben aus Entwicklersicht.",
   "",
-  "In dieser Arbeit: Kapitel „Allgemeine Beschreibung\" sym.approx Lastenheft-Teile und Kapitel „Spezifische Anforderungen\" sym.approx Pflichtenheft.",
+  "In dieser Arbeit: Kapitel „Allgemeine Beschreibung\" entspricht in etwa den Lastenheft-Teilen und Kapitel „Spezifische Anforderungen\" entspricht in etwa dem Pflichtenheft.",
   "IEEE 830-1998",
-  "Software Engineering Vorlesung",
+  "H. Balzert, Lehrbuch der Softwaretechnik, Springer, https://link.springer.com/book/10.1007/978-3-8274-2247-7",
 )
-
 #begriffskarte(
   "Traceability (Rückverfolgbarkeit)",
   "Nachvollziehbare Verbindung zwischen Anforderung, Design, Code und Test.",
   "",
   "Wichtig über den gesamten Lebenszyklus, besonders bei `/LF…/` und `/TC…/`.",
   "Im Projekt als Matrix in `implementation/TRACEABILITY.md`.",
-  "Software Engineering Vorlesung",
+  "K. Pohl, Requirements Engineering Fundamentals, https://books.google.com/books/about/Requirements_Engineering_Fundamentals.html?id=GbsiTwEACAAJ",
 )
-
 #begriffskarte(
   "Property \"deterministisch\"",
   "Gleiche Eingaben und gleiche konfigurierte Abhängigkeiten (Clock) erzeugen identische Ausgaben.",
   "",
   "Gilt für Kern-Pfade ohne bewusst randomisierte Algorithmen.",
-  "-",
+  "",
   "/LL070/.",
 )
-
 === Begriffe zu Werkzeugen und Frameworks
-
 #begriffskarte(
   "JVM (Java Virtual Machine)",
   "Laufzeitumgebung, die Java-Bytecode plattformunabhängig ausführt. Die Bibliothek setzt eine JVM voraus, stellt selbst jedoch keine bereit.",
   "",
   "Ziel-Kompatibilität: Java 11 (LTS), die Bibliothek wird als reines Source-Artefakt ohne ausführbares JAR ausgeliefert.",
   "Die JVM-Version des Host-Projekts muss ≥ 11 sein (niedrigere Versionen werden nicht unterstützt).",
-  "Systemvoraussetzungen; /LL030/",
+  "Systemvoraussetzungen, /LL030/",
 )
-
 #begriffskarte(
   "Maven",
   "Standardwerkzeug für Build, Testlauf und Abhängigkeitsverwaltung in Java-Projekten.",
   "",
   "Im Projekt zentraler Einstieg für Build und Tests (`mvn test`, /LL040/).",
   "Artefakte werden über `groupId:artifactId:version` aufgelöst.",
-  "Apache Maven Project Dokumentation, Software Engineering Vorlesung",
+  "Apache Maven Project Dokumentation, https://maven.apache.org/",
 )
-
 #begriffskarte(
   "Maven-Profil (`w3w`)",
   "Optionale Build-Konfiguration, die What3Words-Clientabhängigkeiten aktiviert.",
   "",
   "Standardbuild ohne Profil bleibt offline-fähig.",
   "Aktivierung: `mvn -Pw3w test` (konzeptionell).",
-  "Apache Maven Documentation",
+  "Apache Maven Documentation, https://maven.apache.org/guides/introduction/introduction-to-profiles.html",
 )
-
 #begriffskarte(
   "SLF4J (Simple Logging Facade for Java)",
   "Einheitliche Logging-Schnittstelle, die konkrete Logger-Backends austauschbar macht.",
@@ -454,16 +407,14 @@ Das folgende Glossar definiert die zentralen Fachbegriffe welche in diesem Dokum
   "Typischer Einstieg: `LoggerFactory.getLogger(...)`.",
   "https://www.slf4j.org/",
 )
-
 #begriffskarte(
   "JUnit 5",
   "Modernes Java-Testframework für Unit- und Integrationsnahe Tests.",
   "",
-  "In diesem Projekt Grundlage der Modul-Tests; aktuell vor allem mit `@Test`.",
-  "Bietet u.\ a. Assertions, Lifecycle-Hooks und Erweiterungen.",
+  "In diesem Projekt Grundlage der Modul-Tests, aktuell vor allem mit `@Test`.",
+  "Bietet u. a. Assertions, Lifecycle-Hooks und Erweiterungen.",
   "https://junit.org/junit5/",
 )
-
 #begriffskarte(
   "JaCoCo",
   "Code-Coverage-Tool für Java, Integration über Maven-Plugin.",
@@ -472,7 +423,6 @@ Das folgende Glossar definiert die zentralen Fachbegriffe welche in diesem Dokum
   "Report: `target/site/jacoco/index.html`.",
   "https://www.jacoco.org/jacoco/trunk/doc/",
 )
-
 #begriffskarte(
   "Checkstyle",
   "Werkzeug für statische Stil- und Strukturprüfungen im Java-Code.",
@@ -481,7 +431,6 @@ Das folgende Glossar definiert die zentralen Fachbegriffe welche in diesem Dokum
   "Konfiguration in `implementation/checkstyle.xml`.",
   "https://checkstyle.org/",
 )
-
 #begriffskarte(
   "ArchUnit",
   "Bibliothek zur Überprüfung architektonischer Regeln im JUnit-Test (z.\ B. keine AWT-Imports).",
@@ -490,7 +439,6 @@ Das folgende Glossar definiert die zentralen Fachbegriffe welche in diesem Dokum
   "Regel: `noClasses().that()...`",
   "https://www.archunit.org/",
 )
-
 #begriffskarte(
   "Jimfs",
   "In-Memory-Dateisystem-Implementierung für JDK `java.nio.file`, geeignet für Tests.",
@@ -499,16 +447,14 @@ Das folgende Glossar definiert die zentralen Fachbegriffe welche in diesem Dokum
   "Google Jimfs Projekt.",
   "https://github.com/google/jimfs",
 )
-
 #begriffskarte(
   "Mutationstest (PIT)",
   "Testtechnik, bei der kleine Codeänderungen (Mutanten) erzeugt werden, um die Schärfe der Tests zu prüfen.",
   "",
   "Als Qualitätsvertiefung möglich, aber nicht Teil des Standard-Builds.",
   "Kennzahl: Mutations-Score.",
-  "Software Engineering Vorlesung",
+  "A. Spillner, T. Linz, Basiswissen Softwaretest, https://books.google.com/books/about/Basiswissen_Softwaretest.html?id=coySMAEACAAJ",
 )
-
 #begriffskarte(
   "Property-Based Testing (jqwik)",
   "Testansatz, bei dem allgemeine Eigenschaften statt einzelner Beispiele geprüft werden.",
@@ -517,7 +463,6 @@ Das folgende Glossar definiert die zentralen Fachbegriffe welche in diesem Dokum
   "Kann optional mit jqwik umgesetzt werden.",
   "https://jqwik.net/",
 )
-
 #begriffskarte(
   "Referenzimplementierung (Test)",
   "Unabhängige, minimal gehaltene Berechnung derselben Größe zum Abgleich von Toleranzen.",
@@ -526,43 +471,38 @@ Das folgende Glossar definiert die zentralen Fachbegriffe welche in diesem Dokum
   "`ReferenceHaversine` (Bezeichner frei wählbar).",
   "/LL020/ Testpraxis.",
 )
-
 #begriffskarte(
   "What3Words (W3W)",
   "Dienst, der Koordinaten in ein Drei-Wort-Format umwandelt.",
   "",
   "Optionaler Teil des Systems (/LF210/), Ergebnisse werden gecacht (/LF220/).",
   "",
-  "what3words Limited, Peter Bohl",
+  "what3words Limited, Klärungsgespräch",
 )
-
 #begriffskarte(
   "System (Softwarekomponente)",
   "Abgegrenzter Teil eines Softwaresystems mit klar definierten Schnittstellen und Verantwortlichkeiten.",
   "",
   "Hier: die Peilungskomponente als eigenständige Bibliothek.",
   "",
-  "Softwarearchitektur-Grundlagen",
+  "L. Bass u. a., Software Architecture in Practice, https://books.google.com/books?id=-II73rBDXCYC",
 )
-
 #begriffskarte(
   "Ist-/Soll-Vergleich (Referenz-App)",
   "Qualitative Gegenüberstellung der Referenz-App mit der Java-Bibliothek ohne pixelgenaue UI-Nachbildung.",
   "",
   "Dient der Motivation und Begriffsableitung, nicht als normative Spezifikation der UI.",
-  "-",
-  "Apple App Store, Produktseite Kompass Professional.",
+  "",
+  "Kompass Pro App, Klärungsgespräch",
 )
-
 #begriffskarte(
   "Genauigkeit",
   "Accuracy beschreibt die Nähe zum wahren Wert, Precision die Wiederholgenauigkeit von Messungen.",
   "",
   "Relevant für GPS-Datenbewertung.",
   "",
-  "Messtechnik-Grundlagen",
+  "R. Lerch, Elektrische Messtechnik, Springer, https://link.springer.com/book/10.1007/978-3-540-75727-6",
 )
-
 #pagebreak()
 
 // ─────────────────────────────────────────────────────────────────────────────
