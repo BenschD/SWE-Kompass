@@ -6,7 +6,7 @@
 #let catalog-tc-range = [/TC010/ … /TC150/]
 
 #let catalog-lf-table = table(
-  columns: (2.2cm, 1fr, 4.5cm),
+  columns: (2.2cm, 1fr, 5.5cm),
   stroke: 0.45pt + rgb("#9a9a9a"),
   inset: 6pt,
   table.header([*ID*], [*Funktion*], [*Code-Anker*]),
