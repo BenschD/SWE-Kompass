@@ -369,6 +369,7 @@ Die Produktdaten beschreiben die zentralen Datenstrukturen der Bibliothek mit ih
 
 Verbindliche Testfälle `/TC010/` … `/TC150/` mit JUnit-Methodennamen (siehe `implementation/TRACEABILITY.md`).
 
+#show figure: set block(breakable: true)
 #figure(
   caption: [Testfälle mit Traceability zu /LF…/ und /LL…/.],
   kind: table,

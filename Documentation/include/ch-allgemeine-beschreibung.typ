@@ -6,7 +6,7 @@
 #let ch-allgemeine-beschreibung-kapitel = [
 #set par(justify: true)
 
-Dieses Kapitel betrachtet die Java-Peilungskomponente aus der Übersicht und beschäftigt sich damit, wie sie sich in das technische Umfeld einfügt, welche Hauptfunktionen sie bietet, welche Benutzerprofile eine Rolle spielen und welche systemweiten Einschränkungen, Annahmen und Abhängigkeiten gelten.
+Dieses Kapitel betrachtet die Java-Peilungskomponente aus der Übersicht und beschäftigt sich damit, wie sie sich in das technische Umfeld einfügt, welche Hauptfunktionen sie bietet, welche Nutzercharakteristiken gelten und welche systemweiten Einschränkungen, Annahmen und Abhängigkeiten festgelegt sind.
 
 // ─────────────────────────────────────────────────────────────────────────────
 == Einbettung
@@ -146,9 +146,27 @@ Die folgende Tabelle fasst die Hauptfunktionsgruppen der Bibliothek zusammen. Di
 == Benutzerprofile
 // ─────────────────────────────────────────────────────────────────────────────
 
-Als Bibliothek ohne eigene Benutzeroberfläche kennt die Peilungskomponente keine direkte Endnutzer-Interaktion. Stattdessen werden Stakeholder und Benutzerrollen im Sinne der IEEE-830-Norm definiert.
+Als Bibliothek ohne eigene Benutzeroberfläche hat die Peilungskomponente keine direkten Endnutzer. Nach IEEE~830 umfasst dieser Abschnitt die Nutzercharakteristiken: für jede Nutzergruppe werden Erfahrung und Fachkenntnis, technische Voraussetzungen sowie Erwartungen an die Bibliothek beschrieben. Systemgrenze, externe Schnittstellen und Integrationspflichten des Hosts sind in Kap.~2.1 (Einbettung), Kap.~2.4 (Einschränkungen) und Kap.~3.3 (Externe Schnittstellen) spezifiziert; Use-Case-Akteure stehen je Anforderung in den `/LF…/`-Karten.
 
-=== Stakeholder und Einflussmatrix
+=== Nutzercharakteristiken
+
+#figure(
+  caption: [Nutzergruppen der Bibliothek mit Erfahrung, Voraussetzungen und Erwartungen.],
+  kind: table,
+  align(left, table(
+    columns: (2.6cm, 1.6cm, 1fr, 1fr, 1fr),
+    stroke: tbl-stroke,
+    inset: tbl-inset,
+    [*Nutzergruppe*], [*Bezug*], [*Erfahrung und Fachkenntnis*], [*Technische Voraussetzungen*], [*Erwartung an die Bibliothek*],
+    [Host-Entwickler/in], [direkt], [Softwareentwicklung; Erfahrung mit Java-Bibliotheken und eingebetteten Komponenten.], [Java 11 oder höher; Integration über die öffentliche API; optional Maven, SLF4J und W3W-Konfiguration durch den Host.], [Stabile, dokumentierte API; `ValidationException` mit maschinenlesbarem `ErrorCode` bei Eingabefehlern; reproduzierbares Session-Verhalten.],
+    [Endnutzer/in], [indirekt], [Keine Kenntnis der Bibliothek; nutzt Peilungs- oder Outdoor-Funktionen über die Host-App.], [Kein direkter Zugriff auf die Bibliothek.], [Zuverlässige Peilungswerte und korrekter GPX-1.1-Export in der Host-App.],
+    [Betrieb (Host-Team)], [indirekt], [Betrieb eingebetteter Java-Anwendungen; Lesen strukturierter Logausgaben.], [Bindet ein SLF4J-Backend im Host-Prozess.], [Strukturierte Logausgabe; Listener-Fehler beeinträchtigen den Session-Zustand nicht (/LF080/).],
+  ))
+)
+
+=== Projektkontext (Stakeholder)
+
+Die folgende Matrix ergänzt die Nutzercharakteristiken um projektbezogene Rollen und deren Einfluss auf diese Arbeit. Sie ist nicht Teil der Laufzeit-Spezifikation.
 
 #figure(
   caption: [Stakeholder der Java-Peilungskomponente mit Erwartungen und Einfluss.],
@@ -160,25 +178,12 @@ Als Bibliothek ohne eigene Benutzeroberfläche kennt die Peilungskomponente kein
     [*Rolle*], [*Erwartung / Interesse*], [*Einfluss*],
     [Dozent / \ Prüfer],      [Nachweis der Vorlesungsinhalte, lauffähiger Code, formal saubere Dokumentation nach IEEE-/SOPHIST-Standard.], [hoch],
     [Studierendenteam],     [Wartbare, erweiterbare Architektur; klare Testbarkeit; nachvollziehbare Anforderungen.], [hoch],
-    [Host-Entwickler/in],   [Stabile, vollständig dokumentierte API; klare Fehlersemantik über maschinenlesbare Exception-Codes.], [hoch],
+    [Host-Entwickler/in],   [Stabile, vollständig dokumentierte API; klare Fehlersemantik über `ValidationException` und `ErrorCode`.], [hoch],
     [Endnutzer/in (indirekt)],[Zuverlässige Peilungswerte und korrekte GPX-Ausgabe in der Host-Anwendung.], [mittel],
     [Betrieb],              [Strukturiertes Logging auf WARN-Level; keine stillen Fehler; deterministisches Verhalten.], [niedrig-mittel],
   ))
 )
 
-=== Primärer Akteur: Host-Anwendung
-
-Der primäre Akteur ist die Host-Anwendung. Sie ruft die öffentliche Java-API der Bibliothek auf und übernimmt folgende Aufgaben:
-
-- Bereitstellung von GNSS-Fixes (lat, lon, Zeitstempel, optional HDOP, Geschwindigkeit, Elevation).
-- Steuerung des Session-Lebenszyklus (Start, Update, Complete/Abort).
-- Entscheidung über Speicherort und Dateiverwaltung beim GPX-Export.
-- Injektion des What3Words-Clients via `BearingBootstrap` (sofern genutzt).
-- Registrierung von Listenern für Ereignisbenachrichtigungen.
-
-=== Sekundärer Akteur: Externe Dienste
-
-Als optionaler sekundärer Akteur fungiert der What3Words-Dienst (W3W): Er beantwortet HTTPS-Reverse-Lookup-Anfragen, die die Bibliothek über ihren konfigurierten HTTP-Adapter stellt. Die Bibliothek greift nie direkt auf GNSS-Hardware zu.
 #pagebreak()
 /*
 === Funktionale Anforderungen - Übersicht
