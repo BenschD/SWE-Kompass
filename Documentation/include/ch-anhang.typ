@@ -111,6 +111,7 @@ Der Entwurf überführt die fachlichen Konzepte in konkrete Klassen und Schnitts
   ))
 )
 
+#pagebreak()
 === Zustandsdiagramm: Session-Lebenszyklus
 
 *Zustände:* `IDLE` → `ACTIVE` (`start`) → `COMPLETED` (`complete`) oder `ABORTED` (`abort`). Rückkehr zu `IDLE` über `reset()` (/LF090/). Details zu Guards und Aktionen: Kap.~3.1 (`/LF010/` … `/LF090/`).
