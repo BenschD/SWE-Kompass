@@ -1,0 +1,9 @@
+flowchart LR
+  call["abort()"] --> active{"Session ACTIVE?"}
+  active -->|ja| export["GPX-Pipeline mit bisherigem Track"]
+  active -->|nein| ise["IllegalStateException"]
+  export --> persist{"persistOnAbort?"}
+  persist -->|ja| file["optional Datei schreiben"]
+  persist -->|nein| skip["kein Dateischreiben"]
+  file --> done["ABORTED, onSessionAborted, GpxResult"]
+  skip --> done

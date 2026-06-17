@@ -1,0 +1,29 @@
+---
+config:
+  flowchart:
+    wrappingWidth: 420
+---
+flowchart TD
+  host["Host-System (außerhalb der Komponente)<br/>Beliebige Java-Anwendung (Desktop, Web, Embedded). Greift ausschließlich über die öffentliche API-Fassade zu. Keine direkten Infrastrukturzugriffe."]
+  api["API / Application Service<br/>Steuert den Session-Lebenszyklus, prüft Vorbedingungen, bildet Fehler auf semantische Codes ab und orchestriert Domain sowie injizierte Ports. Kennt keine konkreten Adapter."]
+  domain["Domain Core<br/>Enthält alle fachlichen Regeln und Berechnungen. Vollständig I/O-frei. Kein Import von Infrastruktur-Klassen."]
+  port["Port-Schicht<br/>Technologieunabhängige Verträge. Die Domain formuliert, was sie braucht, aber nicht wie. Ermöglicht Mocking im Test."]
+  infra["Infrastruktur / Adapter<br/>Realisiert die Ports: GPX-Serialisierung nach XML, HTTP-Client für W3W, Dateisystem-Zugriff, Systemuhr, SLF4J-Logging."]
+
+  host -->|"nur über öffentliche API-Aufrufe"| api
+  api -->|"Fachlogik"| domain
+  api -->|"injizierte Verträge"| port
+  domain -->|"definiert Bedarf über"| port
+  port -->|"implementiert durch"| infra
+
+  classDef host fill:#f4f4f4,stroke:#b4b4b4,color:#333
+  classDef api fill:#e6f2ff,stroke:#7eb8e6,color:#333
+  classDef domain fill:#e6ffe6,stroke:#7ed67e,color:#333
+  classDef port fill:#fff2e6,stroke:#e6b87e,color:#333
+  classDef infra fill:#ffe6e6,stroke:#e67e7e,color:#333
+
+  class host host
+  class api api
+  class domain domain
+  class port port
+  class infra infra

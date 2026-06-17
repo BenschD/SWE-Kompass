@@ -1,0 +1,4 @@
+flowchart LR
+  call["start bei bereits ACTIVE"] --> cas{"compareAndSet IDLE to ACTIVE?"}
+  cas -->|nein| ise["IllegalStateException Doppelstart /LF020/"]
+  cas -->|ja| ref["Erfolgspfad siehe /LF010/"]

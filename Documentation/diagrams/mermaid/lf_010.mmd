@@ -1,0 +1,6 @@
+flowchart LR
+  call["start(config, target)"] --> cas{"compareAndSet IDLE to ACTIVE?"}
+  cas -->|ja| init["UUID, frozenConfig, target, TrackAggregator, startedAt"]
+  init --> resetFields["lastFix und courseDeg leeren"]
+  resetFields --> listener["fire onSessionStarted"]
+  cas -->|nein| ise["IllegalStateException"]

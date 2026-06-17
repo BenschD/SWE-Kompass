@@ -1,0 +1,7 @@
+flowchart LR
+  call["currentSnapshot()"] --> active{"Session ACTIVE?"}
+  active -->|ja| fixQ{"lastFix vorhanden?"}
+  active -->|nein| ise["IllegalStateException"]
+  fixQ -->|ja| calc["snapshotTowardTarget mit courseDeg optional /LF040/"]
+  fixQ -->|nein| nofix["IllegalStateException"]
+  calc --> ret["BearingSnapshot zurueckgeben"]

@@ -195,6 +195,9 @@ public final class DefaultBearingSession implements BearingSession {
 
     @Override
     public synchronized void reset() {
+        if (lifecycle.get() == Lifecycle.ACTIVE) {
+            throw new IllegalStateException("Cannot reset while ACTIVE");
+        }
         lifecycle.set(Lifecycle.IDLE);
         sessionId = null;
         frozenConfig = null;
@@ -249,7 +252,7 @@ public final class DefaultBearingSession implements BearingSession {
         try {
             r.run();
         } catch (Throwable t) {
-            logger.error("listener", sessionId, "LISTENER_FAILED", t.getMessage(), t);
+            logger.warn("listener", sessionId, "LISTENER_FAILED", t.getMessage(), t);
         }
     }
 }

@@ -1,0 +1,11 @@
+flowchart TD
+  evt["Session-Event"] --> loop["fuer jeden BearingListener"]
+  loop --> serQ{"listenerSerialized?"}
+  serQ -->|ja| syncRun["synchronized safeRun"]
+  serQ -->|nein| run["safeRun: Callback ausfuehren"]
+  syncRun --> ok{"Exception?"}
+  run --> ok
+  ok -->|nein| next["naechster Listener"]
+  ok -->|ja| warn["logger.warn LISTENER_FAILED"]
+  warn --> next
+  next --> loop

@@ -175,6 +175,14 @@ class BearingSessionTest {
     }
 
     @Test
+    void resetWhileActiveThrows() {
+        Clock clock = Clock.fixed(Instant.parse("2026-01-01T12:00:00Z"), ZoneOffset.UTC);
+        DefaultBearingSession s = session(clock);
+        s.start(SessionConfig.defaults(), new GeoCoordinate(48.78, 9.18));
+        assertThatThrownBy(s::reset).isInstanceOf(IllegalStateException.class);
+    }
+
+    @Test
     void tc130_resetAllowsRestart() {
         Clock clock = Clock.fixed(Instant.parse("2026-01-01T12:00:00Z"), ZoneOffset.UTC);
         DefaultBearingSession s = session(clock);
