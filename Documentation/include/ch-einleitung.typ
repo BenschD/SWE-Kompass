@@ -340,15 +340,15 @@ Das folgende Glossar definiert die zentralen Fachbegriffe welche in diesem Dokum
   "Typen: funktional, nicht-funktional.",
   "ISO/IEC/IEEE 29148.",
 )
-#begriffskarte(
+/*#begriffskarte(
   "SOPHIST-Regeln",
   "Regelsatz, um Anforderungen klar, überprüfbar und ohne Widersprüche zu formulieren.",
   "",
   "Dient als Qualitätsmaßstab für die Formulierung der `/LF…/`, `/LL…/` und `/LD…/`-Artefakte.",
   "Wird in Reviews als kompakte Checkliste eingesetzt.",
   "C. Rupp und die SOPHISTen, Requirements-Engineering und -Management, https://books.google.com/books/about/Requirements_Engineering_und_Management.html?id=pJKqBAAAQBAJ",
-)
-#begriffskarte(
+)*/
+/*#begriffskarte(
   "Lastenheft vs. Pflichtenheft",
   "Lastenheft: fachliche, wirtschaftliche und politische Zielsetzung aus Auftraggebersicht.
 
@@ -357,7 +357,7 @@ Das folgende Glossar definiert die zentralen Fachbegriffe welche in diesem Dokum
   "In dieser Arbeit: Kapitel „Allgemeine Beschreibung\" entspricht in etwa den Lastenheft-Teilen und Kapitel „Spezifische Anforderungen\" entspricht in etwa dem Pflichtenheft.",
   "IEEE 830-1998",
   "H. Balzert, Lehrbuch der Softwaretechnik, Springer, https://link.springer.com/book/10.1007/978-3-8274-2247-7",
-)
+)*/
 #begriffskarte(
   "Traceability (Rückverfolgbarkeit)",
   "Nachvollziehbare Verbindung zwischen Anforderung, Design, Code und Test.",
@@ -447,14 +447,14 @@ Das folgende Glossar definiert die zentralen Fachbegriffe welche in diesem Dokum
   "Google Jimfs Projekt.",
   "https://github.com/google/jimfs",
 )
-#begriffskarte(
+/*#begriffskarte(
   "Mutationstest (PIT)",
   "Testtechnik, bei der kleine Codeänderungen (Mutanten) erzeugt werden, um die Schärfe der Tests zu prüfen.",
   "",
   "Als Qualitätsvertiefung möglich, aber nicht Teil des Standard-Builds.",
   "Kennzahl: Mutations-Score.",
   "A. Spillner, T. Linz, Basiswissen Softwaretest, https://books.google.com/books/about/Basiswissen_Softwaretest.html?id=coySMAEACAAJ",
-)
+)*/
 #begriffskarte(
   "Property-Based Testing (jqwik)",
   "Testansatz, bei dem allgemeine Eigenschaften statt einzelner Beispiele geprüft werden.",
@@ -517,6 +517,6 @@ Der Aufbau des Dokuments orientiert sich an IEEE 830 und gliedert sich in drei H
 
 *Kapitel 3 -- Spezifische Anforderungen* bildet den normativen Kern des Dokuments. Es umfasst die funktionalen Spezifikationen (`/LF…/`) mit zugehörigen Aktivitätsdiagrammen (Kap. 3.1), die nicht-funktionalen Anforderungen (`/LL…/`), die externen Schnittstellen, die Performance-Anforderungen sowie das Qualitätsmodell nach ISO/IEC 25010.
 
-Der *Anhang* vervollständigt die Spezifikation um Traceability-Matrizen, das objektorientierte Analyse- und Entwurfsmodell, Review-Checklisten, Normreferenzen, erweiterte Akzeptanzkriterien sowie algorithmische Hinweise.
+Der *Anhang* vervollständigt die Spezifikation um ein Verzeichnis der referenzierten Dokumente, Traceability-Matrizen, das objektorientierte Analyse- und Entwurfsmodell, Review-Checklisten, Normreferenzen, erweiterte Akzeptanzkriterien sowie algorithmische Hinweise.
 #pagebreak()
 ]
