@@ -11,7 +11,7 @@ Nummerierung: `/LF010/` … `/LF250/`, `/LL010/` … `/LL080/`, `/TC010/` … `/
 | /TC010/ | /LF010/, /LF020/ | `tc010_doubleStartThrows` | `BearingSessionTest` |
 | /TC020/ | /LF030/, /LF230/ | `tc020_invalidLatThrows` | `BearingSessionTest` |
 | /TC030/ | /LF030/, /LF240/ | `tc030_futureTimestampThrows` | `BearingSessionTest` |
-| /TC040/ | /LF060/ | `tc040_updateAfterCompleteThrows` | `BearingSessionTest` |
+| /TC040/ | /LF060/, /LF030/ | `tc040_updateAfterCompleteThrows` | `BearingSessionTest` |
 | /TC050/ | /LF050/ | `tc050_snapshotWithoutFixThrows` | `BearingSessionTest` |
 | /TC060/ | /LF110/ | `tc060_softLimitWarns` | `TrackAggregatorTest` |
 | /TC070/ | /LF130/ | `tc070_hardLimitStopsRecording` | `TrackAggregatorTest` |
@@ -23,6 +23,12 @@ Nummerierung: `/LF010/` … `/LF250/`, `/LL010/` … `/LL080/`, `/TC010/` … `/
 | /TC130/ | /LF090/ | `tc130_resetAllowsRestart` | `BearingSessionTest` |
 | /TC140/ | /LL020/ | `tc140_azimuthReference` | `BearingCalculatorReferenceTest` |
 | /TC150/ | /LF120/ | `tc150_segmentSplit` | `TrackAggregatorTest` |
+
+## Ergänzende Nachweise (ohne `/TC…/`)
+
+| LF | JUnit-Methode | Testklasse | Hinweis |
+|----|---------------|------------|---------|
+| /LF150/ | `writesInsideBase` | `SafeFileSinkJimfsTest` | Atomares Schreiben unter `allowedBaseDir`; ergänzt Demo Schritt 6–7 |
 
 ## Funktionale Anforderungen
 
