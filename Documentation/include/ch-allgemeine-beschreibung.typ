@@ -195,34 +195,31 @@ Die normativen Detail-Spezifikationen stehen in Kapitel 3.1 (`/LF010/` … `/LF2
 
 
 */
-//INFO: Komplett doppelt auch wenn bezug drauf genommen!
-/*
+
 // ─────────────────────────────────────────────────────────────────────────────
 == Einschränkungen
 // ─────────────────────────────────────────────────────────────────────────────
 
-
-Kapitel 1.2 hat den Funktionsumfang bereits umrissen. Die folgende Auflistung hält ihn als verbindliche Abgrenzung fest und ergänzt die Aspekte Validierung und Qualitätssicherung.
+Die folgende Auflistung definiert den technischen Funktionsumfang als verbindliche Systemgrenze. Sie präzisiert Integrationsschnittstellen, Session-Verhalten, Eingabevalidierung, Exportformate und Qualitätssicherung.
 
 === Im Scope
-- Berechnung von Zielrichtung (Azimut), Entfernung und Himmelsrichtung (Ordinalrichtung) auf WGS84-Basis, bei verfügbarem Kurswert auch der Kursabweichung.
-- Klar definierte Integrationsschnittstellen, über die der Host Positionsdaten und zugehörige Metadaten (z. B. Zeitstempel, Geschwindigkeit, Genauigkeit) bereitstellt.
-- Verwaltung des Session-Lebenszyklus aus Start, laufender Aufzeichnung und Abbruch. Nach einem Abbruch bleiben die bis dahin erfassten Track-Daten für den Export erhalten.
-- Konfigurierbare Aufzeichnung: Punktbudget (Soft-/Hard-Limit), Segmentierung bei Zeitlücken und Validierung der Eingaben (Koordinaten, Zeit). Wie oft Positionsupdates eintreffen, steuert der Host.
-- Export der Track-Daten als GPX 1.1, wahlweise als String oder Bytefolge.
-- Wählbare Optimierungsverfahren vor dem Export (n-ter Punkt, Mindestabstand, Geraden-Heuristik, Douglas-Peucker) sowie eine optionale What3Words-Auflösung mit lokalem Caching.
-- Qualitätssicherung durch automatisierte Unit-Tests der Kernfunktionen vorallem der geografischen Berechnungen, der Optimierungsalgorithmen und der GPX-Serialisierung.
+- Berechnung von Zielrichtung (Azimut), Entfernung und Himmelsrichtung (Ordinalrichtung) auf WGS84-Basis; bei verfügbarem Kurswert zusätzlich Kursabweichung.
+- Öffentliche Java-API zur Übergabe von Positionsdaten und Metadaten (Zeitstempel, Geschwindigkeit, Genauigkeit) durch den Host.
+- Session-Lebenszyklus (Start, Update, Complete/Abort); nach Abort bleiben erfasste Track-Daten exportierbar.
+- Konfigurierbare Aufzeichnung: Punktbudget (Soft-/Hard-Limit), Segmentierung bei Zeitlücken, Validierung von Koordinaten und Zeitstempeln; Update-Frequenz steuert der Host.
+- GPX-1.1-Export als String oder Bytefolge.
+- Vor dem Export wählbare Optimierungsstrategien (n-ter Punkt, Mindestabstand, Geraden-Heuristik, Douglas-Peucker) sowie optionale What3Words-Auflösung mit lokalem Cache.
+- Automatisierte Unit-Tests für geografische Berechnungen, Optimierungsalgorithmen und GPX-Serialisierung.
 
 === Außerhalb des Scopes
-- Optimierung der eingehenden Track-Daten während der laufenden Aufzeichnung.
-- Magnetische Peilung sowie die automatische Korrektur der magnetischen Deklination.
-- Kartendarstellung, Map-Matching, Routing und Geocoding allgemeiner Adressen (ausgenommen die genannte What3Words-Integration).
-- Direkte Hardwareanbindung (z. B. GNSS-Treiber, Sensorfusion); die rohen Messwerte liefert ausschließlich der Host.
-- Feste Persistenzvorgaben wie ein vorgegebenes Dateiziel für den GPX-Export; über Speicherort und Dateiverwaltung entscheidet der Host.
+- Echtzeit-Optimierung eingehender Track-Punkte während der laufenden Aufzeichnung.
+- Magnetische Peilung und automatische Deklinationskorrektur.
+- Kartendarstellung, Map-Matching, Routing und allgemeines Geocoding (What3Words ausgenommen).
+- Direkte Hardwareanbindung (GNSS-Treiber, Sensorfusion); Messwerte liefert ausschließlich der Host.
+- Vorgegebene Persistenzpfade für GPX-Export; Speicherort und Dateiverwaltung obliegen dem Host.
 - Cloud-Persistenz, Benutzer- und Rechteverwaltung.
 
 #pagebreak()
-*/
 // ─────────────────────────────────────────────────────────────────────────────
 == Annahmen und Abhängigkeiten
 // ─────────────────────────────────────────────────────────────────────────────

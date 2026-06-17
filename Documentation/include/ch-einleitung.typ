@@ -3,7 +3,7 @@
 #let ch-einleitung-kapitel = [
 #set par(justify: true)
 
-Dieses Kapitel klärt, welchen Zweck die Java-Peilungskomponente erfüllt, in welchem fachlichen Umfeld sie entsteht und wo ihre Grenzen liegen. Es benennt die Ziele der Bibliothek und die Kriterien, an denen sich ihr Erfolg messen lässt. Den Abschluss bildet eine Abgrenzung, welche Funktionen die Arbeit umsetzt und welche nicht. Diese Abgrenzung hält die Implementierung fokussiert und schafft Klarheit für alle, die die Bibliothek später einsetzen.
+Dieses Kapitel klärt, welchen Zweck die Java-Peilungskomponente erfüllt, in welchem fachlichen Umfeld sie entsteht und wo ihre Grenzen liegen. Es benennt die Ziele der Bibliothek und die Kriterien, an denen sich ihr Erfolg messen lässt. Die technische Abgrenzung des Funktionsumfangs folgt in Kapitel~2.
 
 // ─────────────────────────────────────────────────────────────────────────────
 == Zweck
@@ -42,23 +42,10 @@ Als fachliche Referenz dient die iOS-App _Kompass Professional_. Sie zeigt, wie 
 Die App hat allerdings einen Haken: Ihre Peilungslogik ist so eng mit der Oberfläche und der Sensorhardware verwoben, dass man sie nicht losgelöst davon verwenden kann. Genau an dieser Stelle setzt die vorliegende Arbeit an. Die zu entwickelnde Bibliothek soll Zielrichtung (Azimut), Entfernung und Ordinalrichtung aus WGS84-Koordinaten,konsistent, reproduzierbar und unter klar definierten Eingangs- und Schnittstellenbedingungen, berechnen. Die Verarbeitung ist als Session organisiert, mit Start, Laufzeit und Abbruch. Wird eine Session abgebrochen, geht nichts verloren: Der bis dahin aufgezeichnete Track lässt sich weiterhin vollständig exportieren.
 
 *Zielbild der Bibliothek:* Der Host liefert Positions- und Kursdaten, die Bibliothek berechnet daraus die Peilungsgrößen und zeichnet parallel einen GPS-Track auf, der als GPX 1.1 exportiert werden kann. Auf Wunsch lassen sich Koordinaten zusätzlich in eine What3Words-Adresse übersetzen.
-=== Im Scope
 
-- Berechnung von Zielrichtung (Azimut), Entfernung und Ordinalrichtung auf WGS84-Basis, bei verfügbarem Kurswert auch der Kursabweichung.
-- Klar definierte Integrationsschnittstellen, über die der Host Positionsdaten und zugehörige Metadaten (Zeitstempel, Geschwindigkeit, Genauigkeit) bereitstellt.
-- Ein Session-Lebenszyklus mit Start, laufender Aufzeichnung und Abbruch. Nach einem Abbruch bleiben die bis dahin erfassten Track-Daten exportierbar.
-- Konfigurierbare Aufzeichnung: Punktbudget (Soft-/Hard-Limit) und Segmentierung bei Zeitlücken. Wie oft Positionsupdates eintreffen, steuert der Host.
-- Export der Track-Daten als GPX 1.1, wahlweise als String oder Bytefolge.
-- Optional vor dem Export: erweiterbare Optimierungsverfahren (n-ter Punkt, Mindestabstand, Geraden-Heuristik, Douglas-Peucker) sowie eine What3Words-Auflösung mit Caching.
+=== Funktionsumfang
 
-=== Außerhalb des Scopes
-
-- Optimierung der eingehenden Rohdaten bereits beim Einlesen.
-- Magnetische Peilung samt automatischer Deklinationskorrektur.
-- Kartendarstellung, Map-Matching, Routing und Geocoding allgemeiner Adressen.
-- Hardwareanbindung, der Host liefert fertige Messwerte.
-- Feste Persistenzvorgaben wie ein vorgegebenes Dateiziel, da der Host über den Speicherort und die Dateiverwaltung entscheidet.
-- Cloud-Persistenz, Benutzer- und Rechteverwaltung.
+Im Kern umfasst die Arbeit Peilung, Track-Aufzeichnung und GPX-Export als eingebettete Java-Bibliothek ohne Benutzeroberfläche. Navigation, Kartendarstellung, Sensor-Hardware und Cloud-Dienste gehören nicht dazu. Die verbindliche technische Abgrenzung mit Scope- und Out-of-Scope-Liste steht in Kapitel~2 (Einschränkungen).
 
 #pagebreak()
 
