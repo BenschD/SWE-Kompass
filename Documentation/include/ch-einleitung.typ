@@ -242,9 +242,9 @@ Das folgende Glossar definiert die zentralen Fachbegriffe welche in diesem Dokum
 )
 #begriffskarte(
   "Overflow-Modus (Punktbudget)",
-  "Definiertes Verhalten bei Erreichen des Hard-Limits: Stopp der Aufzeichnung vs. Downsampling.",
+  "Verhalten bei Erreichen des Hard-Limits: Aufzeichnung stoppen.",
   "",
-  "Konfigurationsabhängig /LF130/.",
+  "Konfigurationsabhängig /LF130/; aktuell nur `OverflowMode.STOP`.",
   "Enum: `OverflowMode.STOP` (Hard-Limit erreicht, Aufzeichnung stoppt).",
   "Interne Spezifikation.",
 )

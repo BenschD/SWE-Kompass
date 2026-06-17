@@ -1,0 +1,15 @@
+flowchart TD
+  call["onPositionUpdate(fix)"] --> active{"Session ACTIVE?"}
+  active -->|ja| valid{"Fix gueltig? WGS84 + Zeit"}
+  active -->|nein| ise["IllegalStateException"]
+  valid -->|ja| lastFix["lastFix = fix"]
+  valid -->|nein| ve["ValidationException"]
+  lastFix --> accept["TrackAggregator.accept"]
+  accept --> evt1["onPositionUpdate mit TrackAcceptSummary"]
+  evt1 --> softQ{"SOFT_LIMIT_WARN?"}
+  softQ -->|ja| softEvt["onSoftLimitWarn"]
+  softQ -->|nein| hardQ{"HARD_LIMIT_REACHED?"}
+  softEvt --> hardQ
+  hardQ -->|ja| hardEvt["onHardLimitReached"]
+  hardQ -->|nein| endNode["Ende"]
+  hardEvt --> endNode

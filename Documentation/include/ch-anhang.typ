@@ -1,4 +1,4 @@
-#import "ad-diagram.typ": zustandsdiagramm-session
+#import "lf-diagram.typ": zustandsdiagramm-session
 
 #let tbl-stroke = 0.45pt + rgb("#9a9a9a")
 #let tbl-inset  = 6pt
@@ -91,10 +91,10 @@ Parameter im Code: `epsilonM` (in Metern). Der Start- und Endpunkt eines Segment
 Die folgende Matrix stellt die vollständige Rückverfolgbarkeit von Anforderungen über OOA-Konzepte und OOD-Klassen bis zu Testclustern her.
 
 #figure(
-  caption: [Vollständige Traceability-Matrix: Anforderung → OOA-Konzept → OOD-Klasse → Test.],
+  caption: [Vollständige Traceability-Matrix],
   kind: table,
   align(left, table(
-    columns: (1.9cm, 2.7cm, 4.4cm, 1fr),
+    columns: (1.9cm, 3.5cm, 4.9cm, 1fr),
     stroke: tbl-stroke, inset: 5pt,
     [*`/LF`*], [*OOA-Konzept*],        [*OOD-Klasse*],                      [*Test*],
     [/LF010/], [`Peilung`],            [`DefaultBearingSession`],            [/TC010/],
@@ -209,7 +209,7 @@ Die folgende Tabelle führt dieselben Übergänge mit den jeweiligen Guards und 
     [ACTIVE],     [ABORTED],   [`abort()`],           [GPX materialisiert; optional persistiert; `onSessionAborted` gefeuert.],
     [COMPLETED],  [IDLE],      [`reset()`],           [Alle internen Zustände gelöscht.],
     [ABORTED],    [IDLE],      [`reset()`],           [Alle internen Zustände gelöscht.],
-    [ACTIVE],     [ACTIVE],    [`onPositionUpdate()`],[Fix validiert, gespeichert, Peilung berechnet, Listener benachrichtigt.],
+    [ACTIVE],     [ACTIVE],    [`onPositionUpdate()`],[Fix validiert, in Rohtrack gespeichert, Listener benachrichtigt.],
   ))
 )
 
@@ -239,9 +239,8 @@ Die Anordnung folgt einer streng hierarchischen Struktur (Presentation Layer →
 
 #pagebreak()
 
-─────────────────────────────────────────────────────────────────────────────
+
 == Literatur- und Normenverweise
-// ─────────────────────────────────────────────────────────────────────────────
 
 #figure(
   caption: [Primäre Normreferenzen und technische Quellen des Projekts.],
@@ -267,7 +266,7 @@ Die Anordnung folgt einer streng hierarchischen Struktur (Presentation Layer →
     [Apache Maven Docs],          [Build-System, Profilverwaltung (`w3w`-Profil)],
   ))
 )
-
+/*
 #pagebreak()
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -303,5 +302,5 @@ Die Anordnung folgt einer streng hierarchischen Struktur (Presentation Layer →
   ))
 )
 
-
+*/
 ]

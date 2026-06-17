@@ -152,6 +152,7 @@ public final class AllCapabilitiesDemo {
         } catch (ValidationException ve) {
             out("ValidationException", ve.getMessage());
         }
+        s.abort();
         s.reset();
         out("reset()", "Session wieder IDLE");
     }
@@ -347,6 +348,7 @@ public final class AllCapabilitiesDemo {
                 new GpsFix(t0, 48.77, 9.17, Optional.empty(), Optional.empty(), Optional.empty()));
         Optional<String> w = s.resolveWhat3Words(48.77, 9.17);
         out("resolveWhat3Words", w.orElse("(leer)"));
+        s.abort();
         s.reset();
     }
 

@@ -1,7 +1,7 @@
 // Kompakte LF-Karte für überschaubare Anforderungen (Optimierer, Validierung, …)
 
 #import "lf-card.typ": lf-card
-#import "lf-diagram.typ": lf-sonstiges
+#import "lf-sonstiges.typ": lf-sonstiges
 
 #let lf-compact(id, funktion, beschreibung, verweise: (), code: "") = {
   lf-card(

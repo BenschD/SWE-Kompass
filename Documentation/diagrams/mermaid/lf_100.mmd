@@ -1,0 +1,13 @@
+flowchart TD
+  fix["GpsFix bereits validiert"] --> stopped{"recordingStopped?"}
+  stopped -->|ja| skip["RECORDING_STOPPED, kein Speichern"]
+  stopped -->|nein| hard{"Hard-Limit erreicht?"}
+  hard -->|ja| stop["HARD_LIMIT_REACHED, recordingStopped"]
+  hard -->|nein| seg{"Zeitluecke > threshold?"}
+  seg -->|ja| newSeg["NEW_SEGMENT, Segment schliessen"]
+  seg -->|nein| softQ{"Soft-Limit erreicht?"}
+  newSeg --> softQ
+  softQ -->|ja| soft["SOFT_LIMIT_WARN einmalig"]
+  softQ -->|nein| store["GpsPoint speichern"]
+  soft --> store
+  store --> flag["Flag STORED"]

@@ -1,0 +1,10 @@
+flowchart TD
+  call["complete()"] --> active{"Session ACTIVE?"}
+  active -->|ja| seg["Segment abschliessen"]
+  active -->|nein| ise["IllegalStateException"]
+  seg --> export["GPX-Pipeline: Snapshot, Optimierer, XML, Bytes"]
+  export --> persist{"completePersistPath gesetzt?"}
+  persist -->|ja| file["SafeFileSink.writeAtomically"]
+  persist -->|nein| skip["kein Dateischreiben"]
+  file --> done["COMPLETED, onSessionCompleted, GpxResult"]
+  skip --> done

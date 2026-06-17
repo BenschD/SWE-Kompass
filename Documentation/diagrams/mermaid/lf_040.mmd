@@ -1,0 +1,7 @@
+flowchart LR
+  call["onCourseUpdate(courseDeg)"] --> active{"Session ACTIVE?"}
+  active -->|ja| range{"0 bis 360 Grad, kein NaN?"}
+  active -->|nein| ise["IllegalStateException"]
+  range -->|ja| set["courseDeg speichern"]
+  range -->|nein| iae["IllegalArgumentException"]
+  set --> endNode["Wert fuer /LF050/ verfuegbar"]

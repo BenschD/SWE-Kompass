@@ -1,0 +1,9 @@
+stateDiagram-v2
+  [*] --> IDLE
+  IDLE --> ACTIVE: start()
+  ACTIVE --> ACTIVE: onPositionUpdate()
+  ACTIVE --> ACTIVE: onCourseUpdate()
+  ACTIVE --> COMPLETED: complete()
+  ACTIVE --> ABORTED: abort()
+  COMPLETED --> IDLE: reset()
+  ABORTED --> IDLE: reset()
