@@ -34,7 +34,7 @@
   [/LF220/], [What3Words cachen], [`W3wHttpClient` \ LRU/TTL],
   [/LF230/], [Koordinaten validieren (GpsFix)], [`ValidationException COORD_RANGE`],
   [/LF240/], [Zeitstempel validieren], [`ValidationException TIMESTAMP_INVALID`],
-  [/LF250/], [Path-Traversal verhindern], [`SafeFileSink` → \ `SecurityException`],
+  [/LF250/], [Path-Traversal verhindern], [`SafeFileSink` \ `SecurityException`],
 )
 
 #let catalog-ll-table = table(
