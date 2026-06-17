@@ -504,6 +504,6 @@ Der Aufbau des Dokuments orientiert sich an IEEE 830 und gliedert sich in drei H
 
 *Kapitel 3 -- Spezifische Anforderungen* bildet den normativen Kern des Dokuments. Es umfasst die funktionalen Spezifikationen (`/LF…/`) mit zugehörigen Aktivitätsdiagrammen (Kap. 3.1), die nicht-funktionalen Anforderungen (`/LL…/`), die externen Schnittstellen, die Performance-Anforderungen sowie das Qualitätsmodell nach ISO/IEC 25010.
 
-Der *Anhang* vervollständigt die Spezifikation um ein Verzeichnis der referenzierten Dokumente, Traceability-Matrizen, das objektorientierte Analyse- und Entwurfsmodell, Review-Checklisten, Normreferenzen, erweiterte Akzeptanzkriterien sowie algorithmische Hinweise.
+Der *Anhang* vervollständigt die Spezifikation um die Traceability-Matrix, das objektorientierte Analyse- und Entwurfsmodell, den Referenzalgorithmus der Peilung sowie Literatur- und Normenverweise.
 #pagebreak()
 ]
