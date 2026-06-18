@@ -11,8 +11,8 @@
     verweise: verweise,
     beschreibung: beschreibung,
     ausloeser: [Siehe Standardablauf; Aufruf über Session-API oder Domain-Service.],
-    vorbedingung: [Session `ACTIVE` sofern Session-bezogen; sonst keine.],
-    nach_erfolg: [Anforderung erfüllt; kein undefinierter Zustand.],
+    vorbedingung: [Session `ACTIVE` sofern Session-bezogen, sonst keine.],
+    nach_erfolg: [Anforderung erfüllt, kein undefinierter Zustand.],
     nach_fehler: [Fachliche Ausnahme gemäß API (`ValidationException`, `IllegalStateException`, `SecurityException`).],
     standardablauf: [
       1. Host oder Export-Pipeline ruft die zugehörige Komponente auf.\
@@ -21,7 +21,7 @@
     ],
     alternativablauf: [Ungültige Eingabe: passende `ValidationException` oder `IllegalStateException`.],
     sonstiges: lf-sonstiges(
-      systemgrenzen: [Kein UI; kein direkter Hardwarezugriff.],
+      systemgrenzen: [Kein UI und kein direkter Hardwarezugriff.],
       speziell: if code != "" { [Implementierung: `#code`.] } else { [Siehe Traceability-Matrix.] },
       bemerkungen: [Normiert in `requirement-catalog.typ`.],
     ),

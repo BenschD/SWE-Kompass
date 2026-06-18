@@ -45,8 +45,8 @@ Das System ist in vier Subsysteme gegliedert (API, Domain, Ports, Infrastruktur)
     columns: (3.9cm, 5.5cm, 1fr),
     stroke: tbl-stroke, inset: tbl-inset,
     [*Subsystem*],              [*Kernverantwortung*],                                              [*Bereitgestellte Dienste*],
-    [API / Application Service],[Use-Case-Orchestrierung; Session-Verwaltung; Fehlerbehandlung],   [Session starten, beenden und abbrechen; konsistenten Zustandsschnappschuss liefern],
-    [Domain Core],              [Fachlogik ohne I/O-Abhängigkeiten],                              [Azimut, Distanz, Ordinalrichtung; Rohspeicher, Validierung, Segmentierung, Export-Optimierer],
+    [API / Application Service],[Use-Case-Orchestrierung,Session-Verwaltung und Fehlerbehandlung],   [Session starten, beenden und abbrechen und konsistenten Zustandsschnappschuss liefern],
+    [Domain Core],              [Fachlogik ohne I/O-Abhängigkeiten],                              [Azimut, Distanz, Ordinalrichtung, Rohspeicher, Validierung, Segmentierung und Export-Optimierer],
     [Ports],                    [Abstraktion technischer Abhängigkeiten],                          [Stabile Schnittstellen für GPX, Zeitgeber, Dateisystem, Logging und W3W],
     [Infrastruktur / \ Adapter],  [Konkrete Implementierung der Ports],                             [XML-Serialisierung, Datei-I/O, HTTP-Client, Systemuhr, Logging-Backend],
   ))
@@ -71,8 +71,8 @@ Das System ist in vier Subsysteme gegliedert (API, Domain, Ports, Infrastruktur)
     [Host],           [Domain],        [Nein],       [Direkter Zugriff würde die Kapselungswirkung der API-Fassade aushebeln.],
     [API],            [Domain],        [Ja],         [Orchestrierung der Fachlogik ist Kernaufgabe der API-Schicht.],
     [API],            [Ports],         [Ja],         [Injizierte Port-Interfaces (`GpxWriterPort`, `FileSinkPort`, `ClockPort`, …).],
-    [API],            [Infrastruktur], [Nein],       [Keine technischen Details im Application Service; nur Port-Interfaces.],
-    [Domain],         [Infrastruktur], [Nein],       [Fachlogik bleibt I/O-frei; Infrastruktur wird über Ports entkoppelt.],
+    [API],            [Infrastruktur], [Nein],       [Keine technischen Details im Application Service und nur Port-Interfaces.],
+    [Domain],         [Infrastruktur], [Nein],       [Fachlogik bleibt I/O-frei und Infrastruktur wird über Ports entkoppelt.],
     [Infrastruktur],  [Domain],        [Nein],       [Zirkuläre Abhängigkeit würde die Testbarkeit zerstören.],
   ))
 )
@@ -97,12 +97,12 @@ Die folgende Tabelle fasst die Hauptfunktionsgruppen der Bibliothek zusammen. Di
     stroke: tbl-stroke, inset: tbl-inset,
     [*Funktionsgruppe*],           [*Beschreibung*],                                                           [*Anforderungen*],
     [Session- \ Lebenszyklus],        [Start, laufende Aufzeichnung und Abbruch einer Peilungs-Session mit UUID-Identifikation.], [/LF010/-/LF090/],
-    [Peilung und Kurs],            [Berechnung von geografischem Azimut, Entfernung (Haversine) und diskreter Himmelsrichtung; optionale Kursabweichung.], [/LF030/-/LF050/],
-    [GPS-Track-Aufzeichnung],      [Kontinuierlicher Rohspeicher validierter GPS-Fixes; Segmentierung bei Zeitlücken; zweistufiges Punktbudget.], [/LF100/-/LF130/],
+    [Peilung und Kurs],            [Berechnung von geografischem Azimut, Entfernung (Haversine) und diskreter Himmelsrichtung und optionale Kursabweichung.], [/LF030/-/LF050/],
+    [GPS-Track-Aufzeichnung],      [Kontinuierlicher Rohspeicher validierter GPS-Fixes, Segmentierung bei Zeitlücken und zweistufiges Punktbudget.], [/LF100/-/LF130/],
     [GPX-Export],                  [GPX-1.1-konformer Export als `byte[]`; optionales atomares Dateischreiben.], [/LF140/-/LF160/],
     [Track-Optimierung],           [Austauschbare Strategie-Algorithmen: n-ter Punkt, Mindestabstand, Geraden-Heuristik, Douglas-Peucker.], [/LF170/-/LF200/],
     [What3Words- \ Integration],      [Optionaler Reverse-Lookup mit Cache via `W3wClientPort`.], [/LF210/, /LF220/],
-    [Validierung und \ Sicherheit],  [Koordinaten- und Zeitstempelprüfung; Path-Traversal-Schutz; XML-Escaping.], [/LF230/-/LF250/],
+    [Validierung und \ Sicherheit],  [Koordinaten- und Zeitstempelprüfung, Path-Traversal-Schutz und XML-Escaping.], [/LF230/-/LF250/],
     [Betrieb und Qualität],        [Deterministische Tests, strukturiertes Logging, reproduzierbarer Build.], [/LL010/-/LL080/],
   ))
 )
@@ -158,12 +158,12 @@ Als Bibliothek ohne eigene Benutzeroberfläche hat die Peilungskomponente keine 
     stroke: tbl-stroke,
     inset: tbl-inset,
     [*Nutzergruppe*], [*Bezug*], [*Erfahrung und Fachkenntnis*], [*Technische Voraussetzungen*], [*Erwartung an die Bibliothek*],
-    [Host-Entwickler/in], [direkt], [Softwareentwicklung; Erfahrung mit Java-Bibliotheken und eingebetteten Komponenten.], [Java 11 oder höher; Integration über die öffentliche API; optional Maven, SLF4J und W3W-Konfiguration durch den Host.], [Stabile, dokumentierte API; `ValidationException` mit maschinenlesbarem `ErrorCode` bei Eingabefehlern; reproduzierbares Session-Verhalten.],
-    [Endnutzer/in], [indirekt], [Keine Kenntnis der Bibliothek; nutzt Peilungs- oder Outdoor-Funktionen über die Host-App.], [Kein direkter Zugriff auf die Bibliothek.], [Zuverlässige Peilungswerte und korrekter GPX-1.1-Export in der Host-App.],
-    [Betrieb (Host-Team)], [indirekt], [Betrieb eingebetteter Java-Anwendungen; Lesen strukturierter Logausgaben.], [Bindet ein SLF4J-Backend im Host-Prozess.], [Strukturierte Logausgabe; Listener-Fehler beeinträchtigen den Session-Zustand nicht (/LF080/).],
+    [Host-Entwickler/in], [direkt], [Softwareentwicklung; Erfahrung mit Java-Bibliotheken und eingebetteten Komponenten.], [Java 11 oder höher, Integration über die öffentliche API, optional Maven, SLF4J und W3W-Konfiguration durch den Host.], [Stabile, dokumentierte API, `ValidationException` mit maschinenlesbarem `ErrorCode` bei Eingabefehlern und reproduzierbares Session-Verhalten.],
+    [Endnutzer/in], [indirekt], [Keine Kenntnis der Bibliothek, nutzt Peilungs- oder Outdoor-Funktionen über die Host-App.], [Kein direkter Zugriff auf die Bibliothek.], [Zuverlässige Peilungswerte und korrekter GPX-1.1-Export in der Host-App.],
+    [Betrieb (Host-Team)], [indirekt], [Betrieb eingebetteter Java-Anwendungen und Lesen strukturierter Logausgaben.], [Bindet ein SLF4J-Backend im Host-Prozess.], [Strukturierte Logausgabe und Listener-Fehler beeinträchtigen den Session-Zustand nicht (/LF080/).],
   ))
 )
-
+#pagebreak()
 === Projektkontext (Stakeholder)
 
 Die folgende Matrix ergänzt die Nutzercharakteristiken um projektbezogene Rollen und deren Einfluss auf diese Arbeit. Sie ist nicht Teil der Laufzeit-Spezifikation.
@@ -177,10 +177,10 @@ Die folgende Matrix ergänzt die Nutzercharakteristiken um projektbezogene Rolle
     inset: tbl-inset,
     [*Rolle*], [*Erwartung / Interesse*], [*Einfluss*],
     [Dozent / \ Prüfer],      [Nachweis der Vorlesungsinhalte, lauffähiger Code, formal saubere Dokumentation nach IEEE-/SOPHIST-Standard.], [hoch],
-    [Studierendenteam],     [Wartbare, erweiterbare Architektur; klare Testbarkeit; nachvollziehbare Anforderungen.], [hoch],
-    [Host-Entwickler/in],   [Stabile, vollständig dokumentierte API; klare Fehlersemantik über `ValidationException` und `ErrorCode`.], [hoch],
+    [Studierendenteam],     [Wartbare, erweiterbare Architektur, klare Testbarkeit und nachvollziehbare Anforderungen.], [hoch],
+    [Host-Entwickler/in],   [Stabile, vollständig dokumentierte API, klare Fehlersemantik über `ValidationException` und `ErrorCode`.], [hoch],
     [Endnutzer/in (indirekt)],[Zuverlässige Peilungswerte und korrekte GPX-Ausgabe in der Host-Anwendung.], [mittel],
-    [Betrieb],              [Strukturiertes Logging auf WARN-Level; keine stillen Fehler; deterministisches Verhalten.], [niedrig-mittel],
+    [Betrieb],              [Strukturiertes Logging auf WARN-Level, keine stillen Fehler und deterministisches Verhalten.], [niedrig-mittel],
   ))
 )
 
@@ -208,9 +208,9 @@ Die normativen Detail-Spezifikationen stehen in Kapitel 3.1 (`/LF010/` … `/LF2
 Die folgende Auflistung definiert den technischen Funktionsumfang als verbindliche Systemgrenze. Sie präzisiert Integrationsschnittstellen, Session-Verhalten, Eingabevalidierung, Exportformate und Qualitätssicherung.
 
 === Im Scope
-- Berechnung von Zielrichtung (Azimut), Entfernung und Himmelsrichtung (Ordinalrichtung) auf WGS84-Basis; bei verfügbarem Kurswert zusätzlich Kursabweichung.
+- Berechnung von Zielrichtung (Azimut), Entfernung und Himmelsrichtung (Ordinalrichtung) auf WGS84-Basis und bei verfügbarem Kurswert zusätzlich Kursabweichung.
 - Öffentliche Java-API zur Übergabe von Positionsdaten und Metadaten (Zeitstempel, Geschwindigkeit, Genauigkeit) durch den Host.
-- Session-Lebenszyklus (Start, Update, Complete/Abort); nach Abort bleiben erfasste Track-Daten exportierbar.
+- Session-Lebenszyklus (Start, Update, Complete/Abort) und nach Abort bleiben erfasste Track-Daten exportierbar.
 - Konfigurierbare Aufzeichnung: Punktbudget (Soft-/Hard-Limit), Segmentierung bei Zeitlücken, Validierung von Koordinaten und Zeitstempeln; Update-Frequenz steuert der Host.
 - GPX-1.1-Export als String oder Bytefolge.
 - Vor dem Export wählbare Optimierungsstrategien (n-ter Punkt, Mindestabstand, Geraden-Heuristik, Douglas-Peucker) sowie optionale What3Words-Auflösung mit lokalem Cache.
@@ -220,8 +220,8 @@ Die folgende Auflistung definiert den technischen Funktionsumfang als verbindlic
 - Echtzeit-Optimierung eingehender Track-Punkte während der laufenden Aufzeichnung.
 - Magnetische Peilung und automatische Deklinationskorrektur.
 - Kartendarstellung, Map-Matching, Routing und allgemeines Geocoding (What3Words ausgenommen).
-- Direkte Hardwareanbindung (GNSS-Treiber, Sensorfusion); Messwerte liefert ausschließlich der Host.
-- Vorgegebene Persistenzpfade für GPX-Export; Speicherort und Dateiverwaltung obliegen dem Host.
+- Direkte Hardwareanbindung (GNSS-Treiber, Sensorfusion) #sym.arrow.r Messwerte liefert ausschließlich der Host.
+- Vorgegebene Persistenzpfade für GPX-Export #sym.arrow.r Speicherort und Dateiverwaltung obliegen dem Host.
 - Cloud-Persistenz, Benutzer- und Rechteverwaltung.
 
 #pagebreak()
@@ -239,7 +239,7 @@ Die folgende Auflistung definiert den technischen Funktionsumfang als verbindlic
     columns: (1.15cm, 4.2cm, 1fr, 1fr),
     stroke: tbl-stroke, inset: tbl-inset,
     [*ID*], [*Annahme*], [*Einfluss auf Anforderungen und Verhalten*], [*Folge bei Verletzung*],
-    [A1], [Der Host liefert fertige Positions- und Kursdaten über die öffentliche API; die Bibliothek liest keine Sensoren und führt keine Sensorfusion aus.], [Systemgrenze und Funktionsumfang (Peilung und Track aus bereitgestellten Messwerten) bleiben definiert.], [Ohne valide Host-Daten sind Peilung und Aufzeichnung nicht sinnvoll nutzbar; dies liegt außerhalb der Verantwortung der Bibliothek.],
+    [A1], [Der Host liefert fertige Positions- und Kursdaten über die öffentliche API. Die Bibliothek liest keine Sensoren und führt keine Sensorfusion aus.], [Systemgrenze und Funktionsumfang (Peilung und Track aus bereitgestellten Messwerten) bleiben definiert.], [Ohne valide Host-Daten sind Peilung und Aufzeichnung nicht sinnvoll nutzbar, dies liegt außerhalb der Verantwortung der Bibliothek.],
     [A2], [Nur der Host steuert die Aufruffrequenz; die Bibliothek dünnt den eingehenden Datenstrom nicht von sich aus aus.], [Roh-Trackfüllung, Punktbudget und Segmentierung folgen der vom Host gewählten Updatefrequenz.], [Andere Taktungsmodelle würden die dokumentierten Erwartungen verletzen und Anpassungen am SRS nach sich ziehen.],
     [A3], [Geografische Berechnungen und Eingaben beziehen sich auf WGS84-konforme Koordinaten, wie in der Spezifikation vorausgesetzt.], [Azimut, Distanz und Exportformate bleiben konsistent zur fachlichen Definition.], [Abweichende Bezugssysteme erfordern eine Überarbeitung der Anforderungen und Algorithmen.],
     [A4], [Die Host-JVM unterstützt mindestens Java~11.], [Bytecode, APIs und Tooling der Bibliothek sind darauf ausgelegt.], [Ältere JVMs werden nicht unterstützt; ein Wechsel der Mindestversion wäre eine System-Änderung.],
@@ -260,12 +260,12 @@ Die folgende Auflistung definiert den technischen Funktionsumfang als verbindlic
     [*Kategorie*], [*Abhängigkeit*], [*Details und Konsequenz*],
     [Host], [Konfiguration (W3W)], [API-Schlüssel und Adapter-Konfiguration bei Nutzung von What3Words. Ohne Schlüssel oder Netz gelten dokumentierte Fallbacks; volle W3W-Funktionalität entfällt.],
     [Host], [Dateisystem (GPX)], [Zielpfade, ggf. `SafeFileSink` und Schreibrechte. Bei Verletzung schlägt GPX-Persistenz fehl oder wird abgelehnt; Fehler über definierte Mechanismen sichtbar.],
-    [Host], [Logging], [SLF4J-API der Bibliothek; konkretes Backend bindet der Host. Ohne Binding keine oder unerwartete Logausgabe; Fachlogik unberührt.],
+    [Host], [Logging], [SLF4J-API der Bibliothek; konkretes Backend bindet der Host. Ohne Binding keine oder unerwartete Logausgabe,die Fachlogik unberührt.],
     [Host], [Netzwerk], [HTTPS zur W3W-API nur bei aktivierter Nutzung; Erreichbarkeit und TLS-Vertrauen im Host-Umfeld. Eingeschränkter oder ausgefallener Reverse-Lookup und Cache-Update.],
-    [Laufzeit], [Java SE], [Version 11 oder höher; Ausführungsumgebung im Host-Prozess.],
-    [Build], [Apache Maven], [Projekt unter `implementation/`; Abhängigkeiten über Maven Central. Kompilieren, Testen, Packen; Änderungen am Build können das SRS ergänzen lassen.],
-    [Laufzeit], [`slf4j-api`], [2.0.12 (Parent-POM). Fassade für Logging; Versionwechsel kann Integrationshinweise betreffen.],
-    [Test], [JUnit~5, AssertJ, Mockito, Jimfs], [Versionen 5.10.2, 3.25.3, 5.11.0, 1.3.0. Nur für automatisierte Tests; nicht Teil der Host-Laufzeit.],
+    [Laufzeit], [Java SE], [Version 11],
+    [Build], [Apache Maven], [Projekt unter `implementation/`und Abhängigkeiten über Maven Central. Kompilieren, Testen, Packen und Änderungen am Build können das SRS ergänzen lassen.],
+    [Laufzeit], [`slf4j-api`], [2.0.12 (Parent-POM). Fassade für Logging. Versionwechsel kann Integrationshinweise betreffen.],
+    [Test], [JUnit~5, AssertJ, Mockito, Jimfs], [Versionen 5.10.2, 3.25.3, 5.11.0, 1.3.0. Nur für automatisierte Tests (nicht Teil der Host-Laufzeit).],
     [Extern], [What3Words-API], [Optional über HTTPS. Profil `w3w` steuert optionale Integrationstests im Build. Verfügbarkeit und API-Änderungen liegen außerhalb der Bibliothek.],
     [Architektur], [Eingebetteter Betrieb], [Kein eigener Serverprozess der Bibliothek; keine Abhängigkeit von einem separaten, von der Komponente bereitgestellten Dienst.],
   ))
