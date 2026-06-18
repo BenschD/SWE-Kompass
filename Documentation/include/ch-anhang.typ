@@ -14,12 +14,12 @@ Der Anhang ergänzt den normativen Teil um vertiefende Artefakte: die vollständ
 // ─────────────────────────────────────────────────────────────────────────────
 
 Die folgende Matrix stellt die vollständige Rückverfolgbarkeit von Anforderungen über OOA-Konzepte und OOD-Klassen bis zu Testclustern her. Die Testzuordnung zu `/TC…/` ist in Kap.~3.4 detailliert.
-
+#v(-0.5em)
 #figure(
   caption: [Vollständige Traceability-Matrix],
   kind: table,
   align(left, table(
-    columns: (1.9cm, 3.5cm, 4.9cm, 1fr),
+    columns: (1.9cm, 3.5cm, 5cm, 1fr),
     stroke: tbl-stroke, inset: 5pt,
     [*`/LF`*], [*OOA-Konzept*],        [*OOD-Klasse*],                      [*Test*],
     [/LF010/], [`Peilung`],            [`DefaultBearingSession`],            [/TC010/],
@@ -36,14 +36,14 @@ Die folgende Matrix stellt die vollständige Rückverfolgbarkeit von Anforderung
     [/LF120/], [`Track`],              [`TrackAggregator`],                 [/TC150/],
     [/LF130/], [`Standortfolge`],      [`TrackAggregator`],                 [/TC070/],
     [/LF140/], [`Export`],             [`GpxXmlWriter`, `OptimizationPipeline`], [/TC100/],
-    [/LF150/], [`Export`],             [`SafeFileSink`],                    [Demo; `SafeFileSinkJimfsTest.writesInsideBase`],
+    [/LF150/], [`Export`],             [`SafeFileSink`],                    [Demo,  `SafeFileSinkJimfsTest.writesInsideBase`],
     [/LF160/], [`Export`],             [`GpxResult`],                       [/TC080/, /TC100/],
     [/LF170/], [`Trackoptimierung`],   [`NthPointOptimizer`],               [/TC110/],
     [/LF180/], [`Trackoptimierung`],   [`MinDistanceOptimizer`],            [implizit /TC110/, Demo],
     [/LF190/], [`Trackoptimierung`],   [`LineCollinearityOptimizer`],       [implizit /TC110/, Demo],
     [/LF200/], [`Trackoptimierung`],   [`DouglasPeuckerOptimizer`],         [implizit /TC110/, Demo],
     [/LF210/], [Externe Referenz],     [`W3wHttpClient`, `NoopW3wClient`],  [Demo (`NoopW3wClient`)],
-    [/LF220/], [Externes Caching],     [`W3wHttpClient`],                   [implizit /LF210/; Code-Review],
+    [/LF220/], [Externes Caching],     [`W3wHttpClient`],                   [implizit /LF210/, Code-Review],
     [/LF230/], [`Validierung`],        [`ValidationException`],             [/TC020/],
     [/LF240/], [`Validierung`],        [`ValidationException`],             [/TC030/],
     [/LF250/], [`Export`],             [`SafeFileSink`],                    [/TC090/],
@@ -60,7 +60,7 @@ Dieser Abschnitt trennt bewusst zwei Sichten: Die objektorientierte Analyse (OOA
 
 === OOA: Domänenmodell
 
-Die Analyse betrachtet die Fachlichkeit, bevor technische Entscheidungen einfließen. Sie hält fest, welche Konzepte die Domäne kennt und wie sie zusammenhängen - noch ohne Klassen, Schnittstellen oder Frameworks. Die Assoziationen sind daher fachlich zu lesen, die Multiplizitäten bewusst pragmatisch gehalten.
+Die Analyse betrachtet die Fachlichkeit, bevor technische Entscheidungen einfließen. Sie hält fest, welche Konzepte die Domäne kennt und wie sie zusammenhängen, noch ohne konkrete Klassen, Schnittstellen oder Frameworks  zu definieren. Die Assoziationen sind daher fachlich zu lesen, die Multiplizitäten bewusst pragmatisch gehalten.
 
 #figure(
   caption: [Fachliches Domänenmodell (OOA): Konzepte und ihre Beziehungen.],
@@ -82,7 +82,7 @@ Die Analyse betrachtet die Fachlichkeit, bevor technische Entscheidungen einflie
 
 === OOD: Technischer Feinentwurf
 
-Der Entwurf überführt die fachlichen Konzepte in konkrete Klassen und Schnittstellen und ordnet ihnen ein Stereotyp zu - Value Object, Domain Service, Infrastructure oder Port. Auffällig ist die Trennung über Strategie- und Port-Interfaces (`TrackOptimizer`, `W3wClientPort`, `ClockPort`): Sie hält die Domäne frei von technischen Abhängigkeiten und erlaubt, im Test echte Implementierungen durch Mocks zu ersetzen.
+Der Entwurf überführt die fachlichen Konzepte in konkrete Klassen und Schnittstellen und ordnet ihnen ein Stereotyp zu, dazu zählen das Value Object, Domain Service, Infrastructure oder Port. Auffällig ist die Trennung über Strategie- und Port-Interfaces (`TrackOptimizer`, `W3wClientPort`, `ClockPort`): Sie hält die Domäne frei von technischen Abhängigkeiten und erlaubt, im Test echte Implementierungen durch Mocks zu ersetzen.
 
 #figure(
   caption: [OOD-Klassenübersicht: Zentrale Entwurfsklassen und Schnittstellen.],
@@ -114,7 +114,7 @@ Der Entwurf überführt die fachlichen Konzepte in konkrete Klassen und Schnitts
 #pagebreak()
 === Zustandsdiagramm: Session-Lebenszyklus
 
-*Zustände:* `IDLE` → `ACTIVE` (`start`) → `COMPLETED` (`complete`) oder `ABORTED` (`abort`). Rückkehr zu `IDLE` über `reset()` (/LF090/). Details zu Guards und Aktionen: Kap.~3.1 (`/LF010/` … `/LF090/`).
+*Zustände:* `IDLE` #sym.arrow.r `ACTIVE` (`start`) #sym.arrow.r `COMPLETED` (`complete`) oder `ABORTED` (`abort`). Rückkehr zu `IDLE` über `reset()` (/LF090/). Details zu Guards und Aktionen: Kap.~3.1 (`/LF010/` … `/LF090/`).
 
 #zustandsdiagramm-session()
 
@@ -140,7 +140,7 @@ $
   d = 2 R dot arcsin(sqrt(a))
 $
 
-wobei $R = 6.371.000$ m der mittlere Erdradius ist.
+wobei $R = 6.371.000 med m$ der mittlere Erdradius ist.
 
 *Azimutberechnung:*
 
@@ -151,9 +151,9 @@ $
 Anschließend Normalisierung auf $[0°, 360°)$: `azimuth = (alpha + 360°) mod 360°`.
 
 *Grenzfälle:*
-- Identische Punkte (d = 0): Azimut undefiniert → Rückgabe 0° per Konvention.
-- Polnähe: Numerische Instabilität durch `cos(φ) → 0` muss durch Klammertests abgesichert werden.
-- Antipodische Punkte (d ≈ πR): Azimut mehrdeutig → dokumentieren und testen.
+- Identische Punkte (d = 0): Azimut undefiniert #sym.arrow.r Rückgabe 0° per Konvention.
+- Polnähe: Numerische Instabilität durch $cos(φ)$ #sym.arrow.r $0$ muss durch Klammertests abgesichert werden.
+- Antipodische Punkte (d ≈ πR): Azimut mehrdeutig #sym.arrow.r dokumentieren und testen.
 
 #pagebreak()
 
