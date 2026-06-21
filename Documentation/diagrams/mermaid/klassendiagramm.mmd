@@ -1,0 +1,121 @@
+%% Klassendiagramm (OOD): zentrale Entwurfsklassen, Schnittstellen und Stereotype.
+%% Quelle: bearing-api, bearing-domain, bearing-spi. Strategy (TrackOptimizer),
+%% Observer (BearingListener) und Ports (…Port) halten die Domain technologiefrei.
+classDiagram
+  direction LR
+
+  class BearingSession {
+    <<interface>>
+    +start(SessionConfig, GeoCoordinate)
+    +onPositionUpdate(GpsFix)
+    +onCourseUpdate(double)
+    +currentSnapshot() BearingSnapshot
+    +complete() GpxResult
+    +abort() GpxResult
+    +reset()
+  }
+  class DefaultBearingSession {
+    -lifecycle : IDLE|ACTIVE|COMPLETED|ABORTED
+    -sessionId : UUID
+  }
+  class SessionConfig {
+    <<Value Object>>
+    +softLimitPoints : int
+    +hardLimitPoints : int
+    +segmentGapThreshold : Duration
+    +optimizers : List~TrackOptimizer~
+  }
+  class GeoCoordinate {
+    <<Value Object>>
+    +latitudeDeg : double
+    +longitudeDeg : double
+  }
+  class GpsFix {
+    <<Value Object>>
+    +time : Instant
+    +latitudeDeg : double
+    +longitudeDeg : double
+  }
+  class BearingCalculator {
+    <<Domain Service>>
+    +greatCircleDistanceMeters() double
+    +azimuthDegrees() double
+    +snapshotTowardTarget() BearingSnapshot
+  }
+  class BearingSnapshot {
+    <<Value Object>>
+    +azimuthDeg : double
+    +distanceM : double
+    +compassOrdinal : CompassOrdinal
+  }
+  class CompassOrdinal {
+    <<enumeration>>
+    N NE E SE S SW W NW
+  }
+  class TrackAggregator {
+    <<Domain Service>>
+    +accept(GpsFix) TrackAcceptResult
+    +immutableTrack() Track
+  }
+  class Track {
+    <<Value Object>>
+  }
+  class TrackSegment {
+    <<Value Object>>
+  }
+  class GpsPoint {
+    <<Value Object>>
+  }
+  class OptimizationPipeline {
+    +apply(Track, List~TrackOptimizer~) Track
+  }
+  class TrackOptimizer {
+    <<interface>>
+    +optimize(List~GpsPoint~) List~GpsPoint~
+  }
+  class NthPointOptimizer
+  class MinDistanceOptimizer
+  class LineCollinearityOptimizer
+  class DouglasPeuckerOptimizer
+  class BearingListener {
+    <<interface>>
+  }
+  class GpxWriterPort {
+    <<interface>>
+  }
+  class ClockPort {
+    <<interface>>
+  }
+  class FileSinkPort {
+    <<interface>>
+  }
+  class W3wClientPort {
+    <<interface>>
+  }
+  class LoggerPort {
+    <<interface>>
+  }
+
+  BearingSession <|.. DefaultBearingSession
+  DefaultBearingSession --> SessionConfig : frozenConfig
+  DefaultBearingSession --> GeoCoordinate : target
+  DefaultBearingSession --> TrackAggregator
+  DefaultBearingSession --> BearingCalculator
+  DefaultBearingSession --> OptimizationPipeline
+  DefaultBearingSession o-- "0..*" BearingListener
+  DefaultBearingSession ..> ClockPort
+  DefaultBearingSession ..> GpxWriterPort
+  DefaultBearingSession ..> FileSinkPort
+  DefaultBearingSession ..> W3wClientPort
+  DefaultBearingSession ..> LoggerPort
+  SessionConfig o-- "0..*" TrackOptimizer
+  BearingCalculator ..> BearingSnapshot
+  BearingSnapshot --> CompassOrdinal
+  TrackAggregator --> Track
+  Track *-- "1..*" TrackSegment
+  TrackSegment *-- "0..*" GpsPoint
+  OptimizationPipeline ..> TrackOptimizer
+  TrackOptimizer <|.. NthPointOptimizer
+  TrackOptimizer <|.. MinDistanceOptimizer
+  TrackOptimizer <|.. LineCollinearityOptimizer
+  TrackOptimizer <|.. DouglasPeuckerOptimizer

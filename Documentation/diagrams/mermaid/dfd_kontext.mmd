@@ -1,0 +1,15 @@
+%% Kontextdiagramm (DFD Stufe 0): die Bibliothek als ein Prozess mit ihren
+%% externen Terminatoren und Datenflüssen. Quelle: Kap. 2.1 (Externe Schnittstellen).
+flowchart LR
+  Host["Host-Anwendung"]
+  W3W["What3Words-API"]
+  FS[("Dateisystem")]
+  LOG["SLF4J-Backend"]
+  P(("0\nJava-Peilungskomponente"))
+
+  Host -->|"SessionConfig, Ziel, GpsFix, Kurs"| P
+  P -->|"BearingSnapshot, GpxResult, Events"| Host
+  P -->|"Koordinate"| W3W
+  W3W -->|"drei Wörter"| P
+  P -->|"GPX-Datei (optional)"| FS
+  P -->|"Log-Events"| LOG

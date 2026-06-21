@@ -1,6 +1,6 @@
 flowchart LR
   call["reset()"] --> active{"Lifecycle ACTIVE?"}
-  active -->|nein| clear["Felder loeschen: sessionId, config, target, aggregator, lastFix, courseDeg"]
+  active -->|nein| clear["Felder löschen: sessionId, config, target, aggregator, lastFix, courseDeg"]
   active -->|ja| ise["IllegalStateException"]
   clear --> idle["lifecycle = IDLE"]
-  idle --> ready["/LF010/ wieder moeglich"]
+  idle --> ready["/LF010/ wieder möglich"]

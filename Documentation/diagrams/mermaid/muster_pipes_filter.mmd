@@ -1,0 +1,13 @@
+%% Architekturmuster Pipes-and-Filter: die Optimierer-Kette vor dem GPX-Export.
+%% Jeder Filter implementiert TrackOptimizer; OptimizationPipeline reicht die
+%% Punktliste je Segment sequentiell durch. Quelle: OptimizationPipeline.apply.
+flowchart TB
+  raw[("Roh-Track<br/>(GpsPoint-Liste je Segment)")] --> f1["Filter: NthPointOptimizer"]
+  f1 --> f2["Filter: MinDistanceOptimizer"]
+  f2 --> f3["Filter: DouglasPeuckerOptimizer"]
+  f3 --> f4["Filter: LineCollinearityOptimizer"]
+  f4 --> opt[("optimierter Track")]
+  opt --> gpx["GpxXmlWriter → GPX 1.1"]
+
+  classDef filter fill:#fff2e6,stroke:#e6b87e,color:#23272e
+  class f1,f2,f3,f4 filter

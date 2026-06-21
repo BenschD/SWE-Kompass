@@ -1,0 +1,20 @@
+' ─────────────────────────────────────────────────────────────────────────────
+' Entscheidungstabelle (begrenzter Eintrag) für onPositionUpdate(GpsFix).
+' Bedingungen/Aktionen aus DefaultBearingSession.onPositionUpdate + validate +
+' TrackAggregator.accept. J = ja, N = nein, – = irrelevant.
+' ─────────────────────────────────────────────────────────────────────────────
+@startsalt
+{#
+.                          | R1 | R2 | R3 | R4 | R5
+Session ACTIVE?            | N  | J  | J  | J  | J
+Koordinate WGS84-gültig?   | –  | N  | J  | J  | J
+Zeitstempel gültig?        | –  | –  | N  | J  | J
+Hard-Limit erreicht?       | –  | –  | –  | J  | N
+==
+IllegalStateException      | X  | .  | .  | .  | .
+ValidationException COORD  | .  | X  | .  | .  | .
+ValidationException TIME   | .  | .  | X  | .  | .
+onHardLimitReached / STOP  | .  | .  | .  | X  | .
+Fix speichern (+ Events)   | .  | .  | .  | .  | X
+}
+@endsalt

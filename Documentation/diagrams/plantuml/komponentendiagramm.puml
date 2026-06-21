@@ -1,0 +1,61 @@
+' ─────────────────────────────────────────────────────────────────────────────
+' Komponentendiagramm: Module als Komponenten mit angebotenen (Lollipop) und
+' benötigten (Socket) Schnittstellen. Die SPI-Ports entkoppeln API von Adaptern.
+' Quelle: bearing-api/BearingBootstrap (Verdrahtung), bearing-spi/*Port
+' ─────────────────────────────────────────────────────────────────────────────
+@startuml
+!pragma layout smetana
+left to right direction
+skinparam shadowing false
+skinparam nodesep 22
+skinparam ranksep 70
+skinparam componentStyle uml2
+skinparam component {
+  BackgroundColor #fff2e6
+  BorderColor #e6b87e
+}
+skinparam interface {
+  BackgroundColor #ffffff
+  BorderColor #888888
+}
+
+actor "Host-Anwendung" as Host
+
+component "bearing-api" as API
+component "bearing-domain" as DOM
+
+interface "BearingSession" as I_session
+interface "GpxWriterPort" as I_gpx
+interface "ClockPort"     as I_clock
+interface "FileSinkPort"  as I_file
+interface "LoggerPort"    as I_log
+interface "W3wClientPort" as I_w3w
+
+component "bearing-adapter-gpx"    as GPX
+component "bearing-adapter-system" as SYS
+component "bearing-adapter-w3w"    as W3W
+
+cloud    "What3Words" as cloudW3W
+database "Dateisystem" as dbFS
+
+' bereitgestellte Schnittstellen
+API  -right- I_session
+GPX  -right- I_gpx
+SYS  -right- I_clock
+SYS  -right- I_file
+SYS  -right- I_log
+W3W  -right- I_w3w
+
+' Nutzung
+Host ..> I_session
+API  ..> I_gpx
+API  ..> I_clock
+API  ..> I_file
+API  ..> I_log
+API  ..> I_w3w
+API  --> DOM : Fachlogik
+
+' externe Systeme
+W3W ..> cloudW3W : HTTPS
+SYS ..> dbFS     : Datei-I/O
+@enduml

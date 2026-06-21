@@ -1,0 +1,51 @@
+%% ER-Modell der Produktdaten (/LD010/ … /LD060/). Entitäten und Kardinalitäten
+%% entsprechen dem Domänenmodell (Session, Track, Segment, Punkt, Snapshot, Export).
+erDiagram
+  SESSION ||--|| SESSION_CONFIG : "konfiguriert durch"
+  SESSION ||--|| GEO_COORDINATE : "Ziel"
+  SESSION ||--o| TRACK : "zeichnet auf"
+  SESSION ||--o| GPX_RESULT : "erzeugt"
+  SESSION ||--o{ BEARING_SNAPSHOT : "leitet ab"
+  SESSION_CONFIG ||--o{ TRACK_OPTIMIZER : "enthält"
+  TRACK ||--o{ TRACK_SEGMENT : "enthält"
+  TRACK_SEGMENT ||--o{ GPS_POINT : "enthält"
+
+  SESSION {
+    UUID sessionId PK
+    string status
+    Instant startedAt
+  }
+  SESSION_CONFIG {
+    int softLimitPoints
+    int hardLimitPoints
+    Duration segmentGapThreshold
+    Duration maxFixAge
+  }
+  GEO_COORDINATE {
+    double latitudeDeg
+    double longitudeDeg
+  }
+  TRACK {
+    int totalPoints
+  }
+  TRACK_SEGMENT {
+    int pointCount
+  }
+  GPS_POINT {
+    Instant time
+    double latitudeDeg
+    double longitudeDeg
+    double hdop
+  }
+  BEARING_SNAPSHOT {
+    double azimuthDeg
+    double distanceM
+    string compassOrdinal
+  }
+  GPX_RESULT {
+    bytes gpxBytes
+    string appliedOptimizers
+  }
+  TRACK_OPTIMIZER {
+    string name
+  }

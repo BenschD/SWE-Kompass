@@ -1,6 +1,6 @@
 flowchart TD
   call["onPositionUpdate(fix)"] --> active{"Session ACTIVE?"}
-  active -->|ja| valid{"Fix gueltig? WGS84 + Zeit"}
+  active -->|ja| valid{"Fix gültig? WGS84 + Zeit"}
   active -->|nein| ise["IllegalStateException"]
   valid -->|ja| lastFix["lastFix = fix"]
   valid -->|nein| ve["ValidationException"]

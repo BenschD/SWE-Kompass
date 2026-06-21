@@ -1,0 +1,20 @@
+%% Kontrollflussgraph (Whitebox-Test) der Methode TrackAggregator.accept(GpsFix).
+%% Entscheidungsknoten d1..d4, n4 ergeben die zyklomatische Komplexität v(G)=6.
+%% Quelle: bearing-domain/TrackAggregator.accept.
+flowchart TD
+  n1(["accept(fix)"]) --> d1{"recordingStopped?"}
+  d1 -- ja --> r1["return RECORDING_STOPPED"]
+  r1 --> ex([exit])
+  d1 -- nein --> d2{"hardLimit &gt; 0 und storedCount ≥ hardLimit?"}
+  d2 -- ja --> n2["recordingStopped=true; HARD_LIMIT_REACHED"]
+  n2 --> ex
+  d2 -- nein --> d3{"lastStoredPoint != null?"}
+  d3 -- ja --> d4{"gap &gt; segmentGapThreshold?"}
+  d4 -- ja --> n3["closeCurrentSegment(); NEW_SEGMENT"]
+  n3 --> n4
+  d4 -- nein --> n4
+  d3 -- nein --> n4{"softLimit &gt; 0 und storedCount ≥ softLimit und nicht softWarned?"}
+  n4 -- ja --> n5["SOFT_LIMIT_WARN; softWarned=true"]
+  n5 --> n6
+  n4 -- nein --> n6["store point; STORED; return"]
+  n6 --> ex

@@ -81,7 +81,6 @@ Das System ist in vier Subsysteme gegliedert (API, Domain, Ports, Infrastruktur)
 
 Die Komponente wird als Bibliothek in den Host-Prozess eingebettet und läuft in dessen JVM. Für Integrationstests sind lokale Mocks der Ports ausreichend. Die Offline-Fähigkeit sichert den Betrieb auch ohne Netzwerkzugang.
 
-#pagebreak()
 
 // ─────────────────────────────────────────────────────────────────────────────
 == Funktionen
@@ -106,7 +105,6 @@ Die folgende Tabelle fasst die Hauptfunktionsgruppen der Bibliothek zusammen. Di
     [Betrieb und Qualität],        [Deterministische Tests, strukturiertes Logging, reproduzierbarer Build.], [/LL010/-/LL080/],
   ))
 )
-#pagebreak()
 *Weitere Entwurfsprinzipien:*
 
 #figure(
@@ -140,7 +138,6 @@ Die folgende Tabelle fasst die Hauptfunktionsgruppen der Bibliothek zusammen. Di
   ))
 )
 
-#pagebreak()
 
 // ─────────────────────────────────────────────────────────────────────────────
 == Benutzerprofile
@@ -163,7 +160,6 @@ Als Bibliothek ohne eigene Benutzeroberfläche hat die Peilungskomponente keine 
     [Betrieb (Host-Team)], [indirekt], [Betrieb eingebetteter Java-Anwendungen und Lesen strukturierter Logausgaben.], [Bindet ein SLF4J-Backend im Host-Prozess.], [Strukturierte Logausgabe und Listener-Fehler beeinträchtigen den Session-Zustand nicht (/LF080/).],
   ))
 )
-#pagebreak()
 === Projektkontext (Stakeholder)
 
 Die folgende Matrix ergänzt die Nutzercharakteristiken um projektbezogene Rollen und deren Einfluss auf diese Arbeit. Sie ist nicht Teil der Laufzeit-Spezifikation.
@@ -184,7 +180,6 @@ Die folgende Matrix ergänzt die Nutzercharakteristiken um projektbezogene Rolle
   ))
 )
 
-#pagebreak()
 /*
 === Funktionale Anforderungen - Übersicht
 
@@ -224,7 +219,6 @@ Die folgende Auflistung definiert den technischen Funktionsumfang als verbindlic
 - Vorgegebene Persistenzpfade für GPX-Export #sym.arrow.r Speicherort und Dateiverwaltung obliegen dem Host.
 - Cloud-Persistenz, Benutzer- und Rechteverwaltung.
 
-#pagebreak()
 // ─────────────────────────────────────────────────────────────────────────────
 == Annahmen und Abhängigkeiten
 // ─────────────────────────────────────────────────────────────────────────────
@@ -248,7 +242,6 @@ Die folgende Auflistung definiert den technischen Funktionsumfang als verbindlic
 )
  
 
-#pagebreak()
 === Abhängigkeiten
 
 #figure(

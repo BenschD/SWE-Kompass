@@ -1,0 +1,62 @@
+' ─────────────────────────────────────────────────────────────────────────────
+' Objektdiagramm: Momentaufnahme einer aktiven Session mit zwei gespeicherten
+' Punkten in einem Segment. Konkrete Belegung der Klassen aus dem Klassendiagramm.
+' Quelle: DefaultBearingSession, TrackAggregator, GpsPoint, SessionConfig (Defaults)
+' ─────────────────────────────────────────────────────────────────────────────
+@startuml
+!pragma layout smetana
+skinparam shadowing false
+skinparam object {
+  BackgroundColor #e6f2ff
+  BorderColor #7eb8e6
+}
+
+object "session : DefaultBearingSession" as session {
+  lifecycle = ACTIVE
+  sessionId = 7c9e…-v4
+}
+object "frozenConfig : SessionConfig" as cfg {
+  softLimitPoints = 0
+  hardLimitPoints = 0
+  segmentGapThreshold = PT5M
+  maxFixAge = PT24H
+  optimizers = []
+}
+object "target : GeoCoordinate" as target {
+  latitudeDeg = 48.78
+  longitudeDeg = 9.18
+}
+object "aggregator : TrackAggregator" as agg {
+  storedCount = 2
+  softWarned = false
+  recordingStopped = false
+}
+object "seg : TrackSegment" as seg
+object "p1 : GpsPoint" as p1 {
+  time = 10:00:00Z
+  lat = 48.770 / lon = 9.170
+}
+object "p2 : GpsPoint" as p2 {
+  time = 10:00:02Z
+  lat = 48.771 / lon = 9.171
+}
+object "lastFix : GpsFix" as fix {
+  time = 10:00:02Z
+  lat = 48.771 / lon = 9.171
+}
+object "calculator : BearingCalculator" as calc
+object "clock : SystemClockAdapter" as clock
+object "gpxWriter : GpxXmlWriter" as gpx
+
+session --> cfg    : frozenConfig
+session --> target : target
+session --> agg    : aggregator
+session --> fix    : lastFix
+session --> calc   : calculator
+session --> clock  : clock
+session --> gpx    : gpxWriter
+agg --> seg        : current
+seg --> p1
+seg --> p2
+agg --> p2         : lastStoredPoint
+@enduml

@@ -1,0 +1,21 @@
+%% Zustandsdiagramm (detailliert) des Session-Lebenszyklus mit Guards [..] und
+%% Effekten / … . Quelle: DefaultBearingSession (lifecycle, start/complete/abort/reset).
+%% Ergänzt das kompakte session_state.mmd um Bedingungen und Aktionen.
+stateDiagram-v2
+  direction LR
+  [*] --> IDLE
+  IDLE --> ACTIVE: start() [IDLE] / UUID, Config einfrieren, Aggregator
+  ACTIVE --> ACTIVE: onPositionUpdate() [gültig] / speichern, Listener
+  ACTIVE --> ACTIVE: onCourseUpdate() [0..360]
+  ACTIVE --> ACTIVE: currentSnapshot() [≥ 1 Fix]
+  ACTIVE --> COMPLETED: complete() / GPX-Export, onSessionCompleted
+  ACTIVE --> ABORTED: abort() / GPX-Export, onSessionAborted
+  COMPLETED --> IDLE: reset()
+  ABORTED --> IDLE: reset()
+
+  note right of ACTIVE
+    Aufrufe außerhalb ACTIVE
+    werfen IllegalStateException.
+    reset() im Zustand ACTIVE ist
+    ebenfalls unzulässig.
+  end note

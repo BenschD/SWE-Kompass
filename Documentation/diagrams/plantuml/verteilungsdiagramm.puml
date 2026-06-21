@@ -1,0 +1,42 @@
+' ─────────────────────────────────────────────────────────────────────────────
+' Verteilungsdiagramm: Die Bibliothek läuft als Artefakt im Host-Prozess (kein
+' eigener Server). Optionale Kanäle: Dateisystem (GPX) und HTTPS zur W3W-Cloud.
+' Quelle: Kap. 2.1 (Physische Sicht), BearingBootstrap, W3wHttpClient, SafeFileSink
+' ─────────────────────────────────────────────────────────────────────────────
+@startuml
+!pragma layout smetana
+skinparam shadowing false
+skinparam node {
+  BackgroundColor #f7f7f7
+  BorderColor #888888
+}
+skinparam artifact {
+  BackgroundColor #fff2e6
+  BorderColor #e6b87e
+}
+
+node "Host-Gerät" as Device {
+  node "JVM (Java 11+)" as JVM {
+    artifact "Host-Anwendung" as HostApp
+    artifact "bearing-*.jar\n(Peilungskomponente)" as Lib
+    HostApp ..> Lib : API-Aufrufe (in-process)
+  }
+}
+
+node "Lokales Dateisystem" as FS {
+  artifact "track.gpx" as Gpx
+}
+
+cloud "What3Words Cloud" as Cloud {
+  artifact "W3W REST-API\n/v3/convert-to-3wa" as W3WApi
+}
+
+JVM ..> FS    : Datei-I/O (SafeFileSink, optional)
+JVM ..> Cloud : HTTPS (W3wHttpClient, optional)
+
+note right of Lib
+  Eingebetteter Betrieb: kein eigener
+  Prozess/Server. Kernfunktion läuft
+  offline; FS und W3W sind abschaltbar.
+end note
+@enduml

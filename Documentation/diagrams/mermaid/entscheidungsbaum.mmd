@@ -1,0 +1,12 @@
+%% Entscheidungsbaum zur Fix-Verarbeitung (Baumform der Entscheidungstabelle).
+%% Quelle: DefaultBearingSession.onPositionUpdate + validate + TrackAggregator.accept.
+flowchart TD
+  q1{"Session ACTIVE?"}
+  q1 -- nein --> a1["IllegalStateException"]
+  q1 -- ja --> q2{"Koordinate WGS84-gültig?"}
+  q2 -- nein --> a2["ValidationException(COORD_RANGE)"]
+  q2 -- ja --> q3{"Zeitstempel gültig?"}
+  q3 -- nein --> a3["ValidationException(TIMESTAMP_INVALID)"]
+  q3 -- ja --> q4{"Hard-Limit erreicht?"}
+  q4 -- ja --> a4["onHardLimitReached / kein Speichern"]
+  q4 -- nein --> a5["Fix speichern + Segment-/Soft-Limit-Prüfung"]

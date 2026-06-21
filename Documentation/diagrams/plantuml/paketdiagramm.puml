@@ -1,0 +1,69 @@
+' ─────────────────────────────────────────────────────────────────────────────
+' Paketdiagramm: Maven-Module und Java-Pakete mit ihren Abhängigkeiten.
+' Quelle: implementation/*/pom.xml und package-Struktur com.example.bearing.*
+' Erlaubte Richtung: Adapter -> SPI, API -> {Domain, SPI, Adapter}, Demo -> API.
+' Domain und SPI sind frei von internen Abhängigkeiten (I/O-frei, technologieneutral).
+' ─────────────────────────────────────────────────────────────────────────────
+@startuml
+!pragma layout smetana
+skinparam shadowing false
+skinparam packageStyle rectangle
+skinparam package {
+  BackgroundColor #f7f7f7
+  BorderColor #888888
+}
+
+package "bearing-spi" as SPI #e6f2ff {
+  package "spi" as spi_root {
+  }
+  package "spi.model" as spi_model {
+  }
+}
+
+package "bearing-domain" as DOM #e6ffe6 {
+  package "domain" as dom_root {
+  }
+  package "domain.optimize" as dom_opt {
+  }
+}
+
+package "bearing-adapter-gpx" as A_GPX #ffe6e6 {
+  package "adapter.gpx" as ad_gpx {
+  }
+}
+package "bearing-adapter-system" as A_SYS #ffe6e6 {
+  package "adapter.system" as ad_sys {
+  }
+}
+package "bearing-adapter-w3w" as A_W3W #ffe6e6 {
+  package "adapter.w3w" as ad_w3w {
+  }
+}
+
+package "bearing-api" as API #fff2e6 {
+  package "api" as api_root {
+  }
+  package "api.internal" as api_internal {
+  }
+}
+
+package "bearing-demo" as DEMO #f4f4f4 {
+  package "demo" as demo_root {
+  }
+}
+
+dom_opt   ..> dom_root  : <<use>>
+spi_root  ..> spi_model : <<use>>
+
+A_GPX ..> SPI
+A_SYS ..> SPI
+A_W3W ..> SPI
+
+API ..> DOM
+API ..> SPI
+API ..> A_GPX
+API ..> A_SYS
+API ..> A_W3W
+
+DEMO ..> API
+@enduml

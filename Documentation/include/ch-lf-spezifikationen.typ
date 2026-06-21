@@ -41,7 +41,7 @@
 )
 
 #lf-flowchart("/LF010/", "lf_010")
-
+#pagebreak()
 #lf-compact("/LF020/", "Nur eine aktive Session", [Zweiter `start()` im Zustand `ACTIVE` wird mit `IllegalStateException` abgewiesen.], verweise: [/LF010/], code: "compareAndSet IDLE→ACTIVE")
 
 #lf-flowchart("/LF020/", "lf_020")
@@ -68,7 +68,7 @@
   sonstiges: lf-sonstiges(speziell: [/LL020/ Azimut-Genauigkeit.], bemerkungen: [Host steuert Frequenz.]),
 )
 
-#lf-flowchart("/LF030/", "lf_030")
+#lf-flowchart("/LF030/", "lf_030", width: 100%, height: 11cm)
 
 #lf-compact("/LF040/", "Kurs aktualisieren", [Host setzt geografischen Kurs 0-360° via `onCourseUpdate`und Wert fließt in /LF050/ ein.], verweise: [/LF030/, /LF050/], code: "onCourseUpdate")
 
@@ -108,7 +108,7 @@
   sonstiges: lf-sonstiges(bemerkungen: [Danach /LF090/ für Neustart.]),
 )
 
-#lf-flowchart("/LF060/", "lf_060")
+#lf-flowchart("/LF060/", "lf_060", width: 100%, height: 12cm)
 
 #lf-card(
   id: "/LF070/",
@@ -142,7 +142,7 @@
   sonstiges: lf-sonstiges(speziell: [/LL060/ Logging.]),
 )
 
-#lf-flowchart("/LF080/", "lf_080")
+#lf-flowchart("/LF080/", "lf_080", width: 100%, height: 12cm)
 
 #lf-card(
   id: "/LF090/",
@@ -163,7 +163,7 @@
 
 #lf-compact("/LF100/", "GPS-Rohtrack speichern", [Jeder validierte Fix wird im Rohspeicher abgelegt (/LD030/).], verweise: [/LF030/], code: "TrackAggregator.accept")
 
-#lf-flowchart("/LF100/", "lf_100")
+#lf-flowchart("/LF100/", "lf_100", width: 100%, height: 10.5cm)
 
 #lf-compact("/LF110/", "Soft-Limit warnen", [Bei Erreichen des Soft-Limits einmalig `onSoftLimitWarn` (Aufzeichnung läuft weiter).], verweise: [/LF030/], code: "onSoftLimitWarn")
 #lf-compact("/LF120/", "Segment bei Zeitlücke", [Zeitlücke > `segmentGapThreshold` eröffnet neues `trkseg` (/TC150/).], verweise: [/LF030/, /LF100/], code: "TrackAggregator")

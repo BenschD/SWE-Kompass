@@ -1,0 +1,32 @@
+%% Sequenzdiagramm: complete() — regulärer Abschluss mit GPX-Export (/LF060/, /LF140/).
+%% Quelle: DefaultBearingSession.complete(): finalize -> immutableTrack -> pipeline
+%%         -> GpxExportMapper -> GpxXmlWriter -> (optional) SafeFileSink -> Listener.
+sequenceDiagram
+  autonumber
+  actor Host as Host-Anwendung
+  participant S as DefaultBearingSession
+  participant A as TrackAggregator
+  participant P as OptimizationPipeline
+  participant M as GpxExportMapper
+  participant W as GpxXmlWriter
+  participant F as SafeFileSink
+  participant L as BearingListener
+
+  Host->>S: complete()
+  S->>S: ensureActive()
+  S->>A: finalizeOpenSegment()
+  S->>A: immutableTrack()
+  A-->>S: Track (Rohpunkte)
+  S->>P: apply(raw, optimizers)
+  P-->>S: Track (optimiert)
+  S->>M: toDocument(optimized, meta)
+  M-->>S: GpxDocument
+  S->>W: serialize(doc)
+  W-->>S: byte[] (UTF-8, kein BOM)
+  opt completePersistPath gesetzt
+    S->>F: writeAtomically(path, bytes)
+    F-->>S: ok (temp + atomic rename)
+  end
+  S->>S: lifecycle = COMPLETED
+  S->>L: onSessionCompleted(id, result)
+  S-->>Host: GpxResult

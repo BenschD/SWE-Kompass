@@ -1,0 +1,25 @@
+%% Sequenzdiagramm: onPositionUpdate(fix) — Kernschleife der Aufzeichnung (/LF030/).
+%% Quelle: DefaultBearingSession.onPositionUpdate + validate + TrackAggregator.accept.
+sequenceDiagram
+  autonumber
+  actor Host as Host-Anwendung
+  participant S as DefaultBearingSession
+  participant A as TrackAggregator
+  participant L as BearingListener
+
+  Host->>S: onPositionUpdate(fix)
+  S->>S: ensureActive()
+  S->>S: validate(fix)
+  break Koordinate/Zeit ungültig
+    S-->>Host: ValidationException(errorCode)
+  end
+  S->>A: accept(fix)
+  A-->>S: TrackAcceptResult(flags)
+  S->>L: onPositionUpdate(id, summary)
+  opt flags enthält SOFT_LIMIT_WARN
+    S->>L: onSoftLimitWarn(id)
+  end
+  opt flags enthält HARD_LIMIT_REACHED
+    S->>L: onHardLimitReached(id)
+  end
+  S-->>Host: void

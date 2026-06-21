@@ -1,0 +1,62 @@
+' ─────────────────────────────────────────────────────────────────────────────
+' Use-Case-Diagramm der Java-Peilungskomponente (OOA, Kap. 3.1)
+' Akteure und Anwendungsfälle decken die öffentliche API (BearingSession) ab.
+' Quelle: BearingSession / DefaultBearingSession, /LF010/ … /LF250/
+' ─────────────────────────────────────────────────────────────────────────────
+@startuml
+!pragma layout smetana
+left to right direction
+skinparam shadowing false
+skinparam packageStyle rectangle
+skinparam usecase {
+  BackgroundColor #e6f2ff
+  BorderColor #7eb8e6
+}
+skinparam actor {
+  BackgroundColor #f4f4f4
+  BorderColor #b4b4b4
+}
+
+actor "Host-Anwendung" as Host
+actor "What3Words-API" as W3W
+actor "Dateisystem" as FS
+actor "SLF4J-Backend" as Log
+
+rectangle "Java-Peilungskomponente" {
+  usecase "Session starten\n(/LF010/)"            as UC_start
+  usecase "Position verarbeiten\n(/LF030/)"       as UC_pos
+  usecase "Kurs aktualisieren\n(/LF040/)"         as UC_course
+  usecase "Peilung lesen\n(/LF050/)"              as UC_snap
+  usecase "Session beenden\n(/LF060/)"            as UC_complete
+  usecase "Session abbrechen\n(/LF070/)"          as UC_abort
+  usecase "Session zurücksetzen\n(/LF090/)"       as UC_reset
+  usecase "Eingaben validieren\n(/LF230/, /LF240/)" as UC_val
+  usecase "GPX exportieren\n(/LF140/)"            as UC_gpx
+  usecase "Track optimieren\n(/LF170/–/LF200/)"   as UC_opt
+  usecase "GPX-Datei speichern\n(/LF150/)"        as UC_file
+  usecase "What3Words auflösen\n(/LF210/)"        as UC_w3w
+}
+
+' Primärakteur
+Host --> UC_start
+Host --> UC_pos
+Host --> UC_course
+Host --> UC_snap
+Host --> UC_complete
+Host --> UC_abort
+Host --> UC_reset
+Host --> UC_w3w
+
+' include / extend
+UC_pos      ..> UC_val      : <<include>>
+UC_complete ..> UC_gpx      : <<include>>
+UC_abort    ..> UC_gpx      : <<include>>
+UC_gpx      ..> UC_opt      : <<include>>
+UC_complete ..> UC_file     : <<extend>>
+UC_abort    ..> UC_file     : <<extend>>
+
+' Sekundärakteure
+UC_w3w  --> W3W
+UC_file --> FS
+UC_val  ..> Log : <<extend>>
+@enduml

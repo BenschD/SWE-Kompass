@@ -1,0 +1,48 @@
+' ─────────────────────────────────────────────────────────────────────────────
+' Kompositionsstrukturdiagramm: Innenleben von DefaultBearingSession.
+' Interne Parts (Domain-Services, Listener-Liste) und benötigte Ports an der
+' Komponentengrenze. Quelle: DefaultBearingSession (Felder + Konstruktor).
+' ─────────────────────────────────────────────────────────────────────────────
+@startuml
+!pragma layout smetana
+left to right direction
+skinparam shadowing false
+skinparam nodesep 20
+skinparam ranksep 70
+skinparam componentStyle uml2
+skinparam component {
+  BackgroundColor #f7f7f7
+  BorderColor #888888
+}
+
+interface "BearingSession" as I_session
+
+component "DefaultBearingSession" as Session {
+  component "calculator :\nBearingCalculator" as calc #e6ffe6
+  component "pipeline :\nOptimizationPipeline" as pipe #e6ffe6
+  component "aggregator :\nTrackAggregator" as agg #e6ffe6
+  component "listeners :\nList<BearingListener>" as listeners #e6f2ff
+}
+
+I_session - Session : <<provided>>
+
+' benötigte Ports (Sockets), injiziert via Konstruktor (BearingBootstrap)
+interface "ClockPort"     as I_clock
+interface "GpxWriterPort" as I_gpx
+interface "FileSinkPort"  as I_file
+interface "W3wClientPort" as I_w3w
+interface "LoggerPort"    as I_log
+
+Session ..> I_clock : <<port>>
+Session ..> I_gpx   : <<port>>
+Session ..> I_file  : <<port>>
+Session ..> I_w3w   : <<port>>
+Session ..> I_log   : <<port>>
+
+note as N
+  Connectors: aggregator liefert den Roh-Track,
+  pipeline wendet die Optimierer an, calculator
+  erzeugt Snapshots; alle Ports werden über den
+  Konstruktor injiziert (BearingBootstrap).
+end note
+@enduml

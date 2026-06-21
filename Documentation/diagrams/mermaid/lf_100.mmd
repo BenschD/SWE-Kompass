@@ -3,8 +3,8 @@ flowchart TD
   stopped -->|ja| skip["RECORDING_STOPPED, kein Speichern"]
   stopped -->|nein| hard{"Hard-Limit erreicht?"}
   hard -->|ja| stop["HARD_LIMIT_REACHED, recordingStopped"]
-  hard -->|nein| seg{"Zeitluecke > threshold?"}
-  seg -->|ja| newSeg["NEW_SEGMENT, Segment schliessen"]
+  hard -->|nein| seg{"Zeitlücke &gt; threshold?"}
+  seg -->|ja| newSeg["NEW_SEGMENT, Segment schließen"]
   seg -->|nein| softQ{"Soft-Limit erreicht?"}
   newSeg --> softQ
   softQ -->|ja| soft["SOFT_LIMIT_WARN einmalig"]

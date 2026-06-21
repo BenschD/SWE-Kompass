@@ -1,0 +1,26 @@
+%% Aktivitätsdiagramm: vollständiger Verlauf einer Peilungssession von start()
+%% bis zum GPX-Export. Fasst die per-Anforderung-Aktivitäten (lf_0xx) zusammen.
+%% Quelle: DefaultBearingSession (start/onPositionUpdate/complete/abort).
+flowchart TD
+  A([Start]) --> B["start(config, target)"]
+  B --> C{"Position empfangen?"}
+  C -- ja --> D["validate(fix)"]
+  D --> E{"gültig?"}
+  E -- nein --> F["ValidationException — Fix verworfen"]
+  F --> C
+  E -- ja --> G["accept(fix): Segment/Limit prüfen, speichern"]
+  G --> H{"Hard-Limit erreicht?"}
+  H -- ja --> I["onHardLimitReached — Aufzeichnung stoppt"]
+  I --> J
+  H -- nein --> J{"Abschluss angefordert?"}
+  C -- nein --> J
+  J -- "complete()" --> K["lifecycle = COMPLETED"]
+  J -- "abort()" --> L["lifecycle = ABORTED"]
+  K --> M["Track optimieren (Pipeline)"]
+  L --> M
+  M --> N["GPX 1.1 serialisieren"]
+  N --> O{"Persist-Pfad gesetzt?"}
+  O -- ja --> P["Datei atomar schreiben (SafeFileSink)"]
+  O -- nein --> Q["GpxResult an Host"]
+  P --> Q
+  Q --> R([Ende])

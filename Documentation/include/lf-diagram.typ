@@ -11,22 +11,26 @@
 }
 
 #let _svg-figure(caption, name, width: 100%, height: auto) = {
-  v(0.4em)
-  figure(
-    caption: caption,
-    kind: image,
-    block(breakable: false, width: 100%)[
-      #align(center)[
-        #image(_diagram-svg(name), width: width, height: height, fit: "contain")
-      ]
-    ],
-  )
-  v(0.4em)
+  // Ganze Abbildung (Bild + Bildunterschrift) als untrennbare Einheit, damit sie
+  // auch bei `show figure: set block(breakable: true)` nicht über Seiten zerreißt.
+  block(breakable: false, width: 100%)[
+    #v(0.5em)
+    #figure(
+      caption: caption,
+      kind: image,
+      align(center)[
+        #image(_diagram-svg(name), width: 90%, height: height, fit: "contain")
+      ],
+    )
+    #v(0.5em)
+  ]
 }
 
 /// Aktivitätsdiagramm für /LF…/ (SVG-Dateistamm ohne Endung).
-/// Standard `width: 100%`. Kleiner: `#lf-flowchart("/LF020/", "lf_020", width: 50%)`.
-#let lf-flowchart(id, svg-name, width: 100%, height: auto) = {
+/// Breite Flussdiagramme: kompakte Standardbreite (68%) bei `height: auto`, damit
+/// keine Leerhöhe reserviert wird. Hohe Flussdiagramme erhalten am Aufrufort eine
+/// Höhenbegrenzung, z. B. `#lf-flowchart("/LF030/", "lf_030", height: 13cm)`.
+#let lf-flowchart(id, svg-name, width: 68%, height: auto) = {
   _svg-figure([Aktivitätsdiagramm #id], svg-name, width: width, height: height)
 }
 

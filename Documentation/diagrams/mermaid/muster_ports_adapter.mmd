@@ -1,0 +1,45 @@
+%% Architekturmuster Ports-and-Adapters (Hexagonal). Treibende Seite: Host ruft die
+%% BearingSession-API. Getriebene Seite: die Domain definiert Ports (bearing-spi),
+%% Adapter implementieren sie und sprechen externe Systeme an.
+%% Quelle: BearingBootstrap (Verdrahtung), bearing-spi/*Port, bearing-adapter-*.
+flowchart LR
+  Host["Host-Anwendung"]
+
+  subgraph core["Anwendungskern"]
+    API["bearing-api\nDefaultBearingSession"]
+    DOM["bearing-domain\nFachlogik (I/O-frei)"]
+    API --> DOM
+  end
+
+  subgraph ports["Ports (bearing-spi)"]
+    P1["GpxWriterPort"]
+    P2["FileSinkPort"]
+    P3["ClockPort"]
+    P4["LoggerPort"]
+    P5["W3wClientPort"]
+  end
+
+  subgraph adapters["Adapter (sekundär)"]
+    AG["GpxXmlWriter"]
+    AS1["SafeFileSink"]
+    AS2["SystemClockAdapter"]
+    AS3["Slf4jLoggerAdapter"]
+    AW["W3wHttpClient"]
+  end
+
+  subgraph ext["Externe Systeme"]
+    FS[("Dateisystem")]
+    LOG["SLF4J"]
+    W3WX["What3Words"]
+  end
+
+  Host -->|"BearingSession API"| API
+  API --> P1 & P2 & P3 & P4 & P5
+  P1 -. implementiert .-> AG
+  P2 -. implementiert .-> AS1
+  P3 -. implementiert .-> AS2
+  P4 -. implementiert .-> AS3
+  P5 -. implementiert .-> AW
+  AS1 --> FS
+  AS3 --> LOG
+  AW --> W3WX

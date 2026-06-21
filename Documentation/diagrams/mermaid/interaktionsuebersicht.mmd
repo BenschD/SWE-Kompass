@@ -1,0 +1,17 @@
+%% Interaktionsübersichtsdiagramm: Ablauf einer Session als Folge von
+%% Interaktions-Verweisen (ref auf die Sequenzdiagramme). Die Doppelrahmen-Knoten
+%% stehen für "interaction use" auf je ein Sequenzdiagramm.
+flowchart TD
+  start([Start]) --> r1[["ref sd: start() — Session starten"]]
+  r1 --> loop{"Weitere Position?"}
+  loop -- ja --> r2[["ref sd: onPositionUpdate() — Position verarbeiten"]]
+  r2 --> q{"Snapshot gewünscht?"}
+  q -- ja --> r3[["ref sd: currentSnapshot() — Peilung lesen"]]
+  q -- nein --> loop
+  r3 --> loop
+  loop -- nein --> dec{"Abschlussart?"}
+  dec -- regulär --> r4[["ref sd: complete() — GPX-Export"]]
+  dec -- Abbruch --> r5[["ref sd: abort() — GPX-Export"]]
+  r4 --> r6[["ref sd: reset()"]]
+  r5 --> r6
+  r6 --> stop([Ende])

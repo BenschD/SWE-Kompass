@@ -1,0 +1,27 @@
+%% Petri-Netz des Session-Lebenszyklus. Stellen (Kreise) = Zustände, Transitionen
+%% (dunkle Balken) = API-Aufrufe. Die Marke (●) liegt anfangs auf IDLE.
+%% Bipartit: Stelle -> Transition -> Stelle. Quelle: DefaultBearingSession.
+flowchart LR
+  IDLE(("IDLE ●"))
+  ACTIVE(("ACTIVE"))
+  COMPLETED(("COMPLETED"))
+  ABORTED(("ABORTED"))
+
+  t_start["t1: start()"]
+  t_update["t2: onPositionUpdate()"]
+  t_complete["t3: complete()"]
+  t_abort["t4: abort()"]
+  t_reset["t5: reset()"]
+
+  IDLE --> t_start --> ACTIVE
+  ACTIVE --> t_update --> ACTIVE
+  ACTIVE --> t_complete --> COMPLETED
+  ACTIVE --> t_abort --> ABORTED
+  COMPLETED --> t_reset
+  ABORTED --> t_reset
+  t_reset --> IDLE
+
+  classDef place fill:#e6f2ff,stroke:#7eb8e6,color:#23272e
+  classDef trans fill:#23272e,stroke:#23272e,color:#ffffff
+  class IDLE,ACTIVE,COMPLETED,ABORTED place
+  class t_start,t_update,t_complete,t_abort,t_reset trans

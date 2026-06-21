@@ -1,0 +1,35 @@
+%% Datenflussdiagramm (DFD Stufe 1): Zerlegung des Prozesses "0" in Teilprozesse,
+%% Datenspeicher (Roh-Track, W3W-Cache) und ihre Datenflüsse.
+%% Quelle: validate, TrackAggregator, BearingCalculator, OptimizationPipeline,
+%%         GpxXmlWriter, W3wHttpClient.
+flowchart TB
+  Host["Host-Anwendung"]
+  W3W["What3Words-API"]
+  FS[("Dateisystem")]
+
+  P1(("1\nValidieren"))
+  P2(("2\nTrack aggregieren"))
+  P3(("3\nPeilung berechnen"))
+  P4(("4\nOptimieren"))
+  P5(("5\nGPX serialisieren"))
+  P6(("6\nW3W auflösen"))
+
+  D1[("D1 Roh-Track")]
+  D2[("D2 W3W-Cache")]
+
+  Host -->|"GpsFix"| P1
+  P1 -->|"valider Fix"| P2
+  P2 -->|"GpsPoint"| D1
+  Host -->|"Ziel, Kurs"| P3
+  D1 -->|"letzter Fix"| P3
+  P3 -->|"BearingSnapshot"| Host
+  D1 -->|"Roh-Track"| P4
+  P4 -->|"optimierter Track"| P5
+  P5 -->|"GPX-Bytes"| Host
+  P5 -->|"GPX-Datei (optional)"| FS
+  Host -->|"Koordinate"| P6
+  D2 -->|"Cache-Treffer"| P6
+  P6 -->|"Eintrag"| D2
+  P6 -->|"Koordinate"| W3W
+  W3W -->|"drei Wörter"| P6
+  P6 -->|"Adresse"| Host
