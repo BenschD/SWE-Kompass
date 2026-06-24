@@ -119,64 +119,24 @@ Das Klassendiagramm visualisiert diese Entwurfsklassen mit ihren Stereotypen und
   width: 100%,
 )
 
-Das Objektdiagramm zeigt eine Momentaufnahme einer aktiven Session mit zwei gespeicherten Trackpunkten in einem Segment und konkretisiert damit das Klassenmodell.
-
-#mermaid-figure(
-  [Objektdiagramm: Momentaufnahme einer aktiven Session (`ACTIVE`, zwei gespeicherte Punkte).],
-  "objektdiagramm",
-  width: 100%,
-)
-
 === Zustandsdiagramm: Session-Lebenszyklus
 
-*Zustände:* `IDLE` #sym.arrow.r `ACTIVE` (`start`) #sym.arrow.r `COMPLETED` (`complete`) oder `ABORTED` (`abort`). Rückkehr zu `IDLE` über `reset()` (/LF090/). Details zu Guards und Aktionen: Kap.~3.1 (`/LF010/` … `/LF090/`).
+*Zustände:* `IDLE` #sym.arrow.r `ACTIVE` (`start`) #sym.arrow.r `COMPLETED` (`complete`) oder `ABORTED` (`abort`). Rückkehr zu `IDLE` über `reset()` (/LF090/). Details zu den Anforderungen: Kap.~3.1 (`/LF010/` … `/LF090/`).
 
 #zustandsdiagramm-session()
 
-Die detaillierte Variante ergänzt die Übergänge um Bedingungen (in eckigen Klammern) und Effekte (nach dem Schrägstrich) und hält die Selbstübergänge im Zustand `ACTIVE` fest.
-
-#mermaid-figure(
-  [Zustandsdiagramm (detailliert) des Session-Lebenszyklus mit Guards und Effekten.],
-  "zustand_session_detail",
-  width: 100%,
-)
-
 // ─────────────────────────────────────────────────────────────────────────────
-== Struktur-, Architektur- und Verteilungssicht
+== Struktur- und Architektursicht
 // ─────────────────────────────────────────────────────────────────────────────
 
 Dieser Abschnitt ergänzt das Klassenmodell um die grobgranulare Bausteinsicht. Die Schichten- und Kommunikationsregeln stehen in Kap.~2.1.
 
-Das Paketdiagramm zeigt die sieben Maven-Module und die enthaltenen Java-Pakete mit ihren erlaubten Abhängigkeitsrichtungen (Adapter → SPI, API → Domain/SPI/Adapter, Demo → API).
+Das Paketdiagramm zeigt die sieben Maven-Module und die enthaltenen Java-Pakete mit ihren erlaubten Abhängigkeitsrichtungen
 
 #mermaid-figure(
   [Paketdiagramm: Maven-Module und Java-Pakete mit ihren Abhängigkeiten.],
   "paketdiagramm",
   width: 74%,
-)
-
-Das Komponentendiagramm stellt dieselben Module als Komponenten mit angebotenen und benötigten Schnittstellen dar; die SPI-Ports entkoppeln die API von den Adaptern.
-
-#mermaid-figure(
-  [Komponentendiagramm: Module mit bereitgestellten und benötigten Schnittstellen.],
-  "komponentendiagramm",
-  width: 92%,
-)
-
-Das Kompositionsstrukturdiagramm öffnet die Fassade `DefaultBearingSession` und zeigt ihre internen Parts sowie die über den Konstruktor injizierten Ports.
-
-#mermaid-figure(
-  [Kompositionsstrukturdiagramm: Innenleben von `DefaultBearingSession`.],
-  "kompositionsstruktur",
-  width: 64%,
-)
-
-Das Verteilungsdiagramm hält die physische Sicht fest: Die Bibliothek läuft als Artefakt im selben JVM-Prozess wie die Host-Anwendung; Dateisystem und What3Words sind optionale, abschaltbare Kanäle.
-
-#mermaid-figure(
-  [Verteilungsdiagramm: eingebetteter Betrieb mit optionalen externen Kanälen.],
-  "verteilungsdiagramm",
-  width: 100%,
 )
 
 Über die Schichtenarchitektur (Kap.~2.1) hinaus nutzt der Entwurf zwei weitere Muster: Das Ports-and-Adapters-Muster (hexagonal) trennt den Anwendungskern über die SPI-Ports von den Adaptern, das Pipes-and-Filter-Muster beschreibt die Optimierer-Kette vor dem Export.
@@ -190,7 +150,7 @@ Das Verteilungsdiagramm hält die physische Sicht fest: Die Bibliothek läuft al
 #mermaid-figure(
   [Architekturmuster Pipes-and-Filter: die Optimierer-Pipeline.],
   "muster_pipes_filter",
-  width: 36%,
+  width: 10%,
 )
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -206,15 +166,6 @@ Das Aktivitätsdiagramm fasst den gesamten Sessionverlauf von `start()` bis zum 
   height: 15cm,
 )
 
-Das Interaktionsübersichtsdiagramm ordnet die Sequenzdiagramme (Kap.~3.3) in den zeitlichen Gesamtablauf ein; die Doppelrahmen-Knoten verweisen auf je ein Sequenzdiagramm.
-
-#mermaid-figure(
-  [Interaktionsübersichtsdiagramm: Ablauf als Folge von Interaktionsverweisen.],
-  "interaktionsuebersicht",
-  width: 100%,
-  height: 14cm,
-)
-
 Das Datenflussdiagramm der Stufe 1 verfeinert das Kontextdiagramm (Kap.~3.3) in sechs Teilprozesse mit den Datenspeichern Roh-Track und W3W-Cache.
 
 #mermaid-figure(
@@ -223,15 +174,6 @@ Das Datenflussdiagramm der Stufe 1 verfeinert das Kontextdiagramm (Kap.~3.3) in 
   width: 100%,
   height: 14cm,
 )
-
-Das Petri-Netz liest den Session-Lebenszyklus als Stellen-Transitionen-Netz; die einzelne Marke macht die Invariante „genau eine aktive Session" anschaulich.
-
-#mermaid-figure(
-  [Petri-Netz des Session-Lebenszyklus (Stellen, Transitionen, eine Marke).],
-  "petri_session",
-  width: 100%,
-)
-
 
 // ─────────────────────────────────────────────────────────────────────────────
 == Haversine- und Azimutberechnung (Referenzalgorithmus)

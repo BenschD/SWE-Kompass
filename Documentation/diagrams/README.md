@@ -5,10 +5,11 @@ Dieser Ordner enthält alle Diagramme der Projektdokumentation als **Quelltext**
 werden im Typst-Dokument über `lf-diagram.typ` (`mermaid-figure`, `lf-flowchart`,
 `zustandsdiagramm-session`) eingebunden.
 
-Alle hier aufgeführten Diagramme sind im Dokument bereits eingebunden — in
-Kapitel 3 (normativer Teil) bzw. im Anhang; die genaue Stelle steht in der Spalte
-„Platzierung". Sehr hohe Diagramme sind in der Höhe begrenzt (`height: 18cm`),
-damit sie nicht über die Seite hinauslaufen.
+Alle im Dokument eingebundenen Diagramme stehen in Kapitel 2–3 (normativer Teil)
+bzw. im Anhang; die genaue Stelle steht in der Spalte „Platzierung". Quellen
+ohne Einbindung bleiben unter `diagrams/` als optionale Vorlagen erhalten.
+Sehr hohe Diagramme sind in der Höhe begrenzt (`height: 18cm`), damit sie nicht
+über die Seite hinauslaufen.
 
 Jedes Diagramm ist aus dem tatsächlichen Code unter `implementation/` abgeleitet
 (Klassen, Methoden, Maven-Module) und auf die Anforderungen `/LF…/`, `/LL…/`,
@@ -58,19 +59,20 @@ Spalte „Platzierung": wo das Diagramm im Dokument eingebunden ist — in **Kap
 | `use_case.puml` | Use-Case-Diagramm | PlantUML | `BearingSession`-API, `/LF010/–/LF250/` | Kap. 3.1 |
 | `paketdiagramm.puml` | Paketdiagramm | PlantUML | Maven-Module + `com.example.bearing.*` | Anhang (zu 2.1) |
 | `klassendiagramm.mmd` | Klassendiagramm | Mermaid | OOD-Klassen, Kap. „OOA/OOD" | Anhang |
-| `objektdiagramm.puml` | Objektdiagramm | PlantUML | Momentaufnahme aktiver Session | Anhang |
-| `komponentendiagramm.puml` | Komponentendiagramm | PlantUML | `BearingBootstrap`, SPI-Ports | Anhang (zu 2.1) |
-| `kompositionsstruktur.puml` | Kompositionsstruktur | PlantUML | `DefaultBearingSession`-Felder | Anhang |
-| `verteilungsdiagramm.puml` | Verteilungsdiagramm | PlantUML | Physische Sicht (2.1) | Anhang (zu 2.1) |
+| `objektdiagramm.puml` | Objektdiagramm | PlantUML | Momentaufnahme aktiver Session | *nicht eingebunden* |
+| `komponentendiagramm.puml` | Komponentendiagramm | PlantUML | `BearingBootstrap`, SPI-Ports | *nicht eingebunden* |
+| `kompositionsstruktur.puml` | Kompositionsstruktur | PlantUML | `DefaultBearingSession`-Felder | *nicht eingebunden* |
+| `verteilungsdiagramm.puml` | Verteilungsdiagramm | PlantUML | Physische Sicht (2.1) | *nicht eingebunden* |
 | `aktivitaet_session.mmd` | Aktivitätsdiagramm | Mermaid | Sessionverlauf start→Export | Anhang |
-| `sequenz_complete.mmd` | Sequenzdiagramm | Mermaid | `complete()` `/LF060/`,`/LF140/` | Kap. 3 / Anhang |
-| `sequenz_position_update.mmd` | Sequenzdiagramm | Mermaid | `onPositionUpdate()` `/LF030/` | Kap. 3 / Anhang |
-| `zustand_session_detail.mmd` | Zustandsdiagramm | Mermaid | `lifecycle`, `/LF010/–/LF090/` | Anhang |
-| `interaktionsuebersicht.mmd` | Interaktionsübersicht | Mermaid | Verweise auf die Sequenzen | Anhang |
+| `sequenz_complete.mmd` | Sequenzdiagramm | Mermaid | `complete()` `/LF060/`,`/LF140/` | *nicht eingebunden* |
+| `sequenz_position_update.mmd` | Sequenzdiagramm | Mermaid | `onPositionUpdate()` `/LF030/` | Kap. 3.3 |
+| `session_state.mmd` | Zustandsdiagramm | Mermaid | Session-Lebenszyklus, `/LF010/–/LF090/` | Anhang |
+| `zustand_session_detail.mmd` | Zustandsdiagramm | Mermaid | `lifecycle`, Guards/Effekte | *nicht eingebunden* |
+| `interaktionsuebersicht.mmd` | Interaktionsübersicht | Mermaid | Verweise auf die Sequenzen | *nicht eingebunden* |
 | `dfd_kontext.mmd` | Kontextdiagramm (DFD-0) | Mermaid | externe Schnittstellen (2.1) | Kap. 3.3 |
 | `dfd_level1.mmd` | Datenflussdiagramm (DFD-1) | Mermaid | Teilprozesse + Datenspeicher | Anhang |
-| `er_modell.mmd` | ER-Modell | Mermaid | Produktdaten `/LD010/–/LD060/` | Kap. 3.5 |
-| `petri_session.mmd` | Petri-Netz | Mermaid | Session-Lebenszyklus | Anhang |
+| `er_modell.mmd` | ER-Modell | Mermaid | Produktdaten `/LD010/–/LD060/` | Kap. 3.4 |
+| `petri_session.mmd` | Petri-Netz | Mermaid | Session-Lebenszyklus | *nicht eingebunden* |
 | `kontrollflussgraph.mmd` | Kontrollflussgraph | Mermaid | `TrackAggregator.accept` | Kap. 3.4 (Test) |
 | `entscheidungstabelle.puml` | Entscheidungstabelle | PlantUML (salt) | Fix-Validierung | Kap. 3.4 |
 | `entscheidungsbaum.mmd` | Entscheidungsbaum | Mermaid | Fix-Validierung (Baumform) | Kap. 3.4 |
@@ -80,6 +82,9 @@ Spalte „Platzierung": wo das Diagramm im Dokument eingebunden ist — in **Kap
 Bereits vorhanden (unverändert): `arch_layers` (Schichtenarchitektur, Kap. 2.1),
 `session_state` (kompaktes Zustandsdiagramm, Anhang), `lf_010 … lf_100`
 (Aktivitätsdiagramme je Anforderung, Kap. 3.1).
+
+**Anhang (7 Diagramme):** `klassendiagramm`, `session_state`, `paketdiagramm`,
+`muster_ports_adapter`, `muster_pipes_filter`, `aktivitaet_session`, `dfd_level1`.
 
 ---
 
@@ -113,30 +118,21 @@ Object>>`, `<<Domain Service>>`, `<<interface>>`) entsprechen der OOD-Tabelle im
 Anhang. Kompositionen (`Track *-- TrackSegment *-- GpsPoint`) und Multiplizitäten
 sind aus den Feldtypen abgeleitet.
 
-**Objektdiagramm — `objektdiagramm.puml`**
-Eine konkrete Momentaufnahme einer `ACTIVE`-Session mit zwei gespeicherten
-Punkten in einem Segment. Es instanziiert genau die Klassen aus dem
-Klassendiagramm mit plausiblen Werten (Default-`SessionConfig`, Ziel Stuttgart)
-und zeigt die Verweise `frozenConfig`, `target`, `aggregator`, `lastFix`. Damit
-wird der sonst abstrakte Strukturschnitt greifbar.
+**Objektdiagramm — `objektdiagramm.puml`** *(Quelle vorhanden, nicht im PDF)*
+Eine konkrete Momentaufnahme einer `ACTIVE`-Session. Bewusst nicht eingebunden:
+das Klassendiagramm und die OOD-Tabelle im Anhang reichen für die Spezifikation.
 
-**Komponentendiagramm — `komponentendiagramm.puml`**
-Module als Komponenten mit angebotenen (Lollipop) und benötigten (Socket)
-Schnittstellen. Es zeigt, wie `BearingBootstrap` die Adapter an die Ports
-verdrahtet und welche Komponente welche externe Ressource anspricht (Dateisystem,
-What3Words). Ergänzt das Paketdiagramm um die Schnittstellensicht.
+**Komponentendiagramm — `komponentendiagramm.puml`** *(Quelle vorhanden, nicht im PDF)*
+Module als Komponenten mit Lollipop/Socket-Schnittstellen. Nicht eingebunden,
+weil das Paketdiagramm dieselben Module mit Abhängigkeitsrichtungen abdeckt.
 
-**Kompositionsstrukturdiagramm — `kompositionsstruktur.puml`**
-Das Innenleben von `DefaultBearingSession`: die internen Parts (`calculator`,
-`pipeline`, `aggregator`, `listeners`) und die fünf benötigten Ports an der
-Grenze. Direkt aus den Feldern und dem Konstruktor abgeleitet und zeigt, warum
-die Klasse trotz vieler Aufgaben testbar bleibt (alle Ports injiziert).
+**Kompositionsstrukturdiagramm — `kompositionsstruktur.puml`** *(Quelle vorhanden, nicht im PDF)*
+Innenleben von `DefaultBearingSession`. Nicht eingebunden — zu implementierungsnah
+für den Anhang; Inhalt steht im Klassendiagramm.
 
-**Verteilungsdiagramm — `verteilungsdiagramm.puml`**
-Die physische Sicht aus Kap. 2.1: die Bibliothek als Artefakt im selben
-JVM-Prozess wie die Host-Anwendung (kein eigener Server), mit den optionalen
-Kanälen Dateisystem (`SafeFileSink`) und HTTPS zu What3Words (`W3wHttpClient`).
-Unterstreicht die Offline-Fähigkeit der Kernfunktion.
+**Verteilungsdiagramm — `verteilungsdiagramm.puml`** *(Quelle vorhanden, nicht im PDF)*
+Physische Sicht (eingebetteter JVM-Betrieb). Nicht eingebunden — Kap.~2.1
+beschreibt die physische Sicht bereits textuell.
 
 ### Dynamische (Verhaltens-)Diagramme
 
@@ -153,17 +149,14 @@ Die zwei zentralen Abläufe als Objektinteraktion über die Zeit.
 Code). `onPositionUpdate()` zeigt die Kernschleife mit `break` bei
 `ValidationException` und den optionalen Soft-/Hard-Limit-Ereignissen.
 
-**Zustandsdiagramm — `zustand_session_detail.mmd`**
-Detailvariante des vorhandenen `session_state` mit Guards `[…]` und Effekten
-`/ …` (z. B. `start()` nur aus `IDLE`, `currentSnapshot()` erst ab einem Fix).
-Quelle ist der `AtomicReference<Lifecycle>` und `compareAndSet` in
-`DefaultBearingSession`.
+**Zustandsdiagramm — `session_state.mmd`**
+Kompakte Darstellung des Session-Lebenszyklus (`IDLE` → `ACTIVE` →
+`COMPLETED`/`ABORTED`). Im Anhang eingebunden; Detailvariante
+`zustand_session_detail` bleibt als Quelle, ist aber nicht im PDF.
 
-**Interaktionsübersichtsdiagramm — `interaktionsuebersicht.mmd`**
-Der UML-Oberbegriff „Interaktionsdiagramm" konkret als *interaction overview*:
-ein Aktivitätsrahmen, dessen Knoten (Doppelrahmen) auf die beiden Sequenzen
-verweisen. Zeigt die Reihenfolge start → (Positions-/Snapshot-Schleife) →
-complete/abort → reset und verknüpft so die dynamischen Diagramme.
+**Interaktionsübersichtsdiagramm — `interaktionsuebersicht.mmd`** *(Quelle vorhanden, nicht im PDF)*
+Verweis-Rahmen auf Sequenzdiagramme in Kap. 3.3. Nicht eingebunden — bringt im
+Anhang allein keinen Mehrwert.
 
 ### Diagramme der Strukturierten Analyse (nicht-UML)
 
@@ -183,10 +176,9 @@ Die Produktdaten `/LD010/–/LD060/` als Entitäten mit Kardinalitäten (Session
 1–1 Config/Ziel, 1–0..1 Track, Track 1–* Segment 1–* Punkt). Brücke zwischen den
 fachlichen Datenstrukturen und den `/LD…/`-Karten in Kap. 3.5.
 
-**Petri-Netz — `petri_session.mmd`**
-Der Session-Lebenszyklus als Stellen/Transitionen-Netz mit einer Marke. Es ist
-die nebenläufigkeitsnahe Lesart des Zustandsautomaten: die einzelne Marke macht
-die Invariante „genau eine aktive Session" (`/LF020/`) anschaulich.
+**Petri-Netz — `petri_session.mmd`** *(Quelle vorhanden, nicht im PDF)*
+Session-Lebenszyklus als Stellen/Transitionen-Netz. Nicht eingebunden — inhaltlich
+doppelt zum Zustandsdiagramm im Anhang.
 
 ### Whitebox-Test
 
