@@ -121,7 +121,7 @@ Das Klassendiagramm visualisiert diese Entwurfsklassen mit ihren Stereotypen und
 
 === Zustandsdiagramm: Session-Lebenszyklus
 
-*Zustände:* `IDLE` #sym.arrow.r `ACTIVE` (`start`) #sym.arrow.r `COMPLETED` (`complete`) oder `ABORTED` (`abort`). Rückkehr zu `IDLE` über `reset()` (/LF090/). Details zu den Anforderungen: Kap.~3.1 (`/LF010/` … `/LF090/`).
+*Zustände:* `IDLE` -> `ACTIVE` (`start`) -> `COMPLETED` (`complete`) oder `ABORTED` (`abort`). Rückkehr zu `IDLE` über `reset()` (/LF090/). Details zu den Anforderungen: Kap.~3.1 (`/LF010/` … `/LF090/`).
 
 #zustandsdiagramm-session()
 
@@ -205,9 +205,9 @@ $
 Anschließend Normalisierung auf $[0°, 360°)$: `azimuth = (alpha + 360°) mod 360°`.
 
 *Grenzfälle:*
-- Identische Punkte (d = 0): Azimut undefiniert #sym.arrow.r Rückgabe 0° per Konvention.
-- Polnähe: Numerische Instabilität durch $cos(φ)$ #sym.arrow.r $0$ muss durch Klammertests abgesichert werden.
-- Antipodische Punkte (d ≈ πR): Azimut mehrdeutig #sym.arrow.r dokumentieren und testen.
+- Identische Punkte (d = 0): Azimut undefiniert -> Rückgabe 0° per Konvention.
+- Polnähe: Numerische Instabilität durch $cos(φ)$ -> $0$ muss durch Klammertests abgesichert werden.
+- Antipodische Punkte (d ≈ πR): Azimut mehrdeutig -> dokumentieren und testen.
 
 #pagebreak()
 // ─────────────────────────────────────────────────────────────────────────────
