@@ -47,6 +47,3 @@ cd implementation
 
 Linux/macOS: `./run-all-capabilities.sh`
 
-## Bibliothek einbinden
-
-Einstieg: `BearingBootstrap` → `BearingSession` (`bearing-api`). Module: `bearing-api`, `bearing-domain`, `bearing-spi`, Adapter (`bearing-adapter-gpx`, `bearing-adapter-system`, `bearing-adapter-w3w`).
