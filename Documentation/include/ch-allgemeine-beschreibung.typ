@@ -105,6 +105,7 @@ Die folgende Tabelle fasst die Hauptfunktionsgruppen der Bibliothek zusammen. Di
     [Betrieb und Qualität],        [Deterministische Tests, strukturiertes Logging, reproduzierbarer Build.], [/LL010/-/LL080/],
   ))
 )
+#pagebreak()
 *Weitere Entwurfsprinzipien:*
 
 #figure(
