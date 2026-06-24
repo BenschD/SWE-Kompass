@@ -118,7 +118,7 @@ Das Klassendiagramm visualisiert diese Entwurfsklassen mit ihren Stereotypen und
   "klassendiagramm",
   width: 100%,
 )
-
+#pagebreak()
 === Zustandsdiagramm: Session-Lebenszyklus
 
 *Zustände:* `IDLE` -> `ACTIVE` (`start`) -> `COMPLETED` (`complete`) oder `ABORTED` (`abort`). Rückkehr zu `IDLE` über `reset()` (/LF090/). Details zu den Anforderungen: Kap.~3.1 (`/LF010/` … `/LF090/`).
