@@ -2,7 +2,7 @@
 
 UI-freie Java-Bibliothek für Peilung, GPS-Rohtrack und GPX-1.1-Export.
 
-DHBW Stuttgart · Softwareentwicklung · Prof. Dr. Bohl
+DHBW Stuttgart · Softwareentwicklung · Dipl. Ing. Peter Bohl
 
 ## Inhalt
 
