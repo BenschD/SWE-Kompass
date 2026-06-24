@@ -30,7 +30,7 @@
 /// Breite Flussdiagramme: kompakte Standardbreite (68%) bei `height: auto`, damit
 /// keine Leerhöhe reserviert wird. Hohe Flussdiagramme erhalten am Aufrufort eine
 /// Höhenbegrenzung, z. B. `#lf-flowchart("/LF030/", "lf_030", height: 13cm)`.
-#let lf-flowchart(id, svg-name, width: 68%, height: auto) = {
+#let lf-flowchart(id, svg-name, width: 80%, height: auto) = {
   _svg-figure([Aktivitätsdiagramm #id], svg-name, width: width, height: height)
 }
 
