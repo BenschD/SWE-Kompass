@@ -42,7 +42,7 @@
 
 #lf-flowchart("/LF010/", "lf_010")
 #pagebreak()
-#lf-compact("/LF020/", "Nur eine aktive Session", [Zweiter `start()` im Zustand `ACTIVE` wird mit `IllegalStateException` abgewiesen.], verweise: [/LF010/], code: "compareAndSet IDLE→ACTIVE")
+#lf-compact("/LF020/", "Nur eine aktive Session", [Zweiter `start()` im Zustand `ACTIVE` wird mit `IllegalStateException` abgewiesen.], verweise: [/LF010/], code: "compareAndSet IDLE->ACTIVE")
 
 #lf-flowchart("/LF020/", "lf_020")
 
@@ -98,7 +98,7 @@
   akteur: [Host-App (Primär).],
   verweise: [/LF140/, /LF150/, /LF160/],
   datenzugriffe: [/LD060/],
-  beschreibung: [`complete()` → `COMPLETED`, GPX-Export (/LF140/), optional Datei (/LF150/), `GpxResult` (/LF160/).],
+  beschreibung: [`complete()` -Y `COMPLETED`, GPX-Export (/LF140/), optional Datei (/LF150/), `GpxResult` (/LF160/).],
   ausloeser: [`complete()`],
   vorbedingung: [Session `ACTIVE`.],
   nach_erfolg: [`COMPLETED`; `GpxResult`; `onSessionCompleted`.],
