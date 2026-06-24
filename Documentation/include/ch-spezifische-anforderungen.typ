@@ -170,9 +170,9 @@ Die Bibliothek besitzt keine Benutzeroberfläche; ihre einzige Schnittstelle nac
 Das Kontextdiagramm (Datenflussdiagramm der Stufe 0) zeigt die Bibliothek als einen Prozess mit ihren externen Terminatoren und den ein- und ausgehenden Datenflüssen.
 
 #mermaid-figure(
-  [Kontextdiagramm: Datenflüsse zwischen Bibliothek und Umgebung.],
+  [Kontextdiagramm (DFD Stufe 0): Datenflüsse zwischen Bibliothek und Umgebung.],
   "dfd_kontext",
-  width: 85%,
+  width: 100%,
 )
 
 === Öffentliche Java-API
@@ -188,9 +188,9 @@ Alle Aufrufe laufen über eine einzige Fassade. Sie spiegelt den Session-Lebensz
 Das folgenden Sequenzdiagramm zeigt die dynamische Zusammenarbeit hinter den zentralen API-Aufrufes.
 
 #mermaid-figure(
-  [Sequenzdiagramm `onPositionUpdate()`: Validierung, Aggregation und Listener-Ereignisse.],
+  [Sequenzdiagramm `onPositionUpdate()`: Validierung, Aggregation und Listener-Ereignisse (/LF030/).],
   "sequenz_position_update",
-  width: 66%,
+  width: 100%,
 )
 
 === Fehlerverhalten
@@ -333,9 +333,9 @@ Die Produktdaten beschreiben die zentralen Datenstrukturen der Bibliothek mit ih
 Das ER-Modell stellt diese Datenstrukturen mit ihren Beziehungen und Kardinalitäten dar und ordnet sie den `/LD…/`-Karten zu.
 
 #mermaid-figure(
-  [ER-Modell der Produktdaten mit Entitäten und Kardinalitäten.],
+  [ER-Modell der Produktdaten (/LD010/ … /LD060/) mit Entitäten und Kardinalitäten.],
   "er_modell",
-  width: 84%,
+  width: 100%,
 )
 
 #figure(caption: [Produktdaten /LD010/ … /LD060/.], kind: table, catalog-ld-table)

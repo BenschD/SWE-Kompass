@@ -114,7 +114,7 @@ Der Entwurf überführt die fachlichen Konzepte in konkrete Klassen und Schnitts
 Das Klassendiagramm visualisiert diese Entwurfsklassen mit ihren Stereotypen und Beziehungen. Gut erkennbar sind die Strategy-Hierarchie (`TrackOptimizer` mit vier Optimierern), der Observer (`BearingListener`) und die fünf Ports, die die Domain technologiefrei halten.
 
 #mermaid-figure(
-  [Klassendiagramm: Fassade, Value Objects, Domain Services, Strategy, Observer und Ports.],
+  [Klassendiagramm (OOD): Fassade, Value Objects, Domain Services, Strategy, Observer und Ports.],
   "klassendiagramm",
   width: 100%,
 )
@@ -136,13 +136,13 @@ Das Paketdiagramm zeigt die sieben Maven-Module und die enthaltenen Java-Pakete 
 #mermaid-figure(
   [Paketdiagramm: Maven-Module und Java-Pakete mit ihren Abhängigkeiten.],
   "paketdiagramm",
-  width: 74%,
+  width: 100%,
 )
 
 Über die Schichtenarchitektur (Kap.~2.1) hinaus nutzt der Entwurf zwei weitere Muster: Das Ports-and-Adapters-Muster (hexagonal) trennt den Anwendungskern über die SPI-Ports von den Adaptern, das Pipes-and-Filter-Muster beschreibt die Optimierer-Kette vor dem Export.
 
 #mermaid-figure(
-  [Architekturmuster Ports-and-Adapters.],
+  [Architekturmuster Ports-and-Adapters (hexagonal).],
   "muster_ports_adapter",
   width: 100%,
 )
@@ -163,16 +163,15 @@ Das Aktivitätsdiagramm fasst den gesamten Sessionverlauf von `start()` bis zum 
   [Aktivitätsdiagramm: vollständiger Verlauf einer Peilungssession.],
   "aktivitaet_session",
   width: 100%,
-  height: 15cm,
 )
 
 Das Datenflussdiagramm der Stufe 1 verfeinert das Kontextdiagramm (Kap.~3.3) in sechs Teilprozesse mit den Datenspeichern Roh-Track und W3W-Cache.
 
 #mermaid-figure(
-  [Datenflussdiagramm: Teilprozesse und Datenspeicher.],
+  [Datenflussdiagramm (DFD Stufe 1): Teilprozesse und Datenspeicher.],
   "dfd_level1",
   width: 100%,
-  height: 14cm,
+  height: 20cm,
 )
 
 // ─────────────────────────────────────────────────────────────────────────────
