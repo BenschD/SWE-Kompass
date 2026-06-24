@@ -448,7 +448,7 @@ Die Fehlermöglichkeits- und Einflussanalyse (FMEA) betrachtet systematisch, was
 Ergänzend zur Testfall-Tabelle zeigt dieser Abschnitt die Kontroll- und Entscheidungslogik der Eingabeverarbeitung. Der Kontrollflussgraph der Methode `TrackAggregator.accept` besitzt fünf Entscheidungen und damit die zyklomatische Komplexität v(G) = 5 + 1 = 6; sechs unabhängige Pfade bilden das Mindestmaß für die Zweigüberdeckung (/TC060/, /TC070/, /TC110/, /TC150/).
 
 #mermaid-figure(
-  [Kontrollflussgraph von `TrackAggregator.accept` (Whitebox-Sicht, v(G) = 6).],
+  [Kontrollflussgraph von `TrackAggregator.accept` ],
   "kontrollflussgraph",
   width: 100%,
   height: 14cm,
