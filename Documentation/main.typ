@@ -131,6 +131,15 @@ Neben der Implementierung als Maven-Projekt enthält die Arbeit eine Spezifikati
 #counter(page).update(1)
 #show math.equation: set align(center)
 
+#set figure(
+  supplement: [Abbildung],
+  numbering: "1",
+)
+#set figure(kind: table,
+  supplement: [Tabelle],
+  numbering: "1",
+)
+
 // ═════════════════════════════════════════════════════════════════════════════
 // KAPITEL 1 - EINLEITUNG
 // ═════════════════════════════════════════════════════════════════════════════

@@ -150,7 +150,7 @@ Das Paketdiagramm zeigt die sieben Maven-Module und die enthaltenen Java-Pakete 
 #mermaid-figure(
   [Architekturmuster Pipes-and-Filter: die Optimierer-Pipeline.],
   "muster_pipes_filter",
-  width: 10%,
+  width: 38%,
 )
 
 // ─────────────────────────────────────────────────────────────────────────────

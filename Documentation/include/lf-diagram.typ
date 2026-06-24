@@ -10,7 +10,7 @@
   _svg-dir + "/" + name + ".svg"
 }
 
-#let _svg-figure(caption, name, width: 100%, height: auto) = {
+#let _svg-figure(caption, name, width: 90%, height: auto) = {
   // Ganze Abbildung (Bild + Bildunterschrift) als untrennbare Einheit, damit sie
   // auch bei `show figure: set block(breakable: true)` nicht über Seiten zerreißt.
   block(breakable: false, width: 100%)[
@@ -19,7 +19,7 @@
       caption: caption,
       kind: image,
       align(center)[
-        #image(_diagram-svg(name), width: 90%, height: height, fit: "contain")
+        #image(_diagram-svg(name), width: width, height: height, fit: "contain")
       ],
     )
     #v(0.5em)
