@@ -80,7 +80,9 @@
 
   set align(left)
 
-  v(1.5em)
+  // Flexibler Abstand schiebt den Block an den unteren Seitenrand.
+  // Für eine feste Position stattdessen z. B. `v(6cm)` verwenden.
+  v(1fr)
 
   grid(
     columns: (auto, 1fr),
@@ -90,6 +92,8 @@
     [Bearbeitungszeitraum:], [#bearbeitungszeitraum],
     [Matrikelnummer:],       [#matrikelnummer],
   )
+
+  v(1cm)
 
   set page(header: none)
   pagebreak()
