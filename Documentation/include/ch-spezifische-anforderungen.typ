@@ -170,7 +170,7 @@ Die Bibliothek besitzt keine Benutzeroberfläche; ihre einzige Schnittstelle nac
 Das Kontextdiagramm (Datenflussdiagramm der Stufe 0) zeigt die Bibliothek als einen Prozess mit ihren externen Terminatoren und den ein- und ausgehenden Datenflüssen.
 
 #mermaid-figure(
-  [Kontextdiagramm (DFD Stufe 0): Datenflüsse zwischen Bibliothek und Umgebung.],
+  [Kontextdiagramm: Datenflüsse zwischen Bibliothek und Umgebung.],
   "dfd_kontext",
   width: 100%,
 )
