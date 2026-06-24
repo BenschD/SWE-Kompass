@@ -86,7 +86,7 @@
   nach_erfolg: [`BearingSnapshot` zurück, der Zustand bleibt unverändert.],
   nach_fehler: [Kein Fix: `IllegalStateException`. Nicht ACTIVE: `IllegalStateException`.],
   standardablauf: [1. `currentSnapshot()` 2. Snapshot aus letztem Fix + Ziel ableiten 3. Rückgabe],
-  alternativablauf: [Kein Fix #sym.arrow.r `IllegalStateException`.],
+  alternativablauf: [Kein Fix -> `IllegalStateException`.],
   sonstiges: lf-sonstiges(speziell: [Immutables Value Object, 8 Himmelsrichtungen.]),
 )
 
@@ -115,7 +115,7 @@
   funktion: "Session abbrechen",
   akteur: [Host-App (Primär).],
   verweise: [/LF140/, /LF160/],
-  beschreibung: [`abort()` #sym.arrow.r `ABORTED`, GPX mit bisherigem Track, Datei nur bei `persistOnAbort`.],
+  beschreibung: [`abort()` -> `ABORTED`, GPX mit bisherigem Track, Datei nur bei `persistOnAbort`.],
   ausloeser: [`abort()`],
   vorbedingung: [Session `ACTIVE`.],
   nach_erfolg: [`ABORTED`, `GpxResult`, `onSessionAborted`.],
@@ -155,7 +155,7 @@
   nach_erfolg: [`IDLE`; Felder gelöscht; /LF010/ wieder möglich.],
   nach_fehler: [Bei `ACTIVE`: `IllegalStateException`.],
   standardablauf: [1. `reset()` 2. Zustand prüfen 3. Felder löschen 4. `IDLE`],
-  alternativablauf: [ACTIVE #sym.arrow.r Exception.],
+  alternativablauf: [ACTIVE -> Exception.],
   sonstiges: lf-sonstiges(bemerkungen: [/TC130/ Verifikation.]),
 )
 
@@ -174,7 +174,7 @@
   funktion: "GPX 1.1 exportieren",
   akteur: [System (intern via /LF060/, /LF070/).],
   verweise: [/LF170/-/LF200/, /LF160/, /LL050/],
-  beschreibung: [Rohtrack-Snapshot #sym.arrow.r optionale Optimierer-Kette #sym.arrow.r GPX 1.1 XML mit Namespace und UTC-Zeiten.],
+  beschreibung: [Rohtrack-Snapshot -> optionale Optimierer-Kette -> GPX 1.1 XML mit Namespace und UTC-Zeiten.],
   ausloeser: [`complete()` oder `abort()`.],
   vorbedingung: [Session beendet oder Export intern angestoßen.],
   nach_erfolg: [`GpxDocument` serialisiert (/LF160/ erfüllt).],
