@@ -4,7 +4,7 @@
 
 /// Baut Sonstiges-Feld aus Metadaten (Systemgrenzen, spezielle Anforderungen, Hinweise).
 #let lf-sonstiges(systemgrenzen: none, speziell: none, bemerkungen: none) = {
-  let sep = [#linebreak()#linebreak()]
+  let sep = [#linebreak(), #linebreak()]
   let parts = (
     if systemgrenzen != none { ([*Systemgrenzen:* #systemgrenzen],) } else { () }
   ) + (
